@@ -15,15 +15,16 @@
 
   (let ((rst '(progn)))
     (dolist (func func-name (reverse rst))
-      (when (fboundp func)
-        (push
-         `(progn
-            (message "Add advice. Function:%S, pos:%S, action:%S" ',func ',pos ',action)
-            (defadvice ,func (,pos aspk-add-trace)
-              (let ((args (ad-get-args 0)))
-                (apply ',action ',func ad-return-value args)))
-            (ad-activate ',func))
-         rst)))))
+      (if (fboundp func)
+          (push
+           `(progn
+              (message "Add advice. Function:%S, pos:%S, action:%S" ',func ',pos ',action)
+              (defadvice ,func (,pos aspk-add-trace)
+                (let ((args (ad-get-args 0)))
+                  (apply ',action ',func ad-return-value args)))
+              (ad-activate ',func))
+           rst)
+        (message "Add advice error: %S not a fucntion" func)))))
 
 
 ;; (macroexpand '(aspk/advice-add (previous-line next-line) before aspk/tmp))
