@@ -1,7 +1,7 @@
 (defmacro aspk/pointer-make (vara dirct varb)
   (if (eq dirct '->)
-      `(set ,vara ,varb)
-    `(set ,varb ,vara)))
+      `(set ',vara ',varb)
+    `(set ',varb ',vara)))
 ;; (aspk/pointer-make B -> C) ;;B point to C
 ;; (macroexpand '(aspk/pointer-make B -> C))
 
