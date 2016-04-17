@@ -59,4 +59,9 @@
   (overlay-put tooltip 'invisible nil)
   (overlay-put tooltip 'after-string ""))
 
+(defun aspk/tooltip-delete (tooltip)
+  "Delete the tooltip `tooltip'"
+  (aspk/tooltip-hide tooltip)
+  (setq tooltip nil)) ;; TODO: really delete the overlay.
+
 (provide 'aspk-tooltip)

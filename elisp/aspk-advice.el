@@ -15,6 +15,17 @@
 
 ;; look at debug-on-entry, defined at debug.el
 
+
+
+(defun aspk/advice-delete (func-name)
+  "Delete a advice of `func-name'"
+  (unless (listp func-name)
+    (setq func-name (list func-name)))
+  (dolist (func func-name)
+    (when (fboundp func)
+      (message "Delete advice. Function:%S" func)
+      (ad-unadvise func))))
+
 (defun aspk/advice-action-example (func-name return-value &rest args)
   (message "func: %s called" func-name))
 
