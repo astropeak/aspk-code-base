@@ -1,4 +1,3 @@
-(add-pwd-into-load-path)
 (require 'aspk-advice)
 (require 'aspk-window)
 (require 'aspk-tooltip)
@@ -24,12 +23,35 @@
 ;; (aspk/advice-add 'quail-input-method 'before 'aspk/app-wubi-create-tooltip)
 ;; (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-delete-tooltip)
 ;; (aspk/advice-delete 'quail-input-method)
+;; (aspk/advice-delete 'quail-update-translation)
 
 (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-tooltip)
 (aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-tooltip)
 
 (defun aspk/app-wubi-display-tooltip (&rest args)
-  (aspk/tooltip-show aspk/app-wubi-tooltip))
+  (aspk/tooltip-show aspk/app-wubi-tooltip)
+  (message "NEW in aspk/app-wubi-display-tooltip")
+  ;; (setq 	  overriding-local-map t)
+  (let ((key (read-event)))
+    (message "KEY: %S" key)
+    (cond
+     ((equal key ?1)
+      (insert "我")
+      (message "HHHH 1 pressed"))
+     (t
+      (message "HHHH other key pressed: %S" key)
+      (setq unread-command-events (cons key unread-command-events))))))
+
+
+
+  ;; (aspk/keybind-temporary-keymap
+  ;;  (list
+  ;;   (cons "z"  '(message "1"))
+  ;;   (cons "b"  '(message "2")))
+  ;;  "EEEE"
+  ;;  nil
+  ;;  '(setq overriding-local-map nil))
+
 
 (defun aspk/app-wubi-hide-tooltip (&rest args)
   (aspk/tooltip-hide aspk/app-wubi-tooltip))
@@ -41,7 +63,7 @@
   (let* ((key quail-current-key)
          (map (quail-lookup-key quail-current-key nil t))
          (completion-list (aspk/app-wubi-quail-completion-1 key map 0)))
-    (message "completion-list: %S" completion-list)
+    ;; (message "completion-list: %S" completion-list)
     completion-list
     ))
 
@@ -65,7 +87,7 @@
             ;; (cdr elt) indent)
             )
           ))
-    (message "A rst: %S" rst)
+    ;; (message "A rst: %S" rst)
     rst))
 
 (defun aspk/app-wubi-quail-completion-list-translations (map key indent)
@@ -91,7 +113,7 @@
           (push (cons key (aref translations i)) rst)
           (setq i (1+ i)))
         ))
-    (message "rst: %S" rst )
+    ;; (message "rst: %S" rst )
     (reverse rst)))
 
 

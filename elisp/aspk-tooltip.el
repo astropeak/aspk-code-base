@@ -46,9 +46,10 @@
                                       ?
                                       ))
          (prefix (make-string (- (+ pos1 column) begin) ? ))
+         ;; (debug (message "prefix: .%s. pos1:%d, pos2:%d, end-row:%d" prefix pos1 pos2 end-row))
          (str1 (mapconcat (lambda (x) x)
                           candidates "|"))
-         (debug (message "prefix: .%s. pos1:%d, pos2:%d, end-row:%d" prefix pos1 pos2 end-row)))
+         )
     (add-text-properties 0 (length str1) '(face aspk/tooltip-face)
                          str1)
     (overlay-put ov 'aspk/tooltip-display

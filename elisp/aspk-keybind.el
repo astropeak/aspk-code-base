@@ -20,4 +20,20 @@
       (or (minibufferp) (message "%s" (eval msg))))))
 
 
+
+(require 'aspk-debug)
+(defun aspk/keybind-temporary-keymap-highest-priority (bindings &optional msg before after)
+  "Bindings: ((key action excute-count)), if excute-count ommited, just excute one time. Other parameter same as the above function."
+  (tracem bindings msg)
+  (let* ((key (read-event))
+         (bind (assoc (make-string 1 key) bindings))
+         (action (nth 1 bind))
+         (count (nth 2 bind)))
+    (tracem key bind action count)
+    (if bind
+        (eval action)
+      (setq unread-command-events (cons key unread-command-events)))
+    (or (minibufferp) (not msg) (message "%s" (eval msg)))))
+
+
 (provide 'aspk-keybind)
