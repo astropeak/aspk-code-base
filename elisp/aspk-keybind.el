@@ -19,21 +19,49 @@
        t)
       (or (minibufferp) (message "%s" (eval msg))))))
 
-
-
 (require 'aspk-debug)
+(defun aspk/keybind--convert-key (key)
+  (tracel key)
+  (let* ((table '(("return" . 13)
+                 ("backspace" . 8)))
+         (pair (assoc key table)))
+    (if pair
+        (cdr pair)
+      key)))
+
+;; (aspk/keybind--convert-key "backspace")
+;; (setq key "return")
 (defun aspk/keybind-temporary-keymap-highest-priority (bindings &optional msg before after)
-  "Bindings: ((key action excute-count)), if excute-count ommited, just excute one time. Other parameter same as the above function."
+  "Bindings: ((key action excute-count)), if excute-count ommited, just excute unlimited time. Other parameter same as the above function."
   (tracem bindings msg)
   (let* ((key (read-event))
-         (bind (assoc (make-string 1 key) bindings))
-         (action (nth 1 bind))
-         (count (nth 2 bind)))
-    (tracem key bind action count)
-    (if bind
-        (eval action)
-      (setq unread-command-events (cons key unread-command-events)))
-    (or (minibufferp) (not msg) (message "%s" (eval msg)))))
+         (key2 (make-string 1 (aspk/keybind--convert-key key)))
+         (bind (assoc key2 bindings))
+         (action)
+         (count (or (nth 2 bind) 9999999))
+         (rst)
+         (total-count (mapcar (lambda (x)
+                                (cons (car x) 0)) bindings)))
+    (tracem key bind count total-count)
+    (while bind
+      (tracem total-count)
+      (setq action (nth 1 bind))
+      (setq count (nth 2 bind))
+      (tracel key bind action count)
+      (setq rst (eval action))
+      (or (minibufferp) (not msg) (message "%s" (eval msg)))
+      (setcdr (assoc key2 total-count) (1+ (cdr (assoc key2 total-count))))
+      (setq key nil)
+      (if (= count (cdr (assoc key2 total-count)))
+          (setq bind nil)
+        (setq key (read-event))
+        (setq key2 (make-string 1 (aspk/keybind--convert-key key)))
+        (setq bind (assoc key2 bindings))
+        (setq count (or (nth 2 bind) 9999999)))
+      )
 
+    (and key (setq unread-command-events (cons key unread-command-events)))
+    rst))
 
+;; (and nil t)
 (provide 'aspk-keybind)

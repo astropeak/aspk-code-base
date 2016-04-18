@@ -12,10 +12,9 @@
          (aspk/window-column (point))
          ;; 10 40
          ;; '("1. AA " "2. BB " "3. CC ")
-         (mapcar (lambda (x)
-                   (format " %s(%s)" (cdr x) (car x)))
-                 (aspk/app-wubi-completion)
-                 )
+         (aspk/app-wubi-completion)
+         #'(lambda (candidate)
+             (format " %s(%s)" (cdr candidate) (car candidate)))
          )))
 
 ;; (aspk/advice-delete 'quail-translate-key)
@@ -29,28 +28,19 @@
 (aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-tooltip)
 
 (defun aspk/app-wubi-display-tooltip (&rest args)
-  (aspk/tooltip-show aspk/app-wubi-tooltip)
-  (message "NEW in aspk/app-wubi-display-tooltip")
-  ;; (setq 	  overriding-local-map t)
-  (let ((key (read-event)))
-    (message "KEY: %S" key)
-    (cond
-     ((equal key ?1)
-      (insert "我")
-      (message "HHHH 1 pressed"))
-     (t
-      (message "HHHH other key pressed: %S" key)
-      (setq unread-command-events (cons key unread-command-events))))))
+  (let  ((rst (aspk/tooltip-select aspk/app-wubi-tooltip)))
+    (tracem rst)
+    (when rst
+      (quail-abort-translation)
+      (insert (cdr rst)))))
 
-
-
-  ;; (aspk/keybind-temporary-keymap
-  ;;  (list
-  ;;   (cons "z"  '(message "1"))
-  ;;   (cons "b"  '(message "2")))
-  ;;  "EEEE"
-  ;;  nil
-  ;;  '(setq overriding-local-map nil))
+;; (aspk/keybind-temporary-keymap
+;;  (list
+;;   (cons "z"  '(message "1"))
+;;   (cons "b"  '(message "2")))
+;;  "EEEE"
+;;  nil
+;;  '(setq overriding-local-map nil))
 
 
 (defun aspk/app-wubi-hide-tooltip (&rest args)

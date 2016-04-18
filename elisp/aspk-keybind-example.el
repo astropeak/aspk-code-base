@@ -26,9 +26,11 @@
   (aspk/keybind-temporary-keymap-highest-priority
    (list
     (list "b"
-          '(aset aspk/keybind-example-1-data 0 (1+ (aref aspk/keybind-example-1-data 0))))
+          '(aset aspk/keybind-example-1-data 0 (1+ (aref aspk/keybind-example-1-data 0)))
+          1)
     (list "v"
-          '(aset aspk/keybind-example-1-data 1 (1+ (aref aspk/keybind-example-1-data 1))))
+          '(aset aspk/keybind-example-1-data 1 (1+ (aref aspk/keybind-example-1-data 1)))
+          2)
     (list "s"
           '(aset aspk/keybind-example-1-data 2 (1+ (aref aspk/keybind-example-1-data 2)))))
    '(format "Type b , v , or s. Count: b(%d), v(%d), s(%d) "
@@ -38,4 +40,4 @@
             )))
 
 
-(aspk/keybind-example-2)
+;; (aspk/keybind-example-2)
