@@ -3,7 +3,7 @@
   (move-to-window-line 10)
   (move-to-column 10)
   )
-(setq aspk/tt1 (aspk/tooltip-create 0 90 '(" AAA " " BBB ")))
+(setq aspk/tt1 (aspk/tooltip-create 5 59 '(" AAA " " BBB ")))
 (setq aspk/tt2 (aspk/tooltip-create 1 20 '(" AAA " " BBB ")))
 (aspk/tooltip-show aspk/tt1)
 (aspk/tooltip-hide aspk/tt1)

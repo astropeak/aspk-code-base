@@ -1,3 +1,4 @@
+(add-pwd-into-load-path)
 (require 'aspk-advice)
 (require 'aspk-window)
 (require 'aspk-tooltip)

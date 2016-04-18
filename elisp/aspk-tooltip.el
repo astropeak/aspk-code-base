@@ -1,4 +1,14 @@
 ;; Usage: first create, then show or hide.
+
+(defface aspk/tooltip-face
+  '((default :foreground "black")
+    (((class color) (min-colors 88) (background light))
+     (:background "cornsilk"))
+    (((class color) (min-colors 88) (background dark))
+     (:background "yellow")))
+  "Face used for the tooltip.")
+
+
 (defun aspk/tooltip--replace-line (old new)
   (if (> (length new) (length old))
       new
@@ -36,14 +46,15 @@
                                       ?
                                       ))
          (prefix (make-string (- (+ pos1 column) begin) ? ))
+         (str1 (mapconcat (lambda (x) x)
+                          candidates "|"))
          (debug (message "prefix: .%s. pos1:%d, pos2:%d, end-row:%d" prefix pos1 pos2 end-row)))
+    (add-text-properties 0 (length str1) '(face aspk/tooltip-face)
+                         str1)
     (overlay-put ov 'aspk/tooltip-display
                  (aspk/tooltip--replace-line
                   (buffer-substring begin end)
-                  (concat prefix-newline prefix
-                          (mapconcat (lambda (x)
-                                       x)
-                                     candidates "|"))))
+                  (concat prefix-newline prefix str1)))
     (overlay-put ov 'aspk/tooltip-row row)
     (overlay-put ov 'aspk/tooltip-column column)
     ov))
@@ -62,6 +73,7 @@
 (defun aspk/tooltip-delete (tooltip)
   "Delete the tooltip `tooltip'"
   (aspk/tooltip-hide tooltip)
-  (setq tooltip nil)) ;; TODO: really delete the overlay.
+  (delete-overlay tooltip)
+  (setq tooltip nil))
 
 (provide 'aspk-tooltip)
