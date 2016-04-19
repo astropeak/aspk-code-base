@@ -75,6 +75,7 @@
   (let ((candidates (overlay-get tooltip 'aspk/tooltip-candidates)))
     (setq aspk/tooltip-tmp 0)
     (aspk/keybind-temporary-keymap-highest-priority
+     ;; TODO: candidates not used in the mapcar, use a list such as (1..9)
      (mapcar (lambda (x)
                (incf aspk/tooltip-tmp)
                (list (format "%d" aspk/tooltip-tmp)

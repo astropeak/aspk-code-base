@@ -1,6 +1,7 @@
 (setq  a 1234)
 (setq  b "This is a string")
 
+(dbg-set-level LOW)
 (dbg-set-level MEDIUM)
 (tracem b a b a)
 

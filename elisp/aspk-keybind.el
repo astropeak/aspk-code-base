@@ -21,19 +21,20 @@
 
 (require 'aspk-debug)
 (defun aspk/keybind--convert-key (key)
-  (tracel key)
-  (let* ((table '(("return" . 13)
-                 ("backspace" . 8)))
+  (let* ((table '((return . 13)
+                 (backspace . 8)))
          (pair (assoc key table)))
+    (tracel key pair)
     (if pair
         (cdr pair)
       key)))
 
-;; (aspk/keybind--convert-key "backspace")
+;; (macroexpand '(tracem key))
+;; (aspk/keybind--convert-key (read-event))
 ;; (setq key "return")
 (defun aspk/keybind-temporary-keymap-highest-priority (bindings &optional msg before after)
   "Bindings: ((key action excute-count)), if excute-count ommited, just excute unlimited time. Other parameter same as the above function."
-  (tracem bindings msg)
+  (tracel bindings msg)
   (let* ((key (read-event))
          (key2 (make-string 1 (aspk/keybind--convert-key key)))
          (bind (assoc key2 bindings))
@@ -42,9 +43,9 @@
          (rst)
          (total-count (mapcar (lambda (x)
                                 (cons (car x) 0)) bindings)))
-    (tracem key bind count total-count)
+    (tracel key bind count total-count)
     (while bind
-      (tracem total-count)
+      (tracel total-count)
       (setq action (nth 1 bind))
       (setq count (nth 2 bind))
       (tracel key bind action count)

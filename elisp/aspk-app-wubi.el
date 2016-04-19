@@ -17,19 +17,20 @@
              (format " %s(%s)" (cdr candidate) (car candidate)))
          )))
 
-;; (aspk/advice-delete 'quail-translate-key)
 ;; (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-tooltip)
 ;; (aspk/advice-add 'quail-input-method 'before 'aspk/app-wubi-create-tooltip)
 ;; (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-delete-tooltip)
 ;; (aspk/advice-delete 'quail-input-method)
-;; (aspk/advice-delete 'quail-update-translation)
+
+(aspk/advice-delete 'quail-translate-key)
+(aspk/advice-delete 'quail-update-translation)
 
 (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-tooltip)
 (aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-tooltip)
 
 (defun aspk/app-wubi-display-tooltip (&rest args)
   (let  ((rst (aspk/tooltip-select aspk/app-wubi-tooltip)))
-    (tracem rst)
+    (tracel rst)
     (when rst
       (quail-abort-translation)
       (insert (cdr rst)))))

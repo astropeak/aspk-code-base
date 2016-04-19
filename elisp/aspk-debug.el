@@ -8,7 +8,7 @@
 (defconst MEDIUM 4 "medium level log")
 (defconst LOW 5 "low level low")
 
-(defvar *dbg-current-level* MEDIUM "The current debug level")
+(defvar *dbg-current-level* HIGH "The current debug level")
 
 (defun dbg-set-level (lvl)
   "Set the current debug level to `lvl'"
@@ -43,14 +43,14 @@
   ;; TODO: the parameter may be excutes more than one times
   `(and
     (<= ,lvl *dbg-current-level*)
-    (let ((str ,(format "%s:%s:%d:\t" (buffer-file-name) 
+    (let ((str ,(format "%S:%S:%S:\t" (file-name-nondirectory (buffer-file-name))
                         (dbg-find-current-function-name) (line-number-at-pos))))
       ;;(message "args-syms(in let)=%s" (quote ,args-syms))
       (dolist (s (quote ,args-syms))
         ;;(dbg TRIV s)
         ;;(message "s=%s" s)
-        (setq str (concat str (format "%S=%s, " s (symbol-value s)))))
-      (message "%s" (substring str 0 (- (length str) 2))))))
+        (setq str (concat str (format "%S=%S, " s (symbol-value s)))))
+      (message "%S" (substring str 0 (- (length str) 2))))))
 
 (defmacro tracee (&rest args-syms)
   `(aspk/trace ERROR ,@args-syms))
