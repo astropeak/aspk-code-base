@@ -24,10 +24,11 @@
   (let* ((table '((return . 13)
                  (backspace . 8)))
          (pair (assoc key table)))
-    (tracel key pair)
+    ;; (tracel key pair)
     (if pair
-        (cdr pair)
-      key)))
+        ;; (cdr pair)
+        key
+      (make-string 1 key))))
 
 ;; (macroexpand '(tracem key))
 ;; (aspk/keybind--convert-key (read-event))
@@ -36,7 +37,7 @@
   "Bindings: ((key action excute-count)), if excute-count ommited, just excute unlimited time. Other parameter same as the above function."
   (tracel bindings msg)
   (let* ((key (read-event))
-         (key2 (make-string 1 (aspk/keybind--convert-key key)))
+         (key2 (aspk/keybind--convert-key key))
          (bind (assoc key2 bindings))
          (action)
          (count (or (nth 2 bind) 9999999))
@@ -56,7 +57,7 @@
       (if (= count (cdr (assoc key2 total-count)))
           (setq bind nil)
         (setq key (read-event))
-        (setq key2 (make-string 1 (aspk/keybind--convert-key key)))
+        (setq key2 (aspk/keybind--convert-key key))
         (setq bind (assoc key2 bindings))
         (setq count (or (nth 2 bind) 9999999)))
       )
