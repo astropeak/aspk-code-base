@@ -48,7 +48,7 @@
     (while bind
       (tracel total-count)
       (setq action (nth 1 bind))
-      (setq count (nth 2 bind))
+      (setq count (or (nth 2 bind) 9999999))
       (tracel key bind action count)
       (setq rst (eval action))
       (or (minibufferp) (not msg) (message "%s" (eval msg)))

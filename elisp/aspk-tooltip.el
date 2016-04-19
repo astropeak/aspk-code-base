@@ -1,5 +1,5 @@
 (require 'aspk-window)
-(require 'aspk-keybind)
+(require 'aspk-debug)
 ;; Usage: first create, then show or hide.
 
 (defface aspk/tooltip-face
@@ -21,9 +21,10 @@
 ;; FIXED. 并且当ROW在 （point-max）范围外时无法工作。 但当 column在 max-column范围外时可以工作。
 ;; FIXED. 无法支持多行。 多行中第二行时，还是会显示在第一行
 ;; BUG: 当在 point-max 范围外时，无法同时添加多个OVERLAY（在不同行）。
-(defun aspk/tooltip-create (row column candidates &optional display-func)
-  "Create a tooltip that will display at window row `row' and window column `column' the content of `candidates', which is a list of string. And return that tooltip. `display-func' is used to convert candidate."
+(defun aspk/tooltip-create (row column str)
+  "Create a tooltip that will display at window row `row' and window column `column' the string `str'. And return that tooltip."
   ;; (save-excursion)
+  (traceh row column str)
   (let* ((pos1 (save-excursion
                  (move-to-window-line row)
                  (point)))
@@ -47,44 +48,39 @@
          (prefix-newline (make-string (max 0 (- row end-row))
                                       ?
                                       ))
-         (prefix (make-string (- (+ pos1 column) begin) ? ))
-         ;; (debug (message "prefix: .%s. pos1:%d, pos2:%d, end-row:%d" prefix pos1 pos2 end-row))
-         (str1 (mapconcat (or display-func #'(lambda (x) x))
-                          candidates "|"))
-         )
-    (add-text-properties 0 (length str1) '(face aspk/tooltip-face)
-                         str1)
-    (overlay-put ov 'aspk/tooltip-display
+         (prefix (make-string (- (+ pos1 column) begin) ? )))
+    (add-text-properties 0 (length str) '(face aspk/tooltip-face)
+                         str)
+    (overlay-put ov 'content
                  (aspk/tooltip--replace-line
                   (buffer-substring begin end)
-                  (concat prefix-newline prefix str1)))
+                  (concat prefix-newline prefix str)))
     (overlay-put ov 'aspk/tooltip-row row)
     (overlay-put ov 'aspk/tooltip-column column)
-    (overlay-put ov 'aspk/tooltip-candidates candidates)
     ov))
 
 (defun aspk/tooltip-show (tooltip)
   "Show the tooltip `tooptip'"
   (overlay-put tooltip 'invisible t)
   (overlay-put tooltip 'after-string
-               (overlay-get tooltip 'aspk/tooltip-display)))
+               (overlay-get tooltip 'content)))
 
-(defun aspk/tooltip-select (tooltip)
-  "Select an item form the current tooltip, and reuturn that value"
-  (aspk/tooltip-show tooltip)
-  (let ((candidates (overlay-get tooltip 'aspk/tooltip-candidates)))
-    (setq aspk/tooltip-tmp 0)
-    (aspk/keybind-temporary-keymap-highest-priority
-     ;; TODO: candidates not used in the mapcar, use a list such as (1..9)
-     (cons '(return (progn (message "enter pressed")
-                           (cons "ENTER" quail-current-key)) 1)
-           (mapcar (lambda (x)
-                     (incf aspk/tooltip-tmp)
-                     (list (format "%d" aspk/tooltip-tmp)
-                           `(nth ,(- aspk/tooltip-tmp 1) candidates)
-                           1))
-                   candidates))
-     )))
+;; (defun aspk/tooltip-select (tooltip)
+;;   "Select an item form the current tooltip, and reuturn that value"
+;;   (aspk/tooltip-show tooltip)
+;;   (let ((candidates (overlay-get tooltip 'aspk/tooltip-candidates)))
+;;     (setq aspk/tooltip-tmp 0)
+;;     (aspk/keybind-temporary-keymap-highest-priority
+;;      ;; TODO: candidates not used in the mapcar, use a list such as (1..9)
+;;      (cons '(return (progn (message "enter pressed")
+;;                            (cons "ENTER" quail-current-key)) 1)
+;;            (mapcar (lambda (x)
+;;                      (incf aspk/tooltip-tmp)
+;;                      (list (format "%d" aspk/tooltip-tmp)
+;;                            `(nth ,(- aspk/tooltip-tmp 1) candidates)
+;;                            1))
+;;                    candidates))
+;;      )))
 
 (defun aspk/tooltip-hide (tooltip)
   "Hide the tooltip `tooptip'"
@@ -96,5 +92,13 @@
   (aspk/tooltip-hide tooltip)
   (delete-overlay tooltip)
   (setq tooltip nil))
+
+(defun aspk/tooltip-set (tooltip property value)
+  ;; (when (eq property 'content)
+    ;; (overlay-put tooltip 'after-string value))
+  (overlay-put tooltip property value))
+
+(defun aspk/tooltip-get (tooltip property)
+  (overlay-get tooltip property))
 
 (provide 'aspk-tooltip)

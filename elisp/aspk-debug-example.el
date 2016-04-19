@@ -3,6 +3,7 @@
 
 (dbg-set-level LOW)
 (dbg-set-level MEDIUM)
+(dbg-set-level HIGH)
 (tracem b a b a)
 
 (tracee b a b a)

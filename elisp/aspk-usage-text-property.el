@@ -13,4 +13,5 @@
      (:background "yellow")))
   "Face used for the tooltip.")
 
+(setq str1 "AAAAAAAAAA")
 (add-text-properties 0 (length str1) '(face aspk/tooltip-face) str1)
