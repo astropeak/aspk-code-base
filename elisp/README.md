@@ -14,3 +14,5 @@ aspk-PACKAGE-other-implementation.el: other implementation of these functions.
 
 aspk-usage-PACKAGE.el: usage of an third party(or exist) package.
 
+## app wubi
+[wubi input method for Chinese character](/aspk-app-wubi.org)
