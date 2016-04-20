@@ -34,7 +34,7 @@
     (tracel rst)
     (when rst
       (quail-abort-translation)
-      (insert rst))))
+      (insert (substring rst 0 (string-match "(" rst))))))
 
 ;; (aspk/keybind-temporary-keymap
 ;;  (list
@@ -93,7 +93,7 @@
           (setq beg (point))
           ;; (insert translations)
           ;; (setq rst (list (cons key translations)))
-          (push (cons key translations) rst)
+          (push (cons key (make-string 1 translations)) rst)
           )
       ;; We need only vector part.
       (setq translations (cdr translations))
