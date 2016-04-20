@@ -115,9 +115,9 @@
   (let ((candidates (aspk/tooltip-get selectlist 'candidates)))
     (setq aspk/selectlist-tmp 0)
     (aspk/keybind-temporary-keymap-highest-priority
-     (append `(("f" (aspk/selectlist-highlight-next-one ,selectlist))
-               ("b" (aspk/selectlist-highlight-previous-one ,selectlist))
-               ("v" (aspk/selectlist-do-select ,selectlist) 1))
+     (append `((C-f (aspk/selectlist-highlight-next-one ,selectlist))
+               (C-b (aspk/selectlist-highlight-previous-one ,selectlist))
+               (" " (aspk/selectlist-do-select ,selectlist) 1))
              ;; TODO: candidates start form start and end to end.
              (mapcar (lambda (x)
                        (incf aspk/selectlist-tmp)

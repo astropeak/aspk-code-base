@@ -28,12 +28,12 @@
     (list "b"
           '(aset aspk/keybind-example-1-data 0 (1+ (aref aspk/keybind-example-1-data 0)))
           1)
-    (list "v"
+    (list 'C-v
           '(aset aspk/keybind-example-1-data 1 (1+ (aref aspk/keybind-example-1-data 1)))
           2)
     (list "s"
           '(aset aspk/keybind-example-1-data 2 (1+ (aref aspk/keybind-example-1-data 2)))))
-   '(format "Type b , v , or s. Count: b(%d), v(%d), s(%d) "
+   '(format "Type b , C-v , or s. Count: b(%d), C-v(%d), s(%d) "
             (aref aspk/keybind-example-1-data 0)
             (aref aspk/keybind-example-1-data 1)
             (aref aspk/keybind-example-1-data 2)

@@ -20,18 +20,33 @@
       (or (minibufferp) (message "%s" (eval msg))))))
 
 (require 'aspk-debug)
+
+;; (defvar aspk/keybind-key-table
+;;   '(())
+;;   "car is the value returned by read-event, cdr is the converted one, which will be used when define keymap")
+
+;; http://www.physics.udel.edu/~watson/scen103/ascii.html
 (defun aspk/keybind--convert-key (key)
-  (let* ((table '((return . 13)
-                 (backspace . 8)))
-         (pair (assoc key table)))
-    ;; (tracel key pair)
-    (if pair
-        ;; (cdr pair)
-        key
-      (make-string 1 key))))
+  "key is the value returned by read-event. returned value is the internal representaion of that key, used when define keymap"
+  (if (symbolp key)
+      key
+    (if (>= key 32)
+        (make-string 1 key)
+      (intern (concat "C-" (make-string 1 (+ key 96)))))))
+;; (equal (aspk/keybind--convert-key (read-event)) 'C-f)
+
+;; (aspk/keybind--convert-key (read-event))
+
+;; (let* ((table '((return . 13)
+;;                (backspace . 8)))
+;;        (pair (assoc key table)))
+;;   ;; (tracel key pair)
+;;   (if pair
+;;       ;; (cdr pair)
+;;       key
+;;     (make-string 1 key))))
 
 ;; (macroexpand '(tracem key))
-;; (aspk/keybind--convert-key (read-event))
 ;; (setq key "return")
 (defun aspk/keybind-temporary-keymap-highest-priority (bindings &optional msg before after)
   "Bindings: ((key action excute-count)), if excute-count ommited, just excute unlimited time. Other parameter same as the above function."
@@ -44,7 +59,7 @@
          (rst)
          (total-count (mapcar (lambda (x)
                                 (cons (car x) 0)) bindings)))
-    (tracel key bind count total-count)
+    (tracel key key2 bind count total-count)
     (while bind
       (tracel total-count)
       (setq action (nth 1 bind))
