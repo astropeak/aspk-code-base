@@ -135,7 +135,8 @@
                      (let ((s (make-string 1 x)))
                        (list s `(insert ,s)))
                      )
-                   " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"))))
+                   " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"))
+   "En mode"))
 
 ;; (aspk/app-wubi-input-english-wapper)
 ;; (aspk/app-wubi-input-english)
