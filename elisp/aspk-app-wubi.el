@@ -117,16 +117,19 @@
     (reverse rst)))
 
 
-(defun aspk/app-wubi-input-english-wapper (&rest args)
-  (aspk/keybind-temporary-keymap-highest-priority
-   '(("z" (progn
-            ;; (quail-abort-translation)
-            (aspk/app-wubi-input-english)) 1))))
+(defun aspk/app-wubi-input-english-wapper (func-name return-val &rest args)
+  (message "in aspk/app-wubi-input-english-wapper. :%s." return-val)
+  (when (string-equal return-val "z")
+    ;; (backward-delete-char-untabify 1)
+    (message "En mode")
+    (aspk/app-wubi-input-english)
+    (setq return-val "")))
 
 (defun aspk/app-wubi-input-english ()
+  ;; (message "in aspk/app-wubi-input-english")
   (aspk/keybind-temporary-keymap-highest-priority
    (append '((return (quail-abort-translation) 1)
-   ;; (append '((return (backward-delete-char-untabify 1) 1)
+             ;; (append '((return (backward-delete-char-untabify 1) 1)
              (backspace (backward-delete-char-untabify 1)))
            (mapcar (lambda (x)
                      (let ((s (make-string 1 x)))
