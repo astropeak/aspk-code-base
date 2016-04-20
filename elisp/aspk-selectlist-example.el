@@ -1,6 +1,6 @@
 (require 'aspk-selectlist)
 
-(setq sl (aspk/selectlist-create 0 2 '("AA" "BB" "CC") 0 3))
+(setq sl (aspk/selectlist-create 0 20 '("AA" "BB" "CC") 0 3))
 
 (aspk/selectlist-show sl)
 

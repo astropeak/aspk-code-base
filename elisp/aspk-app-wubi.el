@@ -1,39 +1,39 @@
 (require 'aspk-advice)
 (require 'aspk-window)
-(require 'aspk-tooltip)
+(require 'aspk-selectlist)
 
-(setq aspk/app-wubi-tooltip nil)
-(defun aspk/app-wubi-create-tooltip (&rest args)
-  (when (overlayp aspk/app-wubi-tooltip)
-    (aspk/tooltip-delete aspk/app-wubi-tooltip))
-  (setq aspk/app-wubi-tooltip
-        (aspk/tooltip-create
+(setq aspk/app-wubi-selectlist nil)
+(defun aspk/app-wubi-create-selectlist (&rest args)
+  (when (overlayp aspk/app-wubi-selectlist)
+    (aspk/selectlist-hide aspk/app-wubi-selectlist))
+  (setq aspk/app-wubi-selectlist
+        (aspk/selectlist-create
          (+ (aspk/window-row (point)) 1)
          (aspk/window-column (point))
-         ;; 10 40
-         ;; '("1. AA " "2. BB " "3. CC ")
-         (aspk/app-wubi-completion)
-         #'(lambda (candidate)
-             (format " %s(%s)" (cdr candidate) (car candidate)))
-         )))
+         (mapcar
+          (lambda (candidate)
+            (format "%s(%s)" (cdr candidate) (car candidate)))
+          (aspk/app-wubi-completion))
+         0)))
 
-;; (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-tooltip)
-;; (aspk/advice-add 'quail-input-method 'before 'aspk/app-wubi-create-tooltip)
-;; (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-delete-tooltip)
+;; (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
+;; (aspk/advice-add 'quail-input-method 'before 'aspk/app-wubi-create-selectlist)
+;; (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-delete-selectlist)
 ;; (aspk/advice-delete 'quail-input-method)
 
 (aspk/advice-delete 'quail-translate-key)
 (aspk/advice-delete 'quail-update-translation)
 
-(aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-tooltip)
-(aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-tooltip)
+(aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
+(aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-selectlist)
 
-(defun aspk/app-wubi-display-tooltip (&rest args)
-  (let  ((rst (aspk/tooltip-select aspk/app-wubi-tooltip)))
+(defun aspk/app-wubi-display-selectlist (&rest args)
+  (aspk/selectlist-show aspk/app-wubi-selectlist)
+  (let  ((rst (aspk/selectlist-select aspk/app-wubi-selectlist)))
     (tracel rst)
     (when rst
       (quail-abort-translation)
-      (insert (cdr rst)))))
+      (insert rst))))
 
 ;; (aspk/keybind-temporary-keymap
 ;;  (list
@@ -44,11 +44,11 @@
 ;;  '(setq overriding-local-map nil))
 
 
-(defun aspk/app-wubi-hide-tooltip (&rest args)
-  (aspk/tooltip-hide aspk/app-wubi-tooltip))
+(defun aspk/app-wubi-hide-selectlist (&rest args)
+  (aspk/selectlist-hide aspk/app-wubi-selectlist))
 
-(defun aspk/app-wubi-delete-tooltip (&rest args)
-  (aspk/tooltip-delete aspk/app-wubi-tooltip))
+(defun aspk/app-wubi-delete-selectlist (&rest args)
+  (aspk/selectlist-delete aspk/app-wubi-selectlist))
 
 (defun aspk/app-wubi-completion (&rest args)
   (let* ((key quail-current-key)

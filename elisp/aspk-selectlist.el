@@ -1,6 +1,8 @@
 (require 'aspk-tooltip)
 (require 'aspk-keybind)
 (require 'aspk-debug)
+
+;; start and end start form 0, end not included. current-select start form 1.
 (defun aspk/selectlist-create (row column candidates start &optional end)
   (traceh row column candidates)
   (let* ((idx 1)
