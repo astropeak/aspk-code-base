@@ -19,13 +19,14 @@
 ;; (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
 ;; (aspk/advice-add 'quail-input-method 'before 'aspk/app-wubi-create-selectlist)
 ;; (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-delete-selectlist)
-;; (aspk/advice-delete 'quail-input-method)
 
 (aspk/advice-delete 'quail-translate-key)
 (aspk/advice-delete 'quail-update-translation)
+(aspk/advice-delete 'quail-input-method)
 
 (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
 (aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-selectlist)
+(aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-hide-selectlist)
 
 (defun aspk/app-wubi-display-selectlist (&rest args)
   (aspk/selectlist-show aspk/app-wubi-selectlist)
