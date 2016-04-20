@@ -41,16 +41,22 @@
 ;; If the macro is called in a function, then the... maybe it is right
 (defmacro aspk/trace (lvl &rest args-syms)
   ;; TODO: the parameter may be excutes more than one times
-  `(and
-    (<= ,lvl *dbg-current-level*)
-    (let ((str ,(format "%S:%S:%S:\t" (file-name-nondirectory (buffer-file-name))
-                        (dbg-find-current-function-name) (line-number-at-pos))))
-      ;;(message "args-syms(in let)=%s" (quote ,args-syms))
-      (dolist (s (quote ,args-syms))
-        ;;(dbg TRIV s)
-        ;;(message "s=%s" s)
-        (setq str (concat str (format "%S=%S, " s (symbol-value s)))))
-      (message "%S" (substring str 0 (- (length str) 2))))))
+  (let ((temp-var (make-symbol "str")))
+    `(and
+      (<= ,lvl *dbg-current-level*)
+      (let ((,temp-var ,(format "%s:%s:%s:\t" (file-name-nondirectory (or (buffer-file-name) ""))
+                          (dbg-find-current-function-name) (line-number-at-pos))))
+        ;;(message "args-syms(in let)=%s" (quote ,args-syms))
+        (dolist (s (quote ,args-syms))
+          ;;(dbg TRIV s)
+          ;;(message "s=%s" s)
+          (setq ,temp-var (concat ,temp-var (format "%s=%s, " s (symbol-value s)))))
+        (message "%s" (substring ,temp-var 0 (- (length ,temp-var) 2)))))))
+
+;; (setq str "AAA")
+;; (setq a (make-symbol "str"))
+;; (set a "BBB")
+;; (eq  (make-symbol "str"))
 
 (defmacro tracee (&rest args-syms)
   `(aspk/trace ERROR ,@args-syms))

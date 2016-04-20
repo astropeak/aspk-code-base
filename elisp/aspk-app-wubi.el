@@ -32,7 +32,7 @@
 (defun aspk/app-wubi-display-selectlist (&rest args)
   (aspk/selectlist-show aspk/app-wubi-selectlist)
   (let  ((rst (aspk/selectlist-select aspk/app-wubi-selectlist)))
-    ;; (tracel rst)
+    (tracel rst)
     (if rst  ;;if rst not nil, then the user has make a selection
         (progn
           (quail-abort-translation)
