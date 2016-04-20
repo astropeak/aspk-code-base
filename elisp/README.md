@@ -1,7 +1,7 @@
 # Elisp
 Base codes for emacs lisp.
 
-##The file name meaning:
+## File name meaning
 aspk-PACKAEG.el: new implemented common functions for PACKAGE
 
 aspk-PACKAGE-example.el: usage examples for these functions.
@@ -14,5 +14,9 @@ aspk-PACKAGE-other-implementation.el: other implementation of these functions.
 
 aspk-usage-PACKAGE.el: usage of an third party(or exist) package.
 
+aspk-app-APPNAME.el: an app.
+
+aspk-*.org: document file for *.
+
 ## app wubi
-[wubi input method for Chinese character](/aspk-app-wubi.org)
+[wubi input method for Chinese character](./aspk-app-wubi.org)
