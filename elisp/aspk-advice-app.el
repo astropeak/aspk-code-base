@@ -31,7 +31,7 @@
 ;; (aspk/get-function-names "overlay")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^company.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^make-overlay$")
-;; (aspk/advice-app-log-functions-enter-and-exit "^insert$")
+;; (aspk/advice-app-log-functions-enter-and-exit "^quail.*")
 
 (defun aspk/advice-app-dislog-functions-enter-and-exit (pattern)
   (progn
@@ -39,5 +39,5 @@
     (dolist (func aspk/function-list)
       (ad-unadvise func))))
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^company.*")
-;; (aspk/advice-app-dislog-functions-enter-and-exit "^insert$")
+;; (aspk/advice-app-dislog-functions-enter-and-exit "^quail.*")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^make-overlay$")

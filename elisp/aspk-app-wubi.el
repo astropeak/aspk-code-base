@@ -22,10 +22,12 @@
 ;; (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-delete-selectlist)
 
 (aspk/advice-delete 'quail-translate-key)
+(aspk/advice-delete 'quail-start-translation)
 (aspk/advice-delete 'quail-update-translation)
 (aspk/advice-delete 'quail-input-method)
 
 (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
+(aspk/advice-add 'quail-start-translation 'after 'aspk/app-wubi-input-english-wapper)
 (aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-selectlist)
 (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-hide-selectlist)
 
@@ -115,3 +117,23 @@
     (reverse rst)))
 
 
+(defun aspk/app-wubi-input-english-wapper (&rest args)
+  (aspk/keybind-temporary-keymap-highest-priority
+   '(("z" (progn
+            ;; (quail-abort-translation)
+            (aspk/app-wubi-input-english)) 1))))
+
+(defun aspk/app-wubi-input-english ()
+  (aspk/keybind-temporary-keymap-highest-priority
+   (append '((return (quail-abort-translation) 1)
+   ;; (append '((return (backward-delete-char-untabify 1) 1)
+             (backspace (backward-delete-char-untabify 1)))
+           (mapcar (lambda (x)
+                     (let ((s (make-string 1 x)))
+                       (list s `(insert ,s)))
+                     )
+                   " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"))))
+
+;; (aspk/app-wubi-input-english-wapper)
+;; (aspk/app-wubi-input-english)
+;; (mapcar (lambda(x) x) "abc")
