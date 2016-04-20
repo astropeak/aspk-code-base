@@ -1,6 +1,7 @@
 (require 'aspk-advice)
 (require 'aspk-window)
 (require 'aspk-selectlist)
+(require 'aspk-keybind)
 
 (setq aspk/app-wubi-selectlist nil)
 (defun aspk/app-wubi-create-selectlist (&rest args)
@@ -31,10 +32,15 @@
 (defun aspk/app-wubi-display-selectlist (&rest args)
   (aspk/selectlist-show aspk/app-wubi-selectlist)
   (let  ((rst (aspk/selectlist-select aspk/app-wubi-selectlist)))
-    (tracel rst)
-    (when rst
-      (quail-abort-translation)
-      (insert (substring rst 0 (string-match "(" rst))))))
+    ;; (tracel rst)
+    (if rst  ;;if rst not nil, then the user has make a selection
+        (progn
+          (quail-abort-translation)
+          (insert (substring rst 0 (string-match "(" rst))))
+      (aspk/keybind-temporary-keymap-highest-priority
+       '((return (progn
+                   (quail-abort-translation)
+                   (insert quail-current-key)) 1))))))
 
 ;; (aspk/keybind-temporary-keymap
 ;;  (list
