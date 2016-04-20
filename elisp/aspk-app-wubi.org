@@ -1,13 +1,13 @@
 * 五笔输入法 
   基于wubi.el的改进。
-  1. 通过select list（选择列表）显示待选词。
+  1. 通过[select list（选择列表）](./aspk-selectlist.el)显示待选词。
 
      当前选择高亮。
 
      键绑定：C-f选择下一个，C-b选择前一个，数字直接选择，空格上屏，回车输入当前的输入的英文字母。
-     select listc通过overlay 实现。
+     select list通过overlay 实现。
   2. 中英文混输
 
      中文输入情况下，按下键z，进入英文输入状态（此时minibuer提示En mode）。按回车键返回中文输入状态。
-
+  3. [[aspk-selectlist.el][select list]]
   

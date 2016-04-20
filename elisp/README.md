@@ -18,5 +18,5 @@ aspk-app-APPNAME.el: an app.
 
 aspk-*.org: document file for *.
 
-## app wubi
-[wubi input method for Chinese character](./aspk-app-wubi.org)
+## Packages
+[五笔输入法](./aspk-app-wubi.org)
