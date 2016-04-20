@@ -48,13 +48,13 @@
          (prefix-newline (make-string (max 0 (- row end-row))
                                       ?
                                       ))
-         (prefix (make-string (- (+ pos1 column) begin) ? )))
+         (prefix-blank (make-string (- (+ pos1 column) begin) ? ))
+         (prefix (concat prefix-newline prefix-blank)))
     (add-text-properties 0 (length str) '(face aspk/tooltip-face)
                          str)
-    (overlay-put ov 'content
-                 (aspk/tooltip--replace-line
-                  (buffer-substring begin end)
-                  (concat prefix-newline prefix str)))
+    (overlay-put ov 'aspk/tooltip-prefix prefix)
+    (overlay-put ov 'aspk/tooltip-content str)
+    (overlay-put ov 'aspk/tooltip-background-content (buffer-substring begin end))
     (overlay-put ov 'aspk/tooltip-row row)
     (overlay-put ov 'aspk/tooltip-column column)
     ov))
@@ -63,7 +63,11 @@
   "Show the tooltip `tooptip'"
   (overlay-put tooltip 'invisible t)
   (overlay-put tooltip 'after-string
-               (overlay-get tooltip 'content)))
+               (aspk/tooltip--replace-line
+                (overlay-get tooltip 'aspk/tooltip-background-content)
+                (concat
+                 (overlay-get tooltip 'aspk/tooltip-prefix)
+                 (overlay-get tooltip 'aspk/tooltip-content)))))
 
 ;; (defun aspk/tooltip-select (tooltip)
 ;;   "Select an item form the current tooltip, and reuturn that value"
@@ -95,7 +99,7 @@
 
 (defun aspk/tooltip-set (tooltip property value)
   ;; (when (eq property 'content)
-    ;; (overlay-put tooltip 'after-string value))
+  ;; (overlay-put tooltip 'after-string value))
   (overlay-put tooltip property value))
 
 (defun aspk/tooltip-get (tooltip property)

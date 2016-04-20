@@ -45,7 +45,7 @@
     (aspk/tooltip-set tt 'end end)
     (aspk/tooltip-set tt 'current-select 1)
     (aspk/tooltip-set tt 'candidates-pos (reverse pos))
-    (aspk/tooltip-set tt 'orig-content (aspk/tooltip-get tt 'content))
+    (aspk/selectlist-highlight tt 1)
     tt))
 
 (defface aspk/selectlist-highlight-face-1
@@ -60,32 +60,32 @@
   "High light selectlist's `idx' candidate"
   (let ((candidates (aspk/tooltip-get selectlist 'candidates))
         (pos (nth (- idx 1) (aspk/tooltip-get selectlist 'candidates-pos)))
-        (content (aspk/tooltip-get selectlist 'orig-content)))
+        (content (aspk/tooltip-get selectlist 'aspk/tooltip-content)))
     (tracel candidates pos content)
     (aspk/selectlist-unhighlight selectlist)
     (add-text-properties (car pos) (cdr pos) '(face aspk/selectlist-highlight-face-1) content)
     ;; (add-text-properties (car pos) (cdr pos) '(face bold) content)
     (aspk/tooltip-set selectlist 'current-select idx)
-    (aspk/tooltip-set selectlist 'content content)))
+    (aspk/tooltip-set selectlist 'aspk/tooltip-content content))
+  (aspk/selectlist-show selectlist))
 
 (defun aspk/selectlist-unhighlight (selectlist)
   "Unhigh light selectlist's hightlight candidate"
   (let ((candidates (aspk/tooltip-get selectlist 'candidates))
         (pos (nth (- (aspk/tooltip-get selectlist 'current-select) 1)
                   (aspk/tooltip-get selectlist 'candidates-pos)))
-        (content (aspk/tooltip-get selectlist 'content)))
+        (content (aspk/tooltip-get selectlist 'aspk/tooltip-content)))
     (tracel candidates pos content)
     ;; (add-text-properties (car pos) (cdr pos) '(face aspk/selectlist-highlight-face) content)
     (add-text-properties (car pos) (cdr pos) '(face aspk/tooltip-face) content)
     (aspk/tooltip-set selectlist 'current-select idx)
-    (aspk/tooltip-set selectlist 'content content)))
+    (aspk/tooltip-set selectlist 'aspk/tooltip-content content))
+  (aspk/selectlist-show selectlist))
 
 (defun aspk/selectlist-show (selectlist)
   "Select an item form the current select list, and return that value"
   ;; (aspk/selectlist-unhighlight selectlist)
-  (aspk/tooltip-show selectlist)
-  (aspk/selectlist-highlight selectlist
-                             (aspk/tooltip-get selectlist 'current-select)))
+  (aspk/tooltip-show selectlist))
 
 (defun aspk/selectlist-highlight-next-one (selectlist)
   (let ((idx (aspk/tooltip-get selectlist 'current-select))
@@ -122,7 +122,9 @@
              (mapcar (lambda (x)
                        (incf aspk/selectlist-tmp)
                        (list (format "%d" aspk/selectlist-tmp)
-                             `(nth ,(- aspk/selectlist-tmp 1) candidates)
+                             `(progn
+                                (aspk/selectlist-highlight ,selectlist ,aspk/selectlist-tmp)
+                                (nth ,(- aspk/selectlist-tmp 1) candidates))
                              1))
                      candidates))
      )))
