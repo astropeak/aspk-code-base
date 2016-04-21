@@ -14,7 +14,7 @@
          (aspk/window-column (point))
          (mapcar
           (lambda (candidate)
-            (format "%s(%s)"
+            (format "%s"
                     (if (integerp (cdr candidate))
                         (make-string 1 (cdr candidate))
                       (cdr candidate))

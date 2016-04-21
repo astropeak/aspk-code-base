@@ -105,4 +105,14 @@
 (defun aspk/tooltip-get (tooltip property)
   (overlay-get tooltip property))
 
+
+
+(defun aspk/tooltip-create-no-wrap (row column str)
+  "Same as aspk/tooltip-create, but adjust column if tooltip can be displayed fully in current line"
+  (let ((ws (string-width str))
+        (ww (window-width)))
+    (when (> ws (- ww column))
+      (setq column (max 0 (- ww ws))))
+    (aspk/tooltip-create row column str)))
+
 (provide 'aspk-tooltip)

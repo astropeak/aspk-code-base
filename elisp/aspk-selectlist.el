@@ -6,7 +6,7 @@
 (defun aspk/selectlist-create (row column candidates start &optional end)
   (tracem row column candidates)
   (let* ((idx 1)
-         (str (concat "1. " (nth start candidates)))
+         (str (concat "1." (nth start candidates)))
          tt
          t1
          t2 t3
@@ -28,9 +28,9 @@
       (tracel start end t1 t2 pos last-pos idx)
       (incf idx)
       (setq t1 (nth start candidates))
-      (setq t3 (format "  %d. %s" idx t1))
-      (setq t2 (- (length t3) 2))
-      (setq last-pos (+ 2 last-pos)) ;; 2 is length of the spliter "  " for candidates
+      (setq t3 (format " %d.%s" idx t1))
+      (setq t2 (- (length t3) 1))
+      (setq last-pos (+ 1 last-pos)) ;; 2 is length of the spliter "  " for candidates
 
       (push (cons last-pos (+ last-pos t2)) pos)
       (setq last-pos (+ last-pos t2))
@@ -38,7 +38,7 @@
       (setq str (concat str t3))
       (incf start))
 
-    (setq tt (aspk/tooltip-create row column str))
+    (setq tt (aspk/tooltip-create-no-wrap row column str))
     (tracem idx str)
     (aspk/tooltip-set tt 'candidates candidates)
     (aspk/tooltip-set tt 'start orig-start)
