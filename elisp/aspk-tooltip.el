@@ -109,10 +109,6 @@
 
 (defun aspk/tooltip-create-no-wrap (row column str)
   "Same as aspk/tooltip-create, but adjust column if tooltip can be displayed fully in current line"
-  (let ((ws (string-width str))
-        (ww (window-width)))
-    (when (> ws (- ww column))
-      (setq column (max 0 (- ww ws))))
-    (aspk/tooltip-create row column str)))
+  (aspk/tooltip-create row (min column (max 0 (- (window-width) (string-width str)))) str))
 
 (provide 'aspk-tooltip)

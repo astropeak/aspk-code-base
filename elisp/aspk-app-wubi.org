@@ -11,4 +11,7 @@
      中文输入情况下，按下键z，进入英文输入状态（此时minibuer提示En mode）。按回车键返回中文输入状态。
 ** 安装
    先安装wubi.el，然后下载本库的整个elisp目录，并将该目录加入load-path. 最后 (require 'aspk-app-wubi)
-   
+** BUG & TODO
+*** 在有ovelay的区域上再显示，会没有高亮。
+*** 支持联想功能。
+*** 文件最后一个字符会被显示在select list的最后面。
