@@ -153,3 +153,5 @@
 ;; (aspk/app-wubi-input-english-wapper)
 ;; (aspk/app-wubi-input-english)
 ;; (mapcar (lambda(x) x) "abc")
+
+(provide 'aspk-app-wubi)

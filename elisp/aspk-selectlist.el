@@ -4,7 +4,7 @@
 
 ;; start and end start form 0, end not included. current-select start form 1.
 (defun aspk/selectlist-create (row column candidates start &optional end)
-  (traceh row column candidates)
+  (tracem row column candidates)
   (let* ((idx 1)
          (str (concat "1. " (nth start candidates)))
          tt
@@ -20,12 +20,12 @@
 
     (and (null end) (setq end 9999999))
 
-    (traceh start end t1 t2 pos last-pos idx)
+    (tracel start end t1 t2 pos last-pos idx)
     (setq end (min end (+ start 9) (length candidates)))
 
     (incf start)
     (while (< start end)
-      (traceh start end t1 t2 pos last-pos idx)
+      (tracel start end t1 t2 pos last-pos idx)
       (incf idx)
       (setq t1 (nth start candidates))
       (setq t3 (format "  %d. %s" idx t1))
@@ -39,7 +39,7 @@
       (incf start))
 
     (setq tt (aspk/tooltip-create row column str))
-    (traceh idx str)
+    (tracem idx str)
     (aspk/tooltip-set tt 'candidates candidates)
     (aspk/tooltip-set tt 'start orig-start)
     (aspk/tooltip-set tt 'end end)

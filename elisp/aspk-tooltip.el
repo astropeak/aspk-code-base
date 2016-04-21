@@ -24,7 +24,7 @@
 (defun aspk/tooltip-create (row column str)
   "Create a tooltip that will display at window row `row' and window column `column' the string `str'. And return that tooltip."
   ;; (save-excursion)
-  (traceh row column str)
+  (tracem row column str)
   (let* ((pos1 (save-excursion
                  (move-to-window-line row)
                  (point)))
