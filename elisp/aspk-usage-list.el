@@ -6,3 +6,6 @@
 ;; 使用append将多个list合并为一个list。参数必须全部是list。感觉名字叫concat更为合理。
 (append '((1 2 ) "3") a)
 
+(setq mylist '(1 2 3 4 5 6 7 8 9 0))
+(subseq 'mylist 2 8)
+

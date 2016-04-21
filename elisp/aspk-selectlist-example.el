@@ -1,6 +1,6 @@
 (require 'aspk-selectlist)
 
-(setq sl (aspk/selectlist-create 1 20 '("AA" "BB" "CC") 0 3))
+(setq sl (aspk/selectlist-create 1 20 '("AA" "BB" "CC" "DD" "EE" "FF" "GG" "HH") 5))
 
 (aspk/selectlist-show sl)
 
@@ -13,6 +13,8 @@
 (aspk/selectlist-highlight-previous-one sl)
 
 (aspk/selectlist-select sl)
+
+(aspk/selectlist-set-page sl 1)
 
 (overlay-get sl 'after-string)
 

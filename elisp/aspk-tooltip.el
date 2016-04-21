@@ -50,8 +50,7 @@
                                       ))
          (prefix-blank (make-string (- (+ pos1 column) begin) ? ))
          (prefix (concat prefix-newline prefix-blank)))
-    (add-text-properties 0 (length str) '(face aspk/tooltip-face)
-                         str)
+    (add-text-properties 0 (length str) '(face aspk/tooltip-face) str)
     (overlay-put ov 'aspk/tooltip-prefix prefix)
     (overlay-put ov 'aspk/tooltip-content str)
     (overlay-put ov 'aspk/tooltip-background-content (buffer-substring begin end))
@@ -97,8 +96,11 @@
   (delete-overlay tooltip)
   (setq tooltip nil))
 
+(defun aspk/tooltip-propertize-string (str)
+  (add-text-properties 0 (length str) '(face aspk/tooltip-face) str)
+  str)
+
 (defun aspk/tooltip-set (tooltip property value)
-  ;; (when (eq property 'content)
   ;; (overlay-put tooltip 'after-string value))
   (overlay-put tooltip property value))
 
