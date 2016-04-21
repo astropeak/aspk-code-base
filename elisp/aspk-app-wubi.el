@@ -2,6 +2,7 @@
 (require 'aspk-window)
 (require 'aspk-selectlist)
 (require 'aspk-keybind)
+;; (require 'aspk-app-wubi-quail-modified)
 
 (setq aspk/app-wubi-selectlist nil)
 (defun aspk/app-wubi-create-selectlist (&rest args)
@@ -13,7 +14,11 @@
          (aspk/window-column (point))
          (mapcar
           (lambda (candidate)
-            (format "%s(%s)" (cdr candidate) (car candidate)))
+            (format "%s(%s)"
+                    (if (integerp (cdr candidate))
+                        (make-string 1 (cdr candidate))
+                      (cdr candidate))
+                    (car candidate)))
           (aspk/app-wubi-completion))
          0)))
 
@@ -83,11 +88,12 @@
           (if (functionp l)
               (setq l (funcall l)))
           (dolist (elt (reverse l))     ; L = ((CHAR . DEFN) ....) ;
-            ;; (aspk/app-wubi-quail-completion-1 (concat key (string (car elt)))
-            ;; (cdr elt) indent)
+            (setq rst (append rst
+                              (aspk/app-wubi-quail-completion-1 (concat key (string (car elt))) (cdr elt) indent)))
             )
           ))
     ;; (message "A rst: %S" rst)
+    ;; (reverse rst)
     rst))
 
 (defun aspk/app-wubi-quail-completion-list-translations (map key indent)
