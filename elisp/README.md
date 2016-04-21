@@ -20,5 +20,7 @@ aspk-code-reading-PACKAGE.el: key codes selected form PACKAGE when reading its c
 
 aspk-*.org: document file for *.
 
-## Packages
+## Module notes
 [五笔输入法](./aspk-app-wubi.org)
+
+[advice](./aspk-advice.org)

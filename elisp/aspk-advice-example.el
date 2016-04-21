@@ -20,12 +20,23 @@
          (macroexpand '(aspk/advice-add 'previous-line 'after
                                         'aspk/pline-advice)))
 
+  (setq aspk/advice-example-tmp "AAA")
+
 (defun aspk/pline-around (func-name orig-func &rest args)
   ;; (message "func: %S" func-name)
-  (funcall orig-func)
+  (setq aspk/advice-example-tmp (funcall orig-func))
   234) ;; return value of this function will not change the original function's return value
 
+(defun bbbb (fn rt &rest args)
+  (message "fn:%s, rt:%s, args:%S" fn rt args)
+  "bbb")
+
+(bbbb "AA" "BB")
+
+(ad-unadvise 'bbbb)
+
 (aspk/advice-add 'previous-line 'around 'aspk/pline-around)
+(aspk/advice-add 'bbbb 'around 'aspk/pline-around)
 
 (ad-unadvise 'previous-line)
 
@@ -92,3 +103,27 @@
   (aspk/add-advice-to-function forward-line before aspk/enter-function)
   (aspk/add-advice-to-function forward-line after aspk/exit-function)
   )
+
+
+
+;; ad-return-value
+(aspk/advice-add 'previous-line 'after 'aaaa "CCCCC")
+
+(aspk/advice-add 'previous-line 'after 'aaaa 'bbbb)
+
+(ad-unadvise 'previous-line)
+
+
+;; (symbolp 'bbbb)
+;; (fboundp 'bbbb)
+;; look at debug-on-entry, defined at debug.el
+(defun aaaa (fn rt &rest args)
+  (setq cccc rt)
+  ;; (message "%S." rt)
+  )
+(setq dddd (funcall 'bbbb "AA" "BB"))
+
+(defun bbbb (fn rt &rest args)
+  (message "fn:%s, rt:%s, args:%S" fn rt args)
+  "bbb")
+
