@@ -17,8 +17,17 @@
                                                           aspk/pline-advice)))
 
 (message "%S"
-         (macroexpand `(aspk/add-advice-to-function previous-line after
-                                                    aspk/pline-advice)))
+         (macroexpand '(aspk/advice-add 'previous-line 'after
+                                        'aspk/pline-advice)))
+
+(defun aspk/pline-around (func-name orig-func &rest args)
+  ;; (message "func: %S" func-name)
+  (funcall orig-func)
+  234) ;; return value of this function will not change the original function's return value
+
+(aspk/advice-add 'previous-line 'around 'aspk/pline-around)
+
+(ad-unadvise 'previous-line)
 
 (setq aspk/trace-function-current-level 0)
 

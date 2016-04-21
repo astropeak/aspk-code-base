@@ -10,7 +10,9 @@
       (eval
        `(defadvice ,func (,pos aspk-add-trace)
           (let ((args (ad-get-args 0)))
-            (apply ',action ',func ad-return-value args))))
+            ,(if (equal pos 'around)
+                 `(apply ',action ',func (lambda () ad-do-it) args)
+               `(apply ',action ',func ad-return-value args)))))
       (ad-activate func))))
 
 ;; look at debug-on-entry, defined at debug.el
