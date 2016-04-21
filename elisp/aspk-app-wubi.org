@@ -1,6 +1,7 @@
 * 五笔输入法 
   基于wubi.el的改进。
   1. 通过[[aspk-selectlist.el][select list]]显示待选词。
+
      当前选择高亮。
 
      键绑定：C-f选择下一个，C-b选择前一个，数字直接选择，空格上屏，回车输入当前的输入的英文字母。
@@ -8,4 +9,6 @@
   2. 中英文混输
 
      中文输入情况下，按下键z，进入英文输入状态（此时minibuer提示En mode）。按回车键返回中文输入状态。
-  
+** 安装
+   先安装wubi.el，然后下载本库的整个elisp目录，并将该目录加入load-path. 最后 (require 'aspk-app-wubi)
+   

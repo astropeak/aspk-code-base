@@ -16,6 +16,8 @@ aspk-usage-PACKAGE.el: usage of an third party(or exist) package.
 
 aspk-app-APPNAME.el: an app.
 
+aspk-code-reading-PACKAGE.el: key codes selected form PACKAGE when reading its codes.
+
 aspk-*.org: document file for *.
 
 ## Packages
