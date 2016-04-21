@@ -138,6 +138,12 @@
                    " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"))
    "En mode"))
 
+(aspk/advice-add 'quail-input-string-to-events 'around
+                 (lambda (fn of str &rest args)
+                   (if (string-equal str "z")
+                       (message "cancle %s" fn)
+                     (funcall of))))
+
 ;; (aspk/app-wubi-input-english-wapper)
 ;; (aspk/app-wubi-input-english)
 ;; (mapcar (lambda(x) x) "abc")
