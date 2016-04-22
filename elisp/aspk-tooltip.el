@@ -12,10 +12,11 @@
 
 
 (defun aspk/tooltip--replace-line (old new)
-  (if (> (length new) (length old))
+  (message "WN:%d, WO:%d" (string-width new) (string-width old))
+  (if (> (string-width new) (string-width old))
       new
     (concat new
-            (substring old (length new)))))
+            (substring old (car (aspk/lisp-string-width-to-length old (string-width new)))))))
 
 ;; 目前只支持单行显示。
 ;; FIXED. 并且当ROW在 （point-max）范围外时无法工作。 但当 column在 max-column范围外时可以工作。
@@ -58,15 +59,31 @@
     (overlay-put ov 'aspk/tooltip-column column)
     ov))
 
+(defun aspk/tooltip--create-prefix (drow dcolumn)
+  (concat (make-string drow ?
+                       )
+          (make-string dcolumn ? )))
+
 (defun aspk/tooltip-show (tooltip)
-  "Show the tooltip `tooptip'"
-  (overlay-put tooltip 'invisible t)
-  (overlay-put tooltip 'after-string
-               (aspk/tooltip--replace-line
-                (overlay-get tooltip 'aspk/tooltip-background-content)
-                (concat
-                 (overlay-get tooltip 'aspk/tooltip-prefix)
-                 (overlay-get tooltip 'aspk/tooltip-content)))))
+  "Show the tooltip `tooltip'"
+  (let* ((row (aspk/tooltip-get tooltip 'aspk/tooltip-row))
+         (column (aspk/tooltip-get tooltip 'aspk/tooltip-column))
+         (tmp1 (aspk/window-position-to-buffer-point row column))
+         (begin (nth 0 tmp1))
+         (drow (nth 1 tmp1))
+         (dcolumn (nth 2 tmp1))
+         (tmp2 (aspk/window-row-point-range row))
+         (end (cdr tmp2))
+         )
+    (move-overlay tooltip begin end)
+
+    (overlay-put tooltip 'invisible t)
+    (overlay-put tooltip 'after-string
+                 (aspk/tooltip--replace-line
+                  (buffer-substring begin end)
+                  (concat
+                   (aspk/tooltip--create-prefix drow dcolumn)
+                   (overlay-get tooltip 'aspk/tooltip-content))))))
 
 ;; (defun aspk/tooltip-select (tooltip)
 ;;   "Select an item form the current tooltip, and reuturn that value"
@@ -86,7 +103,7 @@
 ;;      )))
 
 (defun aspk/tooltip-hide (tooltip)
-  "Hide the tooltip `tooptip'"
+  "Hide the tooltip `tooltip'"
   (overlay-put tooltip 'invisible nil)
   (overlay-put tooltip 'after-string ""))
 

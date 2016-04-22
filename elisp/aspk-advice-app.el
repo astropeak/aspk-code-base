@@ -31,8 +31,11 @@
 ;; (aspk/get-function-names "overlay")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^aspk/selectlist.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^aspk/tooltip.*")
+;; (aspk/advice-app-log-functions-enter-and-exit "^aspk/window.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^make-overlay$")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^quail.*")
+;; (aspk/advice-app-log-functions-enter-and-exit "^aspk/tooltip--replace-line$")
+
 
 (defun aspk/advice-app-dislog-functions-enter-and-exit (pattern)
   (progn
@@ -42,3 +45,4 @@
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^company.*")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^quail.*")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^make-overlay$")
+;; (aspk/advice-app-dislog-functions-enter-and-exit "^aspk/tooltip--replace-line$")
