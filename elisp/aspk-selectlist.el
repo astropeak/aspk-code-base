@@ -124,6 +124,20 @@ CANDIDATES, list of strings."
   ;; (aspk/selectlist-unhighlight selectlist)
   (aspk/tooltip-show selectlist))
 
+(defun aspk/selectlist-goto-previous-page (selectlist &optional highlight-index)
+  "Go to previous page.
+HIGHLIGHT-INDEX, number, the item that will be highlighted in the new page, default to 1. Start form 1"
+  (let ((page-index (aspk/tooltip-get selectlist 'page-index)))
+    (when (> page-index 0)
+      (aspk/selectlist-set-page selectlist (- page-index 1))
+      (aspk/selectlist-highlight selectlist (or highlight-index 1)))))
+
+(defun aspk/selectlist-goto-next-page (selectlist &optional highlight-index)
+  "Go to next page.
+HIGHLIGHT-INDEX, number, the item that will be highlighted in the new page, default to 1. Start form 1"
+  (aspk/selectlist-set-page selectlist (+ 1 (aspk/tooltip-get selectlist 'page-index)))
+  (aspk/selectlist-highlight selectlist (or highlight-index 1)))
+
 (defun aspk/selectlist-highlight-next-one (selectlist)
   (let ((idx (aspk/tooltip-get selectlist 'current-select))
         (current-candidates (aspk/tooltip-get selectlist 'current-candidates))
@@ -131,21 +145,17 @@ CANDIDATES, list of strings."
         (page-size (aspk/tooltip-get selectlist 'page-size)))
     (traceh idx current-candidates page-index page-size)
     (if (= idx page-size)
-        (aspk/selectlist-set-page selectlist (+ 1 page-index))
+        (aspk/selectlist-goto-next-page selectlist)
       (if (<= (+ idx 1) (min  page-size (length current-candidates)))
           (aspk/selectlist-highlight selectlist (+ idx 1))))))
 
 (defun aspk/selectlist-highlight-previous-one (selectlist)
-  (let ((idx (aspk/tooltip-get selectlist 'current-select))
-        (page-index (aspk/tooltip-get selectlist 'page-index))
-        )
+  (let ((idx (aspk/tooltip-get selectlist 'current-select)))
     (if (> idx 1)
         (aspk/selectlist-highlight selectlist (- idx 1))
-      (if (> page-index 0)
-          (progn
-            (aspk/selectlist-set-page selectlist (- page-index 1))
-            (aspk/selectlist-highlight selectlist
-                                       (aspk/tooltip-get selectlist 'page-size)))))))
+      (aspk/selectlist-goto-previous-page
+       selectlist
+       (aspk/tooltip-get selectlist 'page-size)))))
 
 (defun aspk/selectlist-do-select (selectlist)
   "reuturn current selected candidate value"
@@ -157,11 +167,17 @@ CANDIDATES, list of strings."
 
 (defun aspk/selectlist-select (selectlist)
   "Bind key to select."
-  (let ((candidates (aspk/tooltip-get selectlist 'candidates)))
+  (let ((candidates (aspk/tooltip-get selectlist 'candidates))
+        (last-element-index (min (aspk/tooltip-get selectlist 'page-size)
+                                 (length (aspk/tooltip-get selectlist 'current-candidates)))))
     (setq aspk/selectlist-tmp 0)
     (aspk/keybind-temporary-keymap-highest-priority
      (append `((C-f (aspk/selectlist-highlight-next-one ,selectlist))
                (C-b (aspk/selectlist-highlight-previous-one ,selectlist))
+               (C-a (aspk/selectlist-highlight ,selectlist 1))
+               (C-e (aspk/selectlist-highlight ,selectlist ,last-element-index))
+               (C-n (aspk/selectlist-goto-next-page ,selectlist))
+               (C-p (aspk/selectlist-goto-previous-page ,selectlist))
                (" " (aspk/selectlist-do-select ,selectlist) 1))
              ;; TODO: candidates start form start and end to end.
              (mapcar (lambda (x)
