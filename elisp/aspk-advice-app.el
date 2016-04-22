@@ -29,7 +29,8 @@
   (aspk/advice-add aspk/function-list 'after 'aspk/exit-function)
 )
 ;; (aspk/get-function-names "overlay")
-;; (aspk/advice-app-log-functions-enter-and-exit "^company.*")
+;; (aspk/advice-app-log-functions-enter-and-exit "^aspk/selectlist.*")
+;; (aspk/advice-app-log-functions-enter-and-exit "^aspk/tooltip.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^make-overlay$")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^quail.*")
 

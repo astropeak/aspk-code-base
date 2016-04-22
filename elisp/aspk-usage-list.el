@@ -7,5 +7,7 @@
 (append '((1 2 ) "3") a)
 
 (setq mylist '(1 2 3 4 5 6 7 8 9 0))
-(subseq 'mylist 2 8)
+;; this not work
+;; (subseq 'mylist 2 8)
+(length mylist)
 

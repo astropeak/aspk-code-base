@@ -14,7 +14,7 @@
 
 (aspk/selectlist-select sl)
 
-(aspk/selectlist-set-page sl 1)
+(aspk/selectlist-set-page sl 0)
 
 (overlay-get sl 'after-string)
 

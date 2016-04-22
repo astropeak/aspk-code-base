@@ -1,6 +1,7 @@
 (require 'aspk-tooltip)
 (require 'aspk-keybind)
 (require 'aspk-debug)
+(require 'aspk-lisp)
 
 ;; start and end start form 0, end not included. current-select start form 1.
 (defun aspk/selectlist-create (row column candidates count &optional start)
@@ -29,16 +30,19 @@ IDX, number, page number. Start form 0"
   (traceh selectlist idx)
   (let* ((candidates (aspk/tooltip-get selectlist 'candidates))
          (page-size (aspk/tooltip-get selectlist 'page-size))
-         (tmp (aspk/selectlist--make-list-string
-               (aspk/lisp-sublist candidates (* idx page-size) page-size)))
+         (current-candidates (aspk/lisp-sublist candidates (* idx page-size) page-size))
+         (tmp (aspk/selectlist--make-list-string current-candidates))
          (str (car tmp))
          (pos (cdr tmp)))
     (traceh str pos candidates page-size)
-    (aspk/tooltip-set selectlist 'page-index idx)
-    (aspk/tooltip-set selectlist 'aspk/tooltip-content
-                      (aspk/tooltip-propertize-string str))
-    (aspk/tooltip-set selectlist 'candidates-pos pos))
-  (aspk/selectlist-highlight selectlist 1))
+    (if (= 0 (length current-candidates))
+        (message "No more candidates for page %d" idx)
+      (aspk/tooltip-set selectlist 'page-index idx)
+      (aspk/tooltip-set selectlist 'current-candidates current-candidates)
+      (aspk/tooltip-set selectlist 'aspk/tooltip-content
+                        (aspk/tooltip-propertize-string str))
+      (aspk/tooltip-set selectlist 'candidates-pos pos)
+      (aspk/selectlist-highlight selectlist 1))))
 
 (defun aspk/selectlist--make-list-string (candidates)
   "Make CANDIDATES a select list string.
@@ -108,10 +112,10 @@ CANDIDATES, list of strings."
         (pos (nth (- (aspk/tooltip-get selectlist 'current-select) 1)
                   (aspk/tooltip-get selectlist 'candidates-pos)))
         (content (aspk/tooltip-get selectlist 'aspk/tooltip-content)))
-    (tracel candidates pos content)
-    ;; (add-text-properties (car pos) (cdr pos) '(face aspk/selectlist-highlight-face) content)
-    (add-text-properties (car pos) (cdr pos) '(face aspk/tooltip-face) content)
-    (aspk/tooltip-set selectlist 'current-select idx)
+    (traceh candidates pos content)
+    ;; (add-text-properties (car pos) (cdr pos) '(face aspk/tooltip-face) content)
+    ;; (aspk/tooltip-set selectlist 'current-select idx)
+    (aspk/tooltip-propertize-string content)
     (aspk/tooltip-set selectlist 'aspk/tooltip-content content))
   (aspk/selectlist-show selectlist))
 
@@ -122,17 +126,26 @@ CANDIDATES, list of strings."
 
 (defun aspk/selectlist-highlight-next-one (selectlist)
   (let ((idx (aspk/tooltip-get selectlist 'current-select))
-        ;; (page-index (aspk/tooltip-get selectlist 'page-index))
+        (current-candidates (aspk/tooltip-get selectlist 'current-candidates))
+        (page-index (aspk/tooltip-get selectlist 'page-index))
         (page-size (aspk/tooltip-get selectlist 'page-size)))
-    ;; (page-index (aspk/tooltip-get selectlist 'page-index))
-    (when (<= (+ idx 1) page-size)
-      (aspk/selectlist-highlight selectlist (+ idx 1)))))
+    (traceh idx current-candidates page-index page-size)
+    (if (= idx page-size)
+        (aspk/selectlist-set-page selectlist (+ 1 page-index))
+      (if (<= (+ idx 1) (min  page-size (length current-candidates)))
+          (aspk/selectlist-highlight selectlist (+ idx 1))))))
 
 (defun aspk/selectlist-highlight-previous-one (selectlist)
   (let ((idx (aspk/tooltip-get selectlist 'current-select))
+        (page-index (aspk/tooltip-get selectlist 'page-index))
         )
-    (when (> idx 1)
-      (aspk/selectlist-highlight selectlist (- idx 1)))))
+    (if (> idx 1)
+        (aspk/selectlist-highlight selectlist (- idx 1))
+      (if (> page-index 0)
+          (progn
+            (aspk/selectlist-set-page selectlist (- page-index 1))
+            (aspk/selectlist-highlight selectlist
+                                       (aspk/tooltip-get selectlist 'page-size)))))))
 
 (defun aspk/selectlist-do-select (selectlist)
   "reuturn current selected candidate value"
