@@ -4,37 +4,29 @@
 (require 'aspk-lisp)
 
 ;; start and end start form 0, end not included. current-select start form 1.
-(defun aspk/selectlist-create (row column candidates count &optional start)
-  (tracem row column candidates count start)
-  ;; (and (null end) (setq end 9999999))
-  ;; (setq end (min end (+ start 9) (length candidates)))
-  (when (null start) (setq start 0))
-
-  (tracem str pos)
+(defun aspk/selectlist-create (row column candidates &optional page-size)
+  "PAGE-SIZE, number, maximum number of elements in a page."
+  (tracem row column candidates page-size start)
+  (or page-size (setq page-size 9999999))
   (let (tt)
     (setq tt (aspk/tooltip-create-no-wrap row column ""))
-    (aspk/tooltip-set tt 'page-size count)
+    (aspk/tooltip-set tt 'page-size page-size)
     (aspk/tooltip-set tt 'candidates candidates)
-    ;; (aspk/tooltip-set tt 'start start)
-    ;; (aspk/tooltip-set tt 'end end)
     (aspk/tooltip-set tt 'current-select 1)
-    ;; (aspk/tooltip-set tt 'candidates-pos (reverse pos))
-
     (aspk/selectlist-set-page tt 0)
-
     tt))
 
 (defun aspk/selectlist-set-page (selectlist idx)
   "Set current page index to IDX.
 IDX, number, page number. Start form 0"
-  (traceh selectlist idx)
+  (tracem selectlist idx)
   (let* ((candidates (aspk/tooltip-get selectlist 'candidates))
          (page-size (aspk/tooltip-get selectlist 'page-size))
          (current-candidates (aspk/lisp-sublist candidates (* idx page-size) page-size))
          (tmp (aspk/selectlist--make-list-string current-candidates))
          (str (car tmp))
          (pos (cdr tmp)))
-    (traceh str pos candidates page-size)
+    (tracel str pos candidates page-size)
     (if (= 0 (length current-candidates))
         (message "No more candidates for page %d" idx)
       (aspk/tooltip-set selectlist 'page-index idx)
@@ -94,11 +86,11 @@ CANDIDATES, list of strings."
 
 (defun aspk/selectlist-highlight (selectlist idx)
   "High light selectlist's `idx' candidate"
-  (traceh selectlist idx)
+  (tracem selectlist idx)
   (let ((candidates (aspk/tooltip-get selectlist 'candidates))
         (pos (nth (- idx 1) (aspk/tooltip-get selectlist 'candidates-pos)))
         (content (aspk/tooltip-get selectlist 'aspk/tooltip-content)))
-    (traceh candidates pos content)
+    (tracel candidates pos content)
     (aspk/selectlist-unhighlight selectlist)
     (add-text-properties (car pos) (cdr pos) '(face aspk/selectlist-highlight-face-1) content)
     ;; (add-text-properties (car pos) (cdr pos) '(face bold) content)
@@ -112,7 +104,7 @@ CANDIDATES, list of strings."
         (pos (nth (- (aspk/tooltip-get selectlist 'current-select) 1)
                   (aspk/tooltip-get selectlist 'candidates-pos)))
         (content (aspk/tooltip-get selectlist 'aspk/tooltip-content)))
-    (traceh candidates pos content)
+    (tracel candidates pos content)
     ;; (add-text-properties (car pos) (cdr pos) '(face aspk/tooltip-face) content)
     ;; (aspk/tooltip-set selectlist 'current-select idx)
     (aspk/tooltip-propertize-string content)
@@ -143,7 +135,7 @@ HIGHLIGHT-INDEX, number, the item that will be highlighted in the new page, defa
         (current-candidates (aspk/tooltip-get selectlist 'current-candidates))
         (page-index (aspk/tooltip-get selectlist 'page-index))
         (page-size (aspk/tooltip-get selectlist 'page-size)))
-    (traceh idx current-candidates page-index page-size)
+    (tracel idx current-candidates page-index page-size)
     (if (= idx page-size)
         (aspk/selectlist-goto-next-page selectlist)
       (if (<= (+ idx 1) (min  page-size (length current-candidates)))
@@ -163,6 +155,7 @@ HIGHLIGHT-INDEX, number, the item that will be highlighted in the new page, defa
         (candidates (aspk/tooltip-get selectlist 'candidates))
         (page-size (aspk/tooltip-get selectlist 'page-size))
         (page-index (aspk/tooltip-get selectlist 'page-index)))
+    (tracel idx page-index page-size)
     (nth (+ (* page-index page-size) idx -1) candidates)))
 
 (defun aspk/selectlist-select (selectlist)
@@ -180,15 +173,19 @@ HIGHLIGHT-INDEX, number, the item that will be highlighted in the new page, defa
                (C-p (aspk/selectlist-goto-previous-page ,selectlist))
                (" " (aspk/selectlist-do-select ,selectlist) 1))
              ;; TODO: candidates start form start and end to end.
-             (mapcar (lambda (x)
-                       (incf aspk/selectlist-tmp)
-                       (list (format "%d" aspk/selectlist-tmp)
+             (let ((i 1)
+                   (page-size (aspk/tooltip-get selectlist 'page-size))
+                   rst)
+               (while (<= i page-size)
+                 (push (list (format "%d" i)
                              `(progn
-                                (aspk/selectlist-highlight ,selectlist ,aspk/selectlist-tmp)
-                                (nth ,(- aspk/selectlist-tmp 1) candidates))
-                             1))
-                     candidates))
-     )))
+                                (aspk/selectlist-highlight ,selectlist ,i)
+                                (aspk/selectlist-do-select ,selectlist))
+                             1)
+                       rst)
+                 (incf i))
+               (tracel rst page-size)
+               rst)))))
 
 ;; (append '((1 2)) '(2 3 )  '((4 5) (6 7)))
 

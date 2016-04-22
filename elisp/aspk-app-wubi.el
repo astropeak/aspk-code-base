@@ -20,7 +20,7 @@
                       (cdr candidate))
                     (car candidate)))
           (aspk/app-wubi-completion))
-         0)))
+         9)))
 
 ;; (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
 ;; (aspk/advice-add 'quail-input-method 'before 'aspk/app-wubi-create-selectlist)
