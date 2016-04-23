@@ -9,6 +9,39 @@
       (cl-decf row))
     (cons (+ col (window-hscroll)) row)))
 
+(defun aspk/window-visible-point-range ()
+  "Return value: (min-point . max-point),  point range in window display area"
+  (let ((a (car (aspk/window-row-point-range 0)))
+        (b (cdr (aspk/window-row-point-range (aspk/window-height)))))
+    (cons a b)))
+
+;; (apropos "window.*height")
+;; (company--window-height)
+;; (window-buffer-height
+
+;; Copy form company
+(defsubst aspk/window-height ()
+  (if (fboundp 'window-screen-lines)
+      (floor (window-screen-lines))
+    (window-body-height)))
+
+(defsubst aspk/window-width ()
+  (let ((ww (window-body-width)))
+    ;; Account for the line continuation column.
+    (when (zerop (cadr (window-fringes)))
+      (cl-decf ww))
+    (unless (or (display-graphic-p)
+                (version< "24.3.1" emacs-version))
+      ;; Emacs 24.3 and earlier included margins
+      ;; in window-width when in TTY.
+      (cl-decf ww
+               (let ((margins (window-margins)))
+                 (+ (or (car margins) 0)
+                    (or (cdr margins) 0)))))
+    ww))
+
+
+;; BUG: the function don't return uniform value. When pos not in display area, it will return (0)
 (defun aspk/window-col-row (&optional pos)
   "Get window column and row at point `pos' as a cons (col . row). If `pos' ommited, return current point. Returned col and row both start from 0"
   (aspk/window--posn-col-row (posn-at-point pos)))
@@ -49,7 +82,7 @@ Return value: (point drow dcolumn). Because the window position may exceed buffe
            (pos-end (cdr tmp1))
            (begin (progn (move-to-window-line row)
                          (min (point-max) (+ column (point)))))
-           (tmp (aspk/window-col-row (point-max)))
+           (tmp (aspk/window-col-row (cdr (aspk/window-visible-point-range))))
            (last-visible-row (cdr tmp))
            (last-visible-column (car tmp))
            (begin)
