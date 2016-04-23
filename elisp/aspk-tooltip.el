@@ -26,35 +26,8 @@
   "Create a tooltip that will display at window row `row' and window column `column' the string `str'. And return that tooltip."
   ;; (save-excursion)
   (tracem row column str)
-  (let* ((pos1 (save-excursion
-                 (move-to-window-line row)
-                 (point)))
-         (pos2 (save-excursion
-                 (move-to-window-line (1+ row))
-                 (point)))
-         (begin (save-excursion
-                  (if (> pos2 pos1)
-                      (min (+ pos1 column) (- pos2 1))
-                    pos1)))
-         ;; (move-to-column column) ;; the functon ignores line-continuation
-         (end (save-excursion
-                (if (> pos2 pos1)
-                    (- pos2 1)
-                  pos1)))
-         (ov (make-overlay begin end))
-         (last-visible-row1 (aspk/window-row (point-max)))
-         (end-row (if last-visible-row1
-                      last-visible-row1
-                    99999))
-         (prefix-newline (make-string (max 0 (- row end-row))
-                                      ?
-                                      ))
-         (prefix-blank (make-string (- (+ pos1 column) begin) ? ))
-         (prefix (concat prefix-newline prefix-blank)))
-    (add-text-properties 0 (length str) '(face aspk/tooltip-face) str)
-    (overlay-put ov 'aspk/tooltip-prefix prefix)
+  (let ((ov (make-overlay 0 0)))
     (overlay-put ov 'aspk/tooltip-content str)
-    (overlay-put ov 'aspk/tooltip-background-content (buffer-substring begin end))
     (overlay-put ov 'aspk/tooltip-row row)
     (overlay-put ov 'aspk/tooltip-column column)
     ov))
