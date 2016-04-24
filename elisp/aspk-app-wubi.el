@@ -7,7 +7,7 @@
 (setq aspk/app-wubi-selectlist nil)
 (defun aspk/app-wubi-create-selectlist (&rest args)
   (when (overlayp aspk/app-wubi-selectlist)
-    (aspk/selectlist-hide aspk/app-wubi-selectlist))
+    (aspk/selectlist-delete aspk/app-wubi-selectlist))
   (setq aspk/app-wubi-selectlist
         (aspk/selectlist-create
          (+ (aspk/window-row (point)) 1)

@@ -1,0 +1,64 @@
+- quail-input-method                                             8663  90%
+ - apply                                                         8663  90%
+  - ad-Advice-quail-input-method                                 8663  90%
+   - #<compiled 0x268b79d>                                       8663  90%
+    - quail-start-translation                                    8659  90%
+     - apply                                                     8659  90%
+      - ad-Advice-quail-start-translation                        8659  90%
+       - #<compiled 0x266e7ab>                                   8491  88%
+        - call-interactively                                     8482  88%
+         - quail-self-insert-command                             8391  87%
+          - byte-code                                            8391  87%
+           - quail-translate-key                                 5471  57%
+            - apply                                              5471  57%
+             - ad-Advice-quail-translate-key                     5471  57%
+              - apply                                            5467  57%
+               - aspk/app-wubi-create-selectlist                 5467  57%
+                - aspk/selectlist-create                         5042  52%
+                 - aspk/selectlist-highlight                     5038  52%
+                  - aspk/selectlist-show                         2636  27%
+                   - aspk/tooltip-show                           2636  27%
+                    - aspk/window-position-to-buffer-point               2164  22%
+                     + aspk/window-visible-point-range               1271  13%
+                     + aspk/window-row-point-range                487   5%
+                       aspk/window-col-row                        184   1%
+                    + aspk/window-row-point-range                 448   4%
+                      aspk/tooltip--replace-line                   20   0%
+                  - aspk/selectlist-unhighlight                  2402  25%
+                   - aspk/selectlist-show                        2402  25%
+                    - aspk/tooltip-show                          2402  25%
+                     + aspk/window-position-to-buffer-point               1959  20%
+                     - aspk/window-row-point-range                431   4%
+                        aspk/window-move-to-line                  431   4%
+                       aspk/tooltip--replace-line                  12   0%
+                 + aspk/selectlist-set-page                         4   0%
+                + aspk/window-row                                 239   2%
+                + aspk/window-column                              182   1%
+                #<compiled 0x26ac1c3>                               1   0%
+           - quail-update-translation                            2920  30%
+            - apply                                              2920  30%
+             - ad-Advice-quail-update-translation                2920  30%
+              - apply                                            2908  30%
+               - aspk/app-wubi-display-selectlist                2908  30%
+                - aspk/selectlist-show                           2768  28%
+                 - aspk/tooltip-show                             2768  28%
+                  - aspk/window-position-to-buffer-point               2249  23%
+                   + aspk/window-visible-point-range               1299  13%
+                   + aspk/window-row-point-range                  563   5%
+                   + aspk/window-col-row                          156   1%
+                  + aspk/window-row-point-range                   507   5%
+                    aspk/tooltip--replace-line                     12   0%
+                + aspk/selectlist-select                          140   1%
+         + quail-delete-last-char                                  91   0%
+        + read-key-sequence                                         9   0%
+       + apply                                                    168   1%
+      byte-code                                                     4   0%
++ command-execute                                                 735   7%
++ ...                                                             100   1%
++ linum-update-current                                             29   0%
++ pointback-store-point                                            28   0%
++ timer-event-handler                                              17   0%
++ redisplay_internal (C function)                                   8   0%
++ aspk-set-mode-line-color                                          4   0%
++ yas--post-command-handler                                         4   0%
++ key-chord-input-method                                            1   0%

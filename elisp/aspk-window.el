@@ -64,36 +64,58 @@ Return value: the acturl row moved to. If different from ROW, then ROW exceed bu
     tmp))
 
 (defun aspk/window-row-point-range (row)
-  "Begining point and end point of window row ROW. The row should within point max.
-Return value: (start . end)."
+  "Begining point and end point of window row ROW.
+Return value: (real-row start end). real-row is the closest row to ROW, start and end are beginning point and end point of real-row. real-row will be different form ROW if ROW exceed point-max, and real-row is the row contains point-max"
   (save-excursion
-    (let ((pos1 (progn (aspk/window-move-to-line row) (point)))
-          (pos2 (progn (aspk/window-move-to-line (+ 1 row)) (point))))
-      (if (= pos1 pos2) ;;this is the end line
-          (cons pos1 (progn (end-of-line) (point)))
-        (cons pos1 (- pos2 1))))))
+    (let* ((real-row (aspk/window-move-to-line row))
+           (pos1 (point))
+           (real-row2 (if (= real-row row)
+                          (aspk/window-move-to-line (+ 1 row))
+                        real-row))
+           (pos2 (point)))
+      (if (= real-row row)
+          (if (= real-row real-row2)
+              (list real-row pos1 (progn (end-of-line) (point)))
+            (list real-row pos1 (- pos2 1)))
+        (list real-row pos1 (progn (end-of-line) (point)))))))
+
+;; (defun aspk/window-position-to-point (row column)
+;;   "Return value: number, the point "
+;;   (let* ((tmp1 (aspk/window-row-point-range row))
+;;          (str (buffer-substring (car tmp1) (cdr tmp2))))
+;;     (with-temp-buffer
+;;       (insert str)
+;;       (goto-char 0)
+;;       (move-to-column column)
+;;       (point))))
 
 (defun aspk/window-position-to-buffer-point (row column)
   "Convert window ROW and COLUMN position to the most closest buffer point.
 Return value: (point drow dcolumn). Because the window position may exceed buffer max point, so 'drow' and 'dcolumn' are row and column number differences between given window position and returned 'point'"
-  (save-excursion
-    (let* ((tmp1 (aspk/window-row-point-range row))
-           (pos-begin (car tmp1))
-           (pos-end (cdr tmp1))
-           (begin (progn (move-to-window-line row)
-                         (min (point-max) (+ column (point)))))
-           (tmp (aspk/window-col-row (cdr (aspk/window-visible-point-range))))
-           (last-visible-row (cdr tmp))
-           (last-visible-column (car tmp))
-           (begin)
-           (drow (max 0 (- row last-visible-row)))
-           (dcolumn))
-      (if (>= last-visible-row row)
-          (progn
-            (setq begin (min pos-end (+ pos-begin column)))
-            (setq dcolumn (- column (- begin pos-begin))))
-        (setq begin pos-end)
-        (setq dcolumn column))
-      (list begin drow dcolumn))))
+  (if nil
+      (list (point-max) 2 0)
+    (save-excursion
+      (let* ((tmp1 (aspk/window-row-point-range row)) ;; I think this should be column range. Because point ranage is a different things
+             (real-row (nth 0 tmp1))
+             (pos-begin (nth 1 tmp1))
+             (pos-end (nth 2 tmp1))
+             (begin)
+             (drow)
+             (dcolumn)
+             (str))
+        (if (= real-row row)
+            (progn
+              (setq drow 0)
+              (setq str (buffer-substring pos-begin pos-end))
+              (setq begin (+ pos-begin
+                             (with-temp-buffer
+                               (insert str)
+                               (setq dcolumn (- column (move-to-column column)))
+                               (point)))))
+          (setq begin pos-end)
+          (setq drow (- row real-row))
+          (setq dcolumn column))
+        (when (= dcolumn -1) (setq dcolumn 0))
+        (list begin drow dcolumn)))))
 
 (provide 'aspk-window)

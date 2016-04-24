@@ -39,24 +39,26 @@
 
 (defun aspk/tooltip-show (tooltip)
   "Show the tooltip `tooltip'"
-  (let* ((row (aspk/tooltip-get tooltip 'aspk/tooltip-row))
-         (column (aspk/tooltip-get tooltip 'aspk/tooltip-column))
+  (let* ((content (overlay-get tooltip 'aspk/tooltip-content))
+         (row (aspk/tooltip-get tooltip 'aspk/tooltip-row))
+         ;; adjust column so that the content will not wrap
+         (column (min (aspk/tooltip-get tooltip 'aspk/tooltip-column)
+                      (max 0 (- (window-width) (string-width content)))))
          (tmp1 (aspk/window-position-to-buffer-point row column))
          (begin (nth 0 tmp1))
          (drow (nth 1 tmp1))
          (dcolumn (nth 2 tmp1))
          (tmp2 (aspk/window-row-point-range row))
-         (end (cdr tmp2))
-         )
-    (move-overlay tooltip begin end)
+         ;; (row-begin (car tmp2))
+         (end (nth 2 tmp2))
+         (str (aspk/tooltip--replace-line
+               (buffer-substring begin end)
+               (concat
+                (aspk/tooltip--create-prefix drow dcolumn) content))))
 
+    (move-overlay tooltip begin end)
     (overlay-put tooltip 'invisible t)
-    (overlay-put tooltip 'after-string
-                 (aspk/tooltip--replace-line
-                  (buffer-substring begin end)
-                  (concat
-                   (aspk/tooltip--create-prefix drow dcolumn)
-                   (overlay-get tooltip 'aspk/tooltip-content))))))
+    (overlay-put tooltip 'after-string str)))
 
 ;; (defun aspk/tooltip-select (tooltip)
 ;;   "Select an item form the current tooltip, and reuturn that value"

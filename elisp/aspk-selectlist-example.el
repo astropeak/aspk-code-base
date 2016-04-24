@@ -1,9 +1,8 @@
 (require 'aspk-selectlist)
 
-(setq sl (aspk/selectlist-create 1 20 '("AA" "BB" "CC" "DD" "EE" "FF" "GG" "HH") 5))
+(setq sl (aspk/selectlist-create 27 20 '("AA" "BB" "CC" "DD" "EE" "FF" "GG" "HH") 5))
 
 (aspk/selectlist-show sl)
-
 (aspk/selectlist-hide sl)
 
 (aspk/selectlist-highlight sl 2)

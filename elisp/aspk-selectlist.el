@@ -189,4 +189,7 @@ HIGHLIGHT-INDEX, number, the item that will be highlighted in the new page, defa
 (defun aspk/selectlist-hide (selectlist)
   (aspk/tooltip-hide selectlist))
 
+(defun aspk/selectlist-delete (selectlist)
+  (aspk/tooltip-delete selectlist))
+
 (provide 'aspk-selectlist)
