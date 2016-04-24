@@ -12,7 +12,7 @@
 
 
 (defun aspk/tooltip--replace-line (old new)
-  (message "WN:%d, WO:%d" (string-width new) (string-width old))
+  ;; (message "WN:%d, WO:%d" (string-width new) (string-width old))
   (if (> (string-width new) (string-width old))
       new
     (concat new

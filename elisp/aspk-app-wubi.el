@@ -64,13 +64,14 @@
 (defun aspk/app-wubi-delete-selectlist (&rest args)
   (aspk/selectlist-delete aspk/app-wubi-selectlist))
 
+(setq aspk/app-wubi-max-completion-count 27)
+
 (defun aspk/app-wubi-completion (&rest args)
   (let* ((key quail-current-key)
-         (map (quail-lookup-key quail-current-key nil t))
-         (completion-list (aspk/app-wubi-quail-completion-1 key map 0)))
+         (map (quail-lookup-key quail-current-key nil t)))
     ;; (message "completion-list: %S" completion-list)
-    completion-list
-    ))
+    (setq aspk/app-wubi-current-completion-count 0)
+    (aspk/app-wubi-quail-completion-1 key map 0)))
 
 (defun aspk/app-wubi-quail-completion-1 (key map indent)
   "List all completions of KEY in MAP with indentation INDENT."
@@ -82,18 +83,23 @@
         (setq rst (aspk/app-wubi-quail-completion-list-translations map key (+ indent len 1)))
       ;; (insert " -\n")
       )
-    (setq indent (+ indent 2))
-    (if (and (cdr map) (< (/ (1- indent) 2) quail-completion-max-depth))
-        (let ((l (cdr map)))
-          (if (functionp l)
-              (setq l (funcall l)))
-          (dolist (elt (reverse l))     ; L = ((CHAR . DEFN) ....) ;
-            (setq rst (append rst
-                              (aspk/app-wubi-quail-completion-1 (concat key (string (car elt))) (cdr elt) indent)))
-            )
-          ))
+    ;; (traceh aspk/app-wubi-current-completion-count)
+    (when (<  aspk/app-wubi-current-completion-count
+              aspk/app-wubi-max-completion-count)
+      (setq indent (+ indent 2))
+      (if (and (cdr map) (< (/ (1- indent) 2) quail-completion-max-depth))
+          (let ((l (cdr map)))
+            (if (functionp l)
+                (setq l (funcall l)))
+            (dolist (elt (reverse l))     ; L = ((CHAR . DEFN) ....) ;
+              (setq rst (append rst
+                                (aspk/app-wubi-quail-completion-1 (concat key (string (car elt))) (cdr elt) indent)))
+              )
+            )))
     ;; (message "A rst: %S" rst)
     ;; (reverse rst)
+    (setq aspk/app-wubi-current-completion-count
+          (+ aspk/app-wubi-current-completion-count (length rst)))
     rst))
 
 (defun aspk/app-wubi-quail-completion-list-translations (map key indent)

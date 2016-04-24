@@ -14,6 +14,7 @@
     (aspk/tooltip-set tt 'candidates candidates)
     (aspk/tooltip-set tt 'current-select 1)
     (aspk/selectlist-set-page tt 0)
+    (aspk/selectlist-highlight tt 1)
     tt))
 
 (defun aspk/selectlist-set-page (selectlist idx)
@@ -34,7 +35,7 @@ IDX, number, page number. Start form 0"
       (aspk/tooltip-set selectlist 'aspk/tooltip-content
                         (aspk/tooltip-propertize-string str))
       (aspk/tooltip-set selectlist 'candidates-pos pos)
-      (aspk/selectlist-highlight selectlist 1))))
+      )))
 
 (defun aspk/selectlist--make-list-string (candidates)
   "Make CANDIDATES a select list string.
@@ -87,10 +88,9 @@ CANDIDATES, list of strings."
 (defun aspk/selectlist-highlight (selectlist idx)
   "High light selectlist's `idx' candidate"
   (tracem selectlist idx)
-  (let ((candidates (aspk/tooltip-get selectlist 'candidates))
-        (pos (nth (- idx 1) (aspk/tooltip-get selectlist 'candidates-pos)))
+  (let ((pos (nth (- idx 1) (aspk/tooltip-get selectlist 'candidates-pos)))
         (content (aspk/tooltip-get selectlist 'aspk/tooltip-content)))
-    (tracel candidates pos content)
+    (tracel pos content)
     (aspk/selectlist-unhighlight selectlist)
     (add-text-properties (car pos) (cdr pos) '(face aspk/selectlist-highlight-face-1) content)
     ;; (add-text-properties (car pos) (cdr pos) '(face bold) content)
@@ -100,11 +100,8 @@ CANDIDATES, list of strings."
 
 (defun aspk/selectlist-unhighlight (selectlist)
   "Unhigh light selectlist's hightlight candidate"
-  (let ((candidates (aspk/tooltip-get selectlist 'candidates))
-        (pos (nth (- (aspk/tooltip-get selectlist 'current-select) 1)
-                  (aspk/tooltip-get selectlist 'candidates-pos)))
-        (content (aspk/tooltip-get selectlist 'aspk/tooltip-content)))
-    (tracel candidates pos content)
+  (let ((content (aspk/tooltip-get selectlist 'aspk/tooltip-content)))
+    (tracel content)
     ;; (add-text-properties (car pos) (cdr pos) '(face aspk/tooltip-face) content)
     ;; (aspk/tooltip-set selectlist 'current-select idx)
     (aspk/tooltip-propertize-string content)
