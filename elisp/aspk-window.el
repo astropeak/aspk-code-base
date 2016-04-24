@@ -92,32 +92,30 @@ Return value: (real-row start end). real-row is the closest row to ROW, start an
 (defun aspk/window-position-to-buffer-point (row column)
   "Convert window ROW and COLUMN position to the most closest buffer point.
 Return value: (point drow dcolumn). Because the window position may exceed buffer max point, so 'drow' and 'dcolumn' are row and column number differences between given window position and returned 'point'"
-  (if nil
-      (list (point-max) 2 0)
-    (save-excursion
-      (let* ((tmp1 (aspk/window-row-point-range row)) ;; I think this should be column range. Because point ranage is a different things
-             (real-row (nth 0 tmp1))
-             (pos-begin (nth 1 tmp1))
-             (pos-end (nth 2 tmp1))
-             (begin)
-             (drow)
-             (dcolumn)
-             (str))
-        (if (= real-row row)
-            (progn
-              (setq drow 0)
-              (setq str (buffer-substring pos-begin pos-end))
-              (setq begin (+ pos-begin
-                             (with-temp-buffer
-                               (insert str)
-                               (setq dcolumn (max (- column (move-to-column column)) ;; (move-to-column 1) will return 2 if the char is a multiple characters.
-                                                  0))
-                               (- (point) 1)))) ;; point start form 1
-              )
-          (setq begin pos-end)
-          (setq drow (- row real-row))
-          (setq dcolumn column))
-        ;; (when (= dcolumn -1) (setq dcolumn 0))
-        (list begin drow dcolumn)))))
+  (save-excursion
+    (let* ((tmp1 (aspk/window-row-point-range row)) ;; I think this should be column range. Because point ranage is a different things
+           (real-row (nth 0 tmp1))
+           (pos-begin (nth 1 tmp1))
+           (pos-end (nth 2 tmp1))
+           (begin)
+           (drow)
+           (dcolumn)
+           (str))
+      (if (= real-row row)
+          (progn
+            (setq drow 0)
+            (setq str (buffer-substring pos-begin pos-end))
+            (setq begin (+ pos-begin
+                           (with-temp-buffer
+                             (insert str)
+                             (setq dcolumn (max (- column (move-to-column column)) ;; (move-to-column 1) will return 2 if the char is a multiple characters.
+                                                0))
+                             (- (point) 1)))) ;; point start form 1
+            )
+        (setq begin pos-end)
+        (setq drow (- row real-row))
+        (setq dcolumn column))
+      ;; (when (= dcolumn -1) (setq dcolumn 0))
+      (list begin drow dcolumn))))
 
 (provide 'aspk-window)
