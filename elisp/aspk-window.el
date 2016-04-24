@@ -110,12 +110,14 @@ Return value: (point drow dcolumn). Because the window position may exceed buffe
               (setq begin (+ pos-begin
                              (with-temp-buffer
                                (insert str)
-                               (setq dcolumn (- column (move-to-column column)))
-                               (point)))))
+                               (setq dcolumn (max (- column (move-to-column column)) ;; (move-to-column 1) will return 2 if the char is a multiple characters.
+                                                  0))
+                               (- (point) 1)))) ;; point start form 1
+              )
           (setq begin pos-end)
           (setq drow (- row real-row))
           (setq dcolumn column))
-        (when (= dcolumn -1) (setq dcolumn 0))
+        ;; (when (= dcolumn -1) (setq dcolumn 0))
         (list begin drow dcolumn)))))
 
 (provide 'aspk-window)
