@@ -1,0 +1,37 @@
+* pipe data to a command
+  #+BEGIN_SRC perl :results output
+  open my $fh, "|-", "sort" || die "can't open";
+  # the same thing
+  # open my $fh, "|sort" || die "can't open";
+  print $fh "CCC\nBBB\n111\n", "DDD";
+  print $fh "111\n";
+  print $fh "AAA\n";
+  # EOF will be triggered by closing the file.
+  close $fh;
+  #+END_SRC
+  
+  #+RESULTS:
+  : 111
+  : AAA
+  : BBB
+  : CCC
+  : DDD111
+  
+* get data form a command via pipe.
+  #+begin_src perl :results output
+  # output of `ls -l' will be piped to $fh. Then when read, the output is get
+  open my $fh, "ls -l|" || die "Can't open";
+  while (<$fh>){
+      print;
+  }
+  close $fh;
+  #+end_src
+  
+  #+RESULTS:
+  : total 4
+  : -rw-r--r--    1 luooofuq Administ     1373 Apr 25 16:08 aspk-usage-io-pipe.org
+  : -rw-r--r--    1 luooofuq Administ      490 Apr 25 15:48 aspk-usage-io-pipe.pl
+  : -rw-r--r--    1 luooofuq Administ     1315 Apr 25 14:25 aspk-usage-io.pl
+  : -rw-r--r--    1 luooofuq Administ       63 Apr 25 15:42 aspk-usage-misc.pl
+  : -rw-r--r--    1 luooofuq Administ       20 Apr 25 14:24 myfile
+  

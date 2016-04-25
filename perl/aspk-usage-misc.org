@@ -1,0 +1,9 @@
+* get current process number
+  $$ stores current process number
+  #+begin_src perl :results output
+  print "Process number: $$\n";
+  #+end_src
+
+  #+RESULTS:
+  : Process number: 8696
+
