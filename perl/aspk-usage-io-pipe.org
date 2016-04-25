@@ -17,7 +17,7 @@
   : CCC
   : DDD111
   
-* get data form a command via pipe.
+* get data form a command via pipe
   #+begin_src perl :results output
   # output of `ls -l' will be piped to $fh. Then when read, the output is get
   open my $fh, "ls -l|" || die "Can't open";
