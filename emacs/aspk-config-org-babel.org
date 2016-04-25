@@ -1,0 +1,14 @@
+* active babel languages
+  只有在load 了一个language后，才能执行这个language的代码块。 
+  #+begin_src elisp :results value
+  ;; active perl and emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((perl . t)
+     (emacs-lisp . t)
+     ))
+  #+end_src
+  
+  #+RESULTS:
+  | (perl . t) | (emacs-lisp . t) |
+  

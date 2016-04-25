@@ -1,0 +1,12 @@
+* Org Table
+** docs
+   http://orgmode.org/manual/Tables.html
+** insert a table
+   以'|'开头的行均被当作一个行。因此先输入一个'|'，然后输入 Field name。 手动输入第一行。
+   |AA|BB|CC|
+   
+   然后便可按TAB键，跳转到第二行， 输入内容，重复，直到输入所有 内容。
+
+   |- 然后TAB键可以输入一个分隔行。 
+** table minor mode
+   M-x orgtbl-mode RET.

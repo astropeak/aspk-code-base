@@ -59,6 +59,7 @@
    #+end_src
    
 ** 关闭文件
+   如果不显式关闭，则在脚本结束时，会自动关闭。当向另一个程序pipe数据时必须显式关闭，才能触发EOF。
    #+begin_src perl
    close filehandler
    #+end_src

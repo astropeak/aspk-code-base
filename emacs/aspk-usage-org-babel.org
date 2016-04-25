@@ -1,0 +1,56 @@
+* Org Babel
+  用于将代码块插入到ORG文件中。主要特色：
+  1. 执行代码块并显示结果。
+  2. 代码块输入参数
+  3. 代码块相互引用
+  4. 将一个代码块的结果传入另一个代码块。即使两个代码块的语言不同。
+  5. 文学编程
+     
+  以上功能均在ORG文件中完成，ORG只是一个文本文件。
+** docs
+   简短的介绍
+   http://orgmode.org/worg/org-contrib/babel/intro.html
+   
+   官网
+   http://orgmode.org/worg/org-contrib/babel/
+** 代码块格式
+   #+begin_src org
+   ,#+begin_src language  org-switches header-arguments
+   ,body
+   ,#+end_src
+   #+end_src
+   language 指定编程语言， 如 perl, elisp, c, java, python.
+   
+   其他的为一些参数。 
+   
+** 插入代码块
+   有yasnippet脚本，src然后回车。
+** 执行代码块
+   光标位于代码块中，C-c C-c. 调用的函数:org-babel-execute-src-block. 
+   
+   执行结果会直接显示在代码的后面。
+   
+   ':results'参数控制执行结果：
+   | 取值   | 执行结果                     |
+   |--------+------------------------------|
+   | value  | 语句块的返回值               |
+   | output | 语句块在打在标准输出的字符串 |
+   例如，对于一个perl的代码块，如果':results'为'value'，则执行结果为最后一句perl语句返回的值；如果为'output'，则为所有print到标准输出的字符串。 
+   #+begin_src perl
+   my $a = "AAAAAB";
+   print "I am printed to stdout, $a";
+   $a;
+   #+end_src
+   
+   #+RESULTS:
+   : AAAAAB
+   
+   #+begin_src perl :results output
+   my $a = "AAAAAB";
+   print "I am printed to stdout, $a";
+   $a;
+   #+end_src
+   
+   #+RESULTS:
+   : I am printed to stdout, AAAAAB
+   
