@@ -1,0 +1,5 @@
+* Org File
+** docs
+   Org mode syntax reference: https://github.com/fniessen/refcard-org-mode
+** text markup
+   I know I can use *bold*, /italic/, _underlined_, =verbatim= and ~code~, and, if you must, ‘+strike-through+’ to do some markup to text according to org-mode documentation,
