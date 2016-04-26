@@ -1,4 +1,8 @@
 package Aspk::debug;
+use Exporter;
+
+@ISA=qw(Exporter);
+@EXPORT_OK=qw(printHash);
 
 # first parameter is a references to a hash
 sub printHash {

@@ -38,7 +38,6 @@
    
    only define packages in a module file, and the package name and module name are the same.
    
-   
 ** steps of writing a module
    Suppose the module file path is ~Aspk/debug.pm~
    1. [optional] define current package name at the begining of the module file
@@ -83,28 +82,77 @@
       Module ~Exporter~ is used to export. It defines two array variables: ~@EXPORT~, ~@EXPORT_OK~. Just assign the names you want to export to those variables.
       #+begin_src perl
       use Exporter;
+      @ISA=qw(Exporter); #inheritance import function form Exporter.
       @EXPORT_OK=qw(printHash);
       #+end_src
-
+      
       Names assigned to ~@EXPORT_OK~ will be imported to user's current package on demand.
       
       Names assigned to ~@EXPORT~ will be imported to user's current package imediatly.
-
-      Use the Aspk::debug module: ~use Aspk::debug~. Then all names assigned to @EXPORT will be imported to current package.
-
+      
+      Use the Aspk::debug module: ~use Aspk::debug~. Then all names assigned to ~@EXPORT~ will be imported to current package.
+      
       Use the Aspk::debug module: ~use Aspk::debug qw(printHash)~. Then only ~printHash~ imported to current package.
       
-      The second is better. So always use @EXPORT_OK.
+      The second is better. So always use ~@EXPORT_OK~.
    4. define some sub:s and variables
       
       This is the main content of the module.
    5. return a ~true~ value at end of the module file
       
       A perl module must end with a true value else it is considered not load successfully. The usually way to do this is put below line to the end of the file:
-      
-      ~1;~
-      
-      
+      #+begin_src perl
+      1;
+      #+end_src
+
       
    
    
+   
+** misc
+*** ~require~ function
+    load a perl module.
+
+    ~require Aspk::debug;~ means load file ~Aspk/debug.pm~ in loading path, which is specified by ~@INC~.
+*** ~use~ function
+    load a perl module and calling the module's ~import~ function.
+
+    offcial doc: http://perldoc.perl.org/functions/use.html
+
+    ~use Module LIST~ is excatly the same as 
+    #+begin_src perl
+    BEGIN {
+        require Module;
+        Module->import(LIST);
+    }
+    #+end_src
+
+    
+** how functions of a module are imported to another package
+   Import functions of another module to current package will let you not giving the whole function name(moduleName::functionName) when calling that function.
+
+   Suppose there is a module file named ~Aspk/debug.pm~, and a file ~debug_example.pl~ that use that module.
+
+   File ~Aspk/debug.pm~
+   #+begin_src perl
+   package Aspk::debug;
+   use Exporter;
+   @ISA=qw(Exporter);
+   @EXPORT_OK=qw(printHash);
+   sub printHash{
+       # ...
+   }
+   1;
+   #+end_src
+
+   File ~debug_example.pl~
+   #+begin_src perl
+   use Aspk::debug qw(printHash);
+   printHash();
+   #+end_src
+
+   It is the ~import~ function of module ~Aspk::debug~ that imported the ~printHash~ function to current package in file ~debug_example.pl~. 
+
+   This function is called when ~use Aspk::debug qw(printHash)~ executed.
+
+   This function is defined in class ~Exporter~, and ~Aspk::debug~ inheritatd it(by this line: ~@ISA=qw(Exporter)~).
