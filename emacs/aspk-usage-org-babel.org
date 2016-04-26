@@ -22,28 +22,34 @@
    - language 指定编程语言， 如 perl, elisp, c, java, python.
    - body 为实际的代码
    - #+begin_src和#+end_src为代码块的标记头
+   - org-switches 和 header-arguments为一些参数
 
-   其他的为一些参数。 
+   例子，C语言，打印一句话：
+   #+begin_src org
+   ,#+begin_src c
+   printf("Hello world!");
+   ,#+end_src
+   #+end_src
    
 ** 插入代码块
    手动输入代码块的标记头（如下），然后光标移到中间空行，按C-c ' 键，在弹出的新的buffer里输入代码。输入完成后按C-c '键返回。
    #+begin_src org
-   ,#+begin_src org
+   ,#+begin_src
    
    ,#+end_src
    #+end_src
 
 ** 执行代码块
-   光标位于代码块中，C-c C-c. 调用的函数:org-babel-execute-src-block. 
+   光标置于代码块中，C-c C-c. 调用的函数:org-babel-execute-src-block. 
    
-   执行结果会直接显示在代码的后面。
+   执行结果会直接显示在代码块的后面。
    
    ':results'参数控制执行结果：
-   | 取值   | 执行结果                     |
-   |--------+------------------------------|
-   | value  | 语句块的返回值               |
-   | output | 语句块在打在标准输出的字符串 |
-   例如，对于一个perl的代码块，如果':results'为'value'，则执行结果为最后一句perl语句返回的值；如果为'output'，则为所有print到标准输出的字符串。 
+   | 取值          | 执行结果                     |
+   |---------------+------------------------------|
+   | value(默认值) | 语句块的返回值               |
+   | output        | 语句块在标准输出上的打印 |
+   例如，对于一个perl的代码块，如果':results'为'value'，则执行结果为最后一句perl语句返回的值；如果为'output'，则为标准输出上的打印。 
    #+begin_src org
    ,#+begin_src perl
    my $a = "AAAAAB";
