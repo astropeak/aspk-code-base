@@ -1,0 +1,36 @@
+* module and package
+** what is a perl module
+   A perl module is just a file named "*.pm",  and can be "included"(required) in other perl files(both ".pm" and ".pl" files).
+   
+** how to load/include a module
+   First, the root directory for the module should be added to PERL5LIB environment variable.
+   
+   Including syntax:
+   Suppose a module locates in ~Demo/StringUtils.pm~, you can load it with:
+   
+   ~require Demo::StringUtils~
+
+** what is a perl package   
+   package is a software concept, it is namespace. 
+
+   Default package is main. 
+
+   all sub:s and variables are be defined under current namespace.
+
+** how to set current package
+   Current package can be changed at any where in the code.
+   
+   Builtin function ~package~ is used to change current package.
+   
+   ~package Food::potato  # the following sub and variable will all defined in Food::potato namesapce.~
+   
+   ~Food::potato::say() # call say sub of package Food::potato.~
+
+** relationship between module and package   
+   Module and package are independent things. 
+   
+   Good practice is:
+   
+   only define packages in a module file, and the package name and module name are the same.
+   
+   
