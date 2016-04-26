@@ -1,21 +1,26 @@
 * module and package
+** docs
+   A good explainatoin on perl module: https://en.wikipedia.org/wiki/Perl_module
+   
 ** what is a perl module
    A perl module is just a file named "*.pm",  and can be "included"(required) in other perl files(both ".pm" and ".pl" files).
    
 ** how to load/include a module
-   First, the root directory for the module should be added to PERL5LIB environment variable.
+   First, the root directory for the module should be added to PERL5LIB environment variable. Current directory are always in PERL5LIB.
    
    Including syntax:
    Suppose a module locates in ~Demo/StringUtils.pm~, you can load it with:
    
    ~require Demo::StringUtils~
 
+   Just replace ~/~ in the file path with ~::~.
+
 ** what is a perl package   
    package is a software concept, it is namespace. 
 
    Default package is main. 
 
-   all sub:s and variables are be defined under current namespace.
+   all sub:s and variables are defined under current namespace.
 
 ** how to set current package
    Current package can be changed at any where in the code.
@@ -32,5 +37,69 @@
    Good practice is:
    
    only define packages in a module file, and the package name and module name are the same.
+   
+   
+** steps of writing a module
+   Suppose the module file path is ~Demo/food.pm~
+   1. [optional] define current package name at the begining of the module file
+      
+      ~package Aspk::debug~
+      
+      Although it is optional, but is is good practice to do this step.
+      
+   2. [optional] write embedded POD documents
+      
+      A line start with ~=~ is a documents. ~=cut~ end the documents.
+      
+      The document can be put anywhere in the file.
+      
+      Example:
+      #+begin_src perl
+      =head1 NAME
+      Aspk::debug - debug utils.
+      
+      =head1 SYNOPSIS
+      
+        use Aspk::debug;
+        printHash({"AA"=>"aa", "BB"=>"bb"})
+      =head1 DESCRIPTION
+      
+      =head2 Functions
+      
+      The following functions are exported by default
+      
+      =head3 printHash
+      
+             printHash({"AA"=>"aa", "BB"=>"bb"})
+      =cut
+      #+end_src
+      
+   3. [optional] export some functions or variables to the user
+      
+      A good ref: http://www.thegeekstuff.com/2010/06/perl-exporter-examples/
+      
+      If exporting some functions, the user don't need to type the package name when using those functions. These functions are imported to current package of the user when the module was loaded.
+      
+      Module ~Exporter~ is used to export. It defines two array variables: ~@EXPORT~, ~@EXPORT_OK~. Just assign the names you want to export to those variables.
+      #+begin_src perl
+      use Exporter;
+      @EXPORT_OK=qw(printHash);
+      #+end_src
+
+      Names assigned to ~@EXPORT_OK~ will be imported to user's current package on demand.
+      
+      Names assigned to ~@EXPORT~ will be imported to user's current package imediatly.
+
+   4. define some sub:s and variables
+      
+      This is the main content of the module.
+   5. return a ~true~ value at end of the module file
+      
+      A perl module must end with a true value else it is considered not load successfully. The usually way to do this is put below line to the end of the file:
+      
+      ~1;~
+      
+      
+      
    
    
