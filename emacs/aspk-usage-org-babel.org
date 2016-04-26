@@ -16,15 +16,23 @@
 ** 代码块格式
    #+begin_src org
    ,#+begin_src language  org-switches header-arguments
-   ,body
+   body
    ,#+end_src
    #+end_src
-   language 指定编程语言， 如 perl, elisp, c, java, python.
-   
+   - language 指定编程语言， 如 perl, elisp, c, java, python.
+   - body 为实际的代码
+   - #+begin_src和#+end_src为代码块的标记头
+
    其他的为一些参数。 
    
 ** 插入代码块
-   有yasnippet脚本，src然后回车。
+   手动输入代码块的标记头（如下），然后光标移到中间空行，按C-c ' 键，在弹出的新的buffer里输入代码。输入完成后按C-c '键返回。
+   #+begin_src org
+   ,#+begin_src org
+   
+   ,#+end_src
+   #+end_src
+
 ** 执行代码块
    光标位于代码块中，C-c C-c. 调用的函数:org-babel-execute-src-block. 
    
@@ -36,21 +44,29 @@
    | value  | 语句块的返回值               |
    | output | 语句块在打在标准输出的字符串 |
    例如，对于一个perl的代码块，如果':results'为'value'，则执行结果为最后一句perl语句返回的值；如果为'output'，则为所有print到标准输出的字符串。 
-   #+begin_src perl
+   #+begin_src org
+   ,#+begin_src perl
    my $a = "AAAAAB";
    print "I am printed to stdout, $a";
    $a;
+   ,#+end_src
    #+end_src
-   
-   #+RESULTS:
+
+   结果为：
+   #+begin_src org
    : AAAAAB
-   
-   #+begin_src perl :results output
+   #+end_src
+
+   #+begin_src org
+   ,#+begin_src perl :results output
    my $a = "AAAAAB";
    print "I am printed to stdout, $a";
    $a;
+   ,#+end_src
    #+end_src
-   
-   #+RESULTS:
+
+   结果为：
+   #+begin_src org
    : I am printed to stdout, AAAAAB
-   
+   #+end_src
+
