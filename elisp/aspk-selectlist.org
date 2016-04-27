@@ -1,4 +1,8 @@
+* select list
+** todo
+*** 修改highlight实现
+    ~aspk/selectlist-highlight~ 函数应该是只改变对象的状态，归一到 ~aspk/selectlist-config~ 接口里。逻辑就更简单点了。哈哈。
 
-* Implementation notes
-  全局变量太多，很容易出问题。添加新的代码时， 很容易出现问题。
-  目前的全局变量是： 所有通过aspk/tooltip-set的变量。 目前遇到的一个问题是 current-select导致了翻页时有问题。 
+** Implementation notes
+   全局变量太多，很容易出问题。添加新的代码时， 很容易出现问题。
+   目前的全局变量是： 所有通过aspk/tooltip-set的变量。 目前遇到的一个问题是 current-select导致了翻页时有问题。 
