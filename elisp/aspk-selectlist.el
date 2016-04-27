@@ -11,9 +11,11 @@
   (let (tt)
     (setq tt (aspk/tooltip-create-no-wrap row column ""))
     (aspk/tooltip-set tt 'page-size page-size)
-    (aspk/tooltip-set tt 'candidates candidates)
     (aspk/tooltip-set tt 'current-select 1)
-    (aspk/selectlist-set-page tt 0)
+
+    (aspk/selectlist-config tt 'candidates candidates)
+    ;; (aspk/selectlist-set-page tt 0)
+
     (aspk/selectlist-highlight tt 1)
     tt))
 
@@ -191,5 +193,13 @@ HIGHLIGHT-INDEX, number, the item that will be highlighted in the new page, defa
 
 (defun aspk/selectlist-delete (selectlist)
   (aspk/tooltip-delete selectlist))
+
+(defun aspk/selectlist-config (selectlist property value)
+  (aspk/tooltip-config selectlist property value)
+  (cond
+   ((eq property 'candidates)
+    (aspk/selectlist-set-page selectlist 0)
+    (aspk/tooltip-set selectlist 'current-select 1)
+    )))
 
 (provide 'aspk-selectlist)

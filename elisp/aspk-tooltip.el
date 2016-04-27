@@ -56,7 +56,7 @@
                (concat
                 (aspk/tooltip--create-prefix drow dcolumn) content))))
 
-    (move-overlay tooltip begin end)
+    (move-overlay tooltip begin end (current-buffer))
     (overlay-put tooltip 'invisible t)
     (overlay-put tooltip 'after-string str)))
 
@@ -104,5 +104,10 @@
 (defun aspk/tooltip-create-no-wrap (row column str)
   "Same as aspk/tooltip-create, but adjust column if tooltip can be displayed fully in current line"
   (aspk/tooltip-create row (min column (max 0 (- (window-width) (string-width str)))) str))
+
+
+(defun aspk/tooltip-config (tooltip property value)
+  "Difference form aspk/tooltip-set is: this function may do other things."
+  (aspk/tooltip-set tooltip property value))
 
 (provide 'aspk-tooltip)

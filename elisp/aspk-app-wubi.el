@@ -4,23 +4,26 @@
 (require 'aspk-keybind)
 ;; (require 'aspk-app-wubi-quail-modified)
 
-(setq aspk/app-wubi-selectlist nil)
+(setq aspk/app-wubi-selectlist
+      (aspk/selectlist-create 1 1 '("AA") 9))
+
 (defun aspk/app-wubi-create-selectlist (&rest args)
-  (when (overlayp aspk/app-wubi-selectlist)
-    (aspk/selectlist-delete aspk/app-wubi-selectlist))
-  (setq aspk/app-wubi-selectlist
-        (aspk/selectlist-create
-         (+ (aspk/window-row (point)) 1)
-         (aspk/window-column (point))
-         (mapcar
-          (lambda (candidate)
-            (format "%s"
-                    (if (integerp (cdr candidate))
-                        (make-string 1 (cdr candidate))
-                      (cdr candidate))
-                    (car candidate)))
-          (aspk/app-wubi-completion))
-         9)))
+  (aspk/selectlist-config aspk/app-wubi-selectlist
+                          'aspk/tooltip-row (+ (aspk/window-row (point)) 1))
+
+  (aspk/selectlist-config aspk/app-wubi-selectlist
+                          'aspk/tooltip-column (aspk/window-column (point)))
+
+  (aspk/selectlist-config aspk/app-wubi-selectlist
+                          'candidates
+                          (mapcar
+                           (lambda (candidate)
+                             (format "%s"
+                                     (if (integerp (cdr candidate))
+                                         (make-string 1 (cdr candidate))
+                                       (cdr candidate))
+                                     (car candidate)))
+                           (aspk/app-wubi-completion))))
 
 ;; (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
 ;; (aspk/advice-add 'quail-input-method 'before 'aspk/app-wubi-create-selectlist)
