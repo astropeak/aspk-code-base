@@ -9,6 +9,9 @@
 
 (defun aspk/app-wubi-create-selectlist (&rest args)
   (aspk/selectlist-config aspk/app-wubi-selectlist
+                          'aspk/tooltip-buffer (current-buffer))
+
+  (aspk/selectlist-config aspk/app-wubi-selectlist
                           'aspk/tooltip-row (+ (aspk/window-row (point)) 1))
 
   (aspk/selectlist-config aspk/app-wubi-selectlist

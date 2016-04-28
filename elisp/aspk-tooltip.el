@@ -56,7 +56,7 @@
                (concat
                 (aspk/tooltip--create-prefix drow dcolumn) content))))
 
-    (move-overlay tooltip begin end (current-buffer))
+    (move-overlay tooltip begin end (aspk/tooltip-get tooltip 'aspk/tooltip-buffer))
     (overlay-put tooltip 'invisible t)
     (overlay-put tooltip 'after-string str)))
 

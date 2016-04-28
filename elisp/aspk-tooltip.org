@@ -1,7 +1,9 @@
 * tooltip
 ** todo
-*** 目前move-overlay时buffer直接设置为当前buffer，后续考虑配置当前buffer.
+*** done 目前move-overlay时buffer直接设置为当前buffer，后续考虑配置当前buffer.
     不然当前的实现方式，则同时只能显示一个tooltip. 
+
+    新增的属性为：aspk/tooltip-buffer. 
     
 ** Implementation notes
    条件越多，编写软件越困难。一个函数最好返回统一的值或做统一的操作，否则判断时会造成很多困难。
