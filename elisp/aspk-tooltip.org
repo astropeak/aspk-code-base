@@ -8,41 +8,40 @@
 *** 写tooltip的API文档
 
 ** API
-   Public functions:
-   | Function Name       | Description                  | Parameter | Return Value |
-   |---------------------+------------------------------+-----------+--------------|
-   | aspk/tooltip-create | create a tooltip object      |           |              |
-   | aspk/tooltip-config | change property of a tooltip |           |              |
-   | aspk/tooltip-show   | display the tooltip          |           |              |
-   | aspk/tooltip-hide   | hide the tooltip             |           |              |
-   | aspk/tooltip-delete | delete the tooltip           |           |              |
-
-   Propertys:
-   | Property Name        | Description                | Possible Value |
-   |----------------------+----------------------------+----------------|
-   | aspk/tooltip-row     | The window row             | a number    |
-   | aspk/tooltip-column  | The window column          | a number    |
-   | aspk/tooltip-content | the string to be displayed | a string       |
-   
-   Typical usage:
-   1. First create a tooltip object, then show it
-      #+begin_src elisp
-      (setq aspk/tt1 (aspk/tooltip-create 3 3 "AAAAAAAAAAAAAAABBBBBBB"))
-      (aspk/tooltip-show aspk/tt1)
-      #+end_src
-      The codes will show a tooltip at row 3, column 3 with content "AAAAAAAAAAAAAAABBBBBBB"
-   2. Change some propertys after tooltip created and show it angin
-      #+begin_src elisp
-      (aspk/tooltip-config aspk/tt1 'aspk/tooltip-row 0)
-      (aspk/tooltip-config aspk/tt1 'aspk/tooltip-column 20)
-      (aspk/tooltip-config aspk/tt1 'aspk/tooltip-content "CCCCC")
+*** Public functions
+    | Function Name       | Description                  | Parameter | Return Value |
+    |---------------------+------------------------------+-----------+--------------|
+    | aspk/tooltip-create | create a tooltip object      |           |              |
+    | aspk/tooltip-config | change property of a tooltip |           |              |
+    | aspk/tooltip-show   | display the tooltip          |           |              |
+    | aspk/tooltip-hide   | hide the tooltip             |           |              |
+    | aspk/tooltip-delete | delete the tooltip           |           |              |
+    
+*** Propertys
+    | Property Name        | Description                | Possible Value |
+    |----------------------+----------------------------+----------------|
+    | aspk/tooltip-row     | The window row             | a number       |
+    | aspk/tooltip-column  | The window column          | a number       |
+    | aspk/tooltip-content | the string to be displayed | a string       |
+    
+*** Typical usage
+    1. First create a tooltip object, then show it
+       #+begin_src elisp
+       (setq aspk/tt1 (aspk/tooltip-create 3 3 "AAAAAAAAAAAAAAABBBBBBB"))
+       (aspk/tooltip-show aspk/tt1)
+       #+end_src
+       The codes will show a tooltip at row 3, column 3 with content "AAAAAAAAAAAAAAABBBBBBB"
+    2. Change some propertys after tooltip created and show it angin
+       #+begin_src elisp
+       (aspk/tooltip-config aspk/tt1 'aspk/tooltip-row 0)
+       (aspk/tooltip-config aspk/tt1 'aspk/tooltip-column 20)
+       (aspk/tooltip-config aspk/tt1 'aspk/tooltip-content "CCCCC")
+       
+       (aspk/tooltip-show aspk/tt1)
+       #+end_src
+       The codes will show the tooltip created in step 1 at row 0, column 20 with content "CCCCC". 
       
-      (aspk/tooltip-show aspk/tt1)
-      #+end_src
-      The codes will show the tooltip created in step 1 at row 0, column 20 with content "CCCCC". 
-      
-      Note after change a property, ~aspk/tooltip-show~ should be called to update the display.
-
+       Note after change a property, ~aspk/tooltip-show~ should be called to update the display.
 ** Implementation notes
    条件越多，编写软件越困难。一个函数最好返回统一的值或做统一的操作，否则判断时会造成很多困难。
    move-to-window-line就是一个例子，当目标行值不同，行为就不同，给编程带来不小的困难。
