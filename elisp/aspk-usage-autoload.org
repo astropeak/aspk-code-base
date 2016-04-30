@@ -1,0 +1,15 @@
+* autoload
+** docs
+   Official doc: http://www.gnu.org/software/emacs/manual/html_node/elisp/Autoload.html
+** what
+   Autoload let a function loaded only when it get called first time, instead of when the function definition is evaluated.
+   
+** how
+*** autoload primitive
+    autoload function filename &optional docstring interactive type
+
+*** magic comments
+    `;;;###autoload'
+
+    an autoload expression will be created and put to 'loaddefs.el'.
+    
