@@ -1,0 +1,6 @@
+* github
+** search a repository
+   Search a repository that has at least 20 starts, language is elisp, and extension is el.
+   #+begin_src org
+   stars:>20 extension:el language:elisp
+   #+end_src
