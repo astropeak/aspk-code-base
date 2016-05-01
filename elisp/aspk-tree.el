@@ -1,4 +1,5 @@
-;; data structure of the tree:
+;; Implementation of a N- tree.
+;; Data structure of the tree:
 ;; (root (child_1 (cchild_1)) (child_2) )
 ;; If `tree' is a tree, then (car tree) is the root element, (cdr tree) is the list of it's children, which are all trees.
 
@@ -10,7 +11,6 @@
   (and (stringp elt)
        (string= elt aspk/tree-head-element)))
 
-
 (defun aspk/tree-get-element-and-parent (tree elt &optional predicate parent)
   "Find in a tree an element and its parent subtree. The car is the element subtree, the cdr is its parent subtree. nil means not exist, both for the element or its partent. the `parent' parameter is not given, then `tree' is the root. The parameter will not given in most cases. `predicate' is the compare function who takes two args,elm1 and elm2, if nil, eq will be used"
   (or predicate (setq predicate 'eq))
@@ -18,7 +18,7 @@
   (and tree
        (if (funcall predicate (car tree) elt)
            (cons tree parent)
-         
+
          ;; TODO: write a macro: dolist-if. Its form is (dolist-if (var list condition) BODY... ). Same as dolist except check condition is true before every iteration.
          (let ((child-list (cdr tree))
                (rst))
@@ -79,8 +79,7 @@
       ;; Add all children of `elt' to its parent
       (dolist (e (cdr subtree))
         (nconc parent-tree (list e))
-        (message "e=%s, parent-tree=%s" e parent-tree)
-        )
+        (message "e=%s, parent-tree=%s" e parent-tree))
 
       (delete subtree parent-tree)
       (message "subtree=%s, parent-tree=%s"
