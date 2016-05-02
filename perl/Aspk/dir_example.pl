@@ -1,3 +1,7 @@
+# Print all file names in a dir and the file total size in that dir
+# How to run this if parent dir of Aspk not in search path?
+# cd to the parent dir, then 'perl Aspk/dir_example.pl DIR'
+
 use Aspk::dir qw(dirWalk);
 
 sub printName{
@@ -31,6 +35,9 @@ sub printDir{
 	return $c;
 }
 
-dirWalk($ARGV[0],\&printName,\&printDir);
-
-print "empty dir count: $emptyDirCount\n";
+if ($ARGV[0]) {
+    dirWalk($ARGV[0],\&printName,\&printDir);
+    print "empty dir count: $emptyDirCount\n";
+} else {
+    print "Print all file names in a dir.\nUsage: perl dir_example.pl DIR\n";
+}
