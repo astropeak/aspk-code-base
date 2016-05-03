@@ -29,8 +29,22 @@ sub printDivPost{
 print "\nTraverse result of tree:\n";
 traverse({node=>$n, prefunc=>\&printDiv, postfunc=>\&printDivPost});
 
-print "\nMiddle traverse result:\n";
+print "\nPre order traverse result:\n";
+traverse({node=>$n, prefunc=>
+              sub{
+                  my $para = shift;
+                  print $para->{data}."\n";
+          }});
+
+print "\nMiddle order traverse result:\n";
 traverse({node=>$n, midfunc=>
+              sub{
+                  my $para = shift;
+                  print $para->{data}."\n";
+          }});
+
+print "\nPost order traverse result:\n";
+traverse({node=>$n, postfunc=>
               sub{
                   my $para = shift;
                   print $para->{data}."\n";

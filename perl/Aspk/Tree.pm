@@ -4,7 +4,7 @@ package Aspk::Tree;
 use Exporter;
 
 @ISA=qw(Exporter);
-@EXPORT_OK=qw(createNode appendChild traverse);
+@EXPORT_OK=qw(createNode appendChild traverse getData getChilderen);
 
 # internal function
 sub createNode1{
