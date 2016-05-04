@@ -53,11 +53,11 @@
    my $t = $s->get_name();
    print "type: $t\n";
    #+end_src
-
+   
    #+RESULTS:
    : name: Tom
    : type: Rectangle
-
+   
    Key points on the example:
    1. how to call a method
       - for constructor: ~ClassName->new(,,)~. Eg: ~my $p = Person->new("Tom")~;
@@ -68,17 +68,82 @@
       my $s = new Shape("Rectangle");
       my $s = Shape::new(Shape, "Rectangle");
       #+end_src
-
+      
       But this will not work
       #+begin_src perl
       my $s = new(Shape, "Rectangle");
       #+end_src
       Error message is can't found ~main::new~ method.
-
+      
       So if using ~->~ to call a method, the name space will be resolved by perl based on the left value.
-        
+      
 ** Inheritance
-   To be continued.
+   http://www.perlmonks.org/?node_id=176963
+   1. inheritant from a parent class.
+      #+begin_src perl
+      use parent PARANT_CLASS_NAME;
+      # such as:
+      use parent Aspk::Tree;
+      #+end_src
+   2. call parent class's method if that method is overided
+      #+begin_src perl
+      sub print_info{
+          my ($self)=@_;
+          # call parent class's print_info method
+          $self->SUPER::print_info();
+          print "this class's info\n";
+      }
+      #+end_src
+   3. example
+      #+begin_src perl :results output
+      package Animal;
+      sub new {
+          my ($class, $spec) = @_;
+          my $self={};
+          bless $self, $class;
+          $self->prop(name, $spec->{name});
+          return $self;
+      }
+      sub prop {
+          my ($self, $name, $value) = @_;
+          if (defined($value)) {
+              $self->{"_$name"} = $value;
+              return $self;
+          } else {
+              return $self->{"_$name"};
+          }
+      }
+      sub say {
+          my ($self) = @_;
+          print "I am ".$self->prop(name)."\n";
+          return $self;
+      }
+      
+      package Dog;
+      # use parent Animal;
+      @ISA=qw(Animal);
+      
+      sub new {
+          my ($class, $spec)=@_;
+          my $self = $class->SUPER::new({name=>$spec->{name}});
+          $self->prop(type, $spec->{type});
+          bless $self, $class;
+          return $self;
+      }
+      sub say {
+          my ($self)=@_;
+          $self->SUPER::say();
+          print "Type is ".$self->prop(type)."\n";
+          return $self;
+      }
+      package main;
+      my $a = Dog->new({name=>"dog", type=>"Tedi"});
+      $a->say();
+      #+end_src
+
+      #+RESULTS:
+      : I am dog
+      : Type is Tedi
 
 ** roles
    This seems a new idea I don'w know. See the official docs for it.
@@ -92,7 +157,7 @@
       print blessed($hash); # undef
       print blessed($hostname); # File
       #+end_src
-
+      
 ** OOP systems in perl
    Using perl buildin to implement OOP is quite limited. The official doc recomand using a OOP system. One of the them is moose.
 *** moose

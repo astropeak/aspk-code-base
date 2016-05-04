@@ -5,20 +5,21 @@ package Aspk::Tree;
 
 sub new {
     my ($class, $spec)= @_;
+    $spec = {} if !defined($spec);
     my $self={};
     bless $self, $class;
 
-    $self->_prop(data, $spec->{data});
-    $self->_prop(parent, undef);
+    $self->prop(data, $spec->{data});
+    $self->prop(parent, undef);
     $spec->{parent}->add_child($self) if defined($spec->{parent});
-    $self->_prop(children, []);
+    $self->prop(children, []);
     return $self;
 }
 
 # Get or set a property of the object
-sub _prop {
+sub prop {
     my ($self, $name, $value) = @_;
-    # print "In _prop. name: $name, value: $value\n";
+    # print "In prop. name: $name, value: $value\n";
     if (defined($value)) {
         $self->{"_$name"} = $value;
         return $self;
@@ -29,14 +30,14 @@ sub _prop {
 
 sub _add_child {
     my ($self, $child) = @_;
-    push(@{$self->_prop(children)}, $child);
+    push(@{$self->prop(children)}, $child);
     return $self;
 }
 
 sub add_child {
     my ($self, $child) = @_;
     $self->_add_child($child);
-    $child->_prop(parent, $self);
+    $child->prop(parent, $self);
     return $self;
 }
 
@@ -119,8 +120,8 @@ sub traverse {
     my ($self, $para)=@_;
     $para->{depth} || ($para->{depth}=0);
     my $depth = $para->{depth};
-    my $data = $self->_prop(data);
-    my @children = @{$self->_prop(children)};
+    my $data = $self->prop(data);
+    my @children = @{$self->prop(children)};
 
     # if ($para->{node}) {
     if (1) {
@@ -167,7 +168,7 @@ sub traverse {
 # node: the node
 sub get_data (){
     my ($self) = @_;
-    return $self->_prop(data);
+    return $self->prop(data);
 }
 
 # getter function. Get children as an array of a node
@@ -175,7 +176,7 @@ sub get_data (){
 # node: the node
 sub get_childeren(){
     my ($self) = @_;
-    return $self->_prop(children);
+    return $self->prop(children);
 }
 
 1;
