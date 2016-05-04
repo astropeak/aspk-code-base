@@ -1,0 +1,89 @@
+* perl oop
+** docs
+   - Official doc: http://perldoc.perl.org/perlootut.html. Looks good.
+   - A good tutorial: http://www.tutorialspoint.com/perl/perl_oo_perl.htm
+** create a class with perl builtin
+   | OOP concept | Perl corresponding thing    |
+   |-------------+-----------------------------|
+   | class       | package                     |
+   | object      | a blessed reference to hash |
+   
+   Steps:
+   1. create the class. Just create a package with same name.
+   2. create the constructor. The magic is bless a object into the class.
+   3. create methods. First parameter will always be an object.
+      
+   Example:
+   #+begin_src perl :results output
+   package Person;
+   sub new{
+       my $class=shift;
+       my $name =shift;
+       my $self = {name=>$name};
+       bless $self, $class;
+       return $self;
+   }
+   sub get_name{
+       my $self=shift;
+       return $self->{name};
+   }
+   
+   package Shape;
+   sub new{
+       my $class=shift;
+       my $type =shift;
+       my $self = {type=>$type};
+       bless $self, $class;
+       return $self;
+   }
+   sub get_name{
+       my $self=shift;
+       return $self->{type};
+   }
+   
+   package main;
+   my $p = Person->new("Tom");
+   my $n=$p->get_name();
+   # my $n=Person::get_name($p);
+   print "name: $n\n";
+   
+   # my $s = Shape->new("Rectangle");
+   # my $s = new Shape("Rectangle");
+   my $s = Shape::new(Shape, "Rectangle");
+   my $t = $s->get_name();
+   print "type: $t\n";
+   #+end_src
+
+   #+RESULTS:
+   : name: Tom
+   : type: Rectangle
+
+   Key points on the example:
+   1. how to call a method
+      - for constructor: ~ClassName->new(,,)~. Eg: ~my $p = Person->new("Tom")~;
+      - for methods: ~ObjectName->method(,,)~. Eg: ~$p->get_name()~.
+   2. below there lines are excatly the same
+      #+begin_src perl
+      my $s = Shape->new("Rectangle");
+      my $s = new Shape("Rectangle");
+      my $s = Shape::new(Shape, "Rectangle");
+      #+end_src
+
+      But this will not work
+      #+begin_src perl
+      my $s = new(Shape, "Rectangle");
+      #+end_src
+      Error message is can't found ~main::new~ method.
+
+      So if using ~->~ to call a method, the name space will be resolved by perl based on the left value.
+        
+** Inheritance
+   To be continued.
+
+** roles
+   This seems a new idea I don'w know. See the official docs for it.
+   
+** OOP systems in perl
+   Using perl buildin to implement OOP is quite limited. The official doc recomand using a OOP system. One of the them is moose.
+*** moose
+    Moose provide a complete, modern OO system. Also available in common lisp.

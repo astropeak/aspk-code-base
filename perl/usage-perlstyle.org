@@ -1,0 +1,24 @@
+* perl style
+** docs
+   - Official doc: http://perldoc.perl.org/perlstyle.html
+   - A good thread: http://www.perlmonks.org/?node_id=253796
+** naming convention
+   - Objects and modules names start with a capital letter(eg, Aspk::Tree).
+   - Methods use underscore("_") as a word seperator(eg, get_value());
+   - For arguments to methods
+     - If only one argument, don't use array, hash, or reference. Just itself(eg: get_value($node)).
+     - Else, use a hash or hash reference(eg: print_report({name=>"aaaa", gender=>"male"})).
+   - {Optional} CGI module method prefer add a "-" before arguments name in a hash, but I don't see the benefit(eg: aaa({-type="bb", -value="cc"})).
+   - internal methods names start with a "_"(eg: _internal_func()).
+     #+begin_src perl
+     @EXPORT = qw(external interface);
+     @EXPORT_OK = qw(_internal _interface);
+     %EXPORT_TAGS = (STD  => \@EXPORT,
+                     TEST => \@EXPORT_OK);
+     #+end_src
+     What's the meaning of ~%EXPORT_TAGS~?
+
+
+
+
+   
