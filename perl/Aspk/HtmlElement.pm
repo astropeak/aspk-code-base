@@ -19,7 +19,7 @@ sub new {
     return $self;
 }
 
-sub prop1 {
+sub html_prop {
     my ($self, $name, $value)=@_;
     # print "self:$self, name: $name, value: $value\n";
     if (defined($value)){
@@ -32,23 +32,23 @@ sub prop1 {
 
 sub rm_prop{
     my ($self, $name)=@_;
-    delete $self->{prop}->{$name};
+    delete $self->prop(prop)->{$name};
     return $self;
 }
 
 sub add_class{
     my ($self, $class)=@_;
-    my $orig_class = $self->prop("class");
-    $self->prop("class", $orig_class.";".$class);
+    my $orig_class = $self->html_prop("class");
+    $self->html_prop("class", $orig_class.";".$class);
 
     return $self;
 }
 
 sub rm_class{
     my ($self, $class)=@_;
-    my $orig_class = $self->prop("class");
+    my $orig_class = $self->html_prop("class");
     $orig_class=~s/(;?)$class;?/\1/;
-    $self->prop("class",$orig_class);
+    $self->html_prop("class",$orig_class);
 
     return $self;
 }
@@ -83,4 +83,9 @@ sub print {
                      }})
 }
 
+sub height {
+    my ($self, $value)=@_;
+    my $style = $self->html_prop(style);
+
+}
 1;

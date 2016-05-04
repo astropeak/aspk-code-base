@@ -6,11 +6,11 @@ my $eee=Aspk::HtmlElement->new({tag=>"div", prop=>{class=>"active;aab",id=>"myDi
 $e->add_child($ee);
 $ee->add_child($eee);
 
-# $e->add_class("foo");
-# $e->rm_class("active");
-# $e->prop("type", "text");
-# $e->rm_prop("href");
-# $e->rm_prop("Not_exist");
+$e->add_class("foo");
+$e->rm_class("active");
+$e->html_prop("type", "text");
+$e->rm_prop("href");
+$e->rm_prop("Not_exist");
 
 # my $ss=$e->format_html();
 # print $ss;
