@@ -83,6 +83,16 @@
 ** roles
    This seems a new idea I don'w know. See the official docs for it.
    
+** misc
+   1. how to get an object's class name?
+      
+      Using the ~blessed~ function from ~Scalar::Util~.
+      #+begin_src perl
+      use Scalar::Util 'blessed';
+      print blessed($hash); # undef
+      print blessed($hostname); # File
+      #+end_src
+
 ** OOP systems in perl
    Using perl buildin to implement OOP is quite limited. The official doc recomand using a OOP system. One of the them is moose.
 *** moose
