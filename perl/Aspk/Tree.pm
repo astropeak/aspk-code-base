@@ -1,10 +1,45 @@
 # A very simple tree implementation. Currenttly only little functions implemented.
+# Definition of a tree: a tree has a data, some child trees, and a parent tree.
 
 package Aspk::Tree;
-use Exporter;
 
-@ISA=qw(Exporter);
-@EXPORT_OK=qw(createNode appendChild traverse getData getChilderen);
+sub new {
+    my ($class, $spec)= @_;
+    my $self={};
+    bless $self, $class;
+
+    $self->_prop(data, $spec->{data});
+    $self->_prop(parent, undef);
+    $spec->{parent}->add_child($self) if defined($spec->{parent});
+    $self->_prop(children, []);
+    return $self;
+}
+
+# Get or set a property of the object
+sub _prop {
+    my ($self, $name, $value) = @_;
+    # print "In _prop. name: $name, value: $value\n";
+    if (defined($value)) {
+        $self->{"_$name"} = $value;
+        return $self;
+    } else {
+        return $self->{"_$name"};
+    }
+}
+
+sub _add_child {
+    my ($self, $child) = @_;
+    push(@{$self->_prop(children)}, $child);
+    return $self;
+}
+
+sub add_child {
+    my ($self, $child) = @_;
+    $self->_add_child($child);
+    $child->_prop(parent, $self);
+    return $self;
+}
+
 
 # internal function
 sub createNode1{
@@ -66,7 +101,7 @@ sub appendChild{
 
 # traverse the tree
 # parameter
-# hash->{node}: the node
+# hash->{depth}: the depth of current tree node. Optional
 # hash->{prefunc}: the prefunc callback, called before traverse its subtree. Optional
 # hash->{midfunc}: the midfunc callback, called between every child tree. Optional
 # hash->{postfunc}: the postfunc callback, called after traversed its subtree. Optional
@@ -80,45 +115,48 @@ sub appendChild{
 # hash->{traversedChildCount}: child count that already be traversed.
 #
 # So to pre-order, just provide prefunc. to post-order, just provide post func. to middle order, just provide midfunc.
-sub traverse{
-    my $para=shift;
+sub traverse {
+    my ($self, $para)=@_;
     $para->{depth} || ($para->{depth}=0);
     my $depth = $para->{depth};
-    my $node=$para->{node};
+    my $data = $self->_prop(data);
+    my @children = @{$self->_prop(children)};
 
-    if ($para->{node}) {
+    # if ($para->{node}) {
+    if (1) {
         if ($para->{prefunc}) {
-            $para->{prefunc}({data=>$node->{data},
+            $para->{prefunc}({data=>$data,
                               depth=>$depth,
-                              node=>$node});
+                              node=>$self});
         }
 
-        my $len = scalar(@{$node->{children}});
+        my $len = scalar(@children);
         for (my $i=0;$i<$len;$i++){
-            traverse({node=>${node}->{children}[$i], depth=>$depth+1,
-                      prefunc=>$para->{prefunc}, postfunc=>$para->{postfunc},
-                      midfunc=>$para->{midfunc}});
+            @children[$i]->traverse({depth=>$depth+1,
+                                     prefunc=>$para->{prefunc},
+                                     postfunc=>$para->{postfunc},
+                                     midfunc=>$para->{midfunc}});
             if ($para->{midfunc} && $i < ($len-1)) {
-                $para->{midfunc}({data=>$node->{data},
+                $para->{midfunc}({data=>$data,
                                   depth=>$depth,
-                                  node=>$node,
+                                  node=>$self,
                                   traversedChildCount=>($i+1)});
             }
         }
 
         if ($len<=1){
             if ($para->{midfunc}) {
-                $para->{midfunc}({data=>$node->{data},
+                $para->{midfunc}({data=>$data,
                                   depth=>$depth,
-                                  node=>$node,
+                                  node=>$self,
                                   traversedChildCount=>0});
             }
         }
 
         if ($para->{postfunc}) {
-            $para->{postfunc}({data=>$node->{data},
+            $para->{postfunc}({data=>$data,
                                depth=>$depth,
-                               node=>$node});
+                               node=>$self});
         }
 
     }
@@ -127,15 +165,17 @@ sub traverse{
 # getter function. Get data of a node
 # Parameter:
 # node: the node
-sub getData (){
-    return @_[0]->{data};
+sub get_data (){
+    my ($self) = @_;
+    return $self->_prop(data);
 }
 
 # getter function. Get children as an array of a node
 # Parameter:
 # node: the node
-sub getChilderen(){
-    return @_[0]->{children};
+sub get_childeren(){
+    my ($self) = @_;
+    return $self->_prop(children);
 }
 
 1;

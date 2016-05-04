@@ -1,17 +1,19 @@
-use Aspk::Tree qw(createNode traverse);
+use Aspk::Tree;
+use Aspk::debug qw(printHash);
 
-my $n = createNode({data=>"aaaa"});
-my $cn = createNode({data=>"bbbb", parent=>$n});
-my $cn1 = createNode({data=>"cccc", parent=>$n});
-my $cn11 = createNode({data=>"dddd", parent=>$cn1});
-# appendChild({node=>$n, child=>$cn});
-# appendChild({node=>$n, child=>$cn1});
+my $n = Aspk::Tree->new({data=>"aaaa"});
+my $cn = Aspk::Tree->new({data=>"bbbb", parent=>$n});
+my $cn1 = Aspk::Tree->new({data=>"cccc", parent=>$n});
+my $cn11 = Aspk::Tree->new({data=>"dddd", parent=>$cn1});
+my $cn12 = Aspk::Tree->new({data=>"eeee"});
+$cn1->add_child($cn12);
 
-print "data: ".$n->{data}."\n";
-print "parent: ".$n->{parent}."\n";
-print "child: ".$n->{children}[0]->{data}."\n";
-print "child 1: ".$n->{children}[1]->{data}."\n";
-# print "child 2: ".$n->{children}[2]->{data}."\n";
+print "Hash of $n. data:".$n->{_data}."\n";
+my @a = (keys(%{$n}));
+print "keys: @a\n";
+@a = @{$n->{_children}};
+print "child: @a\n";
+printHash($n);
 
 sub printDiv{
     my $para = shift;
@@ -27,25 +29,25 @@ sub printDivPost{
 }
 
 print "\nTraverse result of tree:\n";
-traverse({node=>$n, prefunc=>\&printDiv, postfunc=>\&printDivPost});
+$n->traverse({prefunc=>\&printDiv, postfunc=>\&printDivPost});
 
 print "\nPre order traverse result:\n";
-traverse({node=>$n, prefunc=>
-              sub{
-                  my $para = shift;
-                  print $para->{data}."\n";
-          }});
+$n->traverse({prefunc=>
+                  sub{
+                      my $para = shift;
+                      print $para->{data}."\n";
+              }});
 
 print "\nMiddle order traverse result:\n";
-traverse({node=>$n, midfunc=>
-              sub{
-                  my $para = shift;
-                  print $para->{data}."\n";
-          }});
+$n->traverse({midfunc=>
+                  sub{
+                      my $para = shift;
+                      print $para->{data}."\n";
+              }});
 
 print "\nPost order traverse result:\n";
-traverse({node=>$n, postfunc=>
-              sub{
-                  my $para = shift;
-                  print $para->{data}."\n";
-          }});
+$n->traverse({postfunc=>
+                  sub{
+                      my $para = shift;
+                      print $para->{data}."\n";
+              }});
