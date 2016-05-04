@@ -1,9 +1,24 @@
-* get current process number
-  $$ stores current process number
-  #+begin_src perl :results output
-  print "Process number: $$\n";
-  #+end_src
+* Misc
+** get current process number
+   $$ stores current process number
+   #+begin_src perl :results output
+   print "Process number: $$\n";
+   #+end_src
 
-  #+RESULTS:
-  : Process number: 8696
+   #+RESULTS:
+   : Process number: 8696
+
+** Check value
+*** check if a scalar is not undef
+    #+begin_src perl
+    $a = 1;
+    defined($a);
+    defined($b);
+    #+end_src
+*** check if a key exist in a hash
+    #+begin_src perl
+    $h = {name=>"Tom"};
+    exists($h->{name});
+    exists($h->{value});
+    #+end_src
 
