@@ -39,18 +39,59 @@ sub rm_prop{
 sub add_class{
     my ($self, $class)=@_;
     my $orig_class = $self->html_prop("class");
-    $self->html_prop("class", $orig_class.";".$class);
+    push(@{$orig_class}, $class);
+    # $self->html_prop("class", $orig_class.";".$class);
 
+    return $self;
+}
+sub style{
+    my ($self, $name, $value)=@_;
+    $self->html_prop("style", {}) if not defined($self->html_prop("style"));
+    my $orig_style = $self->html_prop("style");
+
+    if (defined($value)) {
+        $orig_style->{$name} = $value;
+        return $self;
+    } else {
+        return $orig_style->{$name};
+    }
+}
+
+sub rm_style{
+    my ($self, $name)=@_;
+    my $orig_style = $self->html_prop("style");
+    delete $orig_class->{$name};
     return $self;
 }
 
 sub rm_class{
     my ($self, $class)=@_;
     my $orig_class = $self->html_prop("class");
-    $orig_class=~s/(;?)$class;?/\1/;
-    $self->html_prop("class",$orig_class);
+    my @class_array = grep {$_ ne $class} @{$orig_class};
+    $self->html_prop("class", \@class_array);
 
     return $self;
+}
+
+our $PropFormatTable = {
+    class=>sub{
+        my $class_array=shift;
+        return join(";", @{$class_array});
+    },
+    style=>sub{
+        my $style_hash=shift;
+        return join(";", map {$_.":".$style_hash->{$_}} keys(%{$style_hash}));
+    }
+};
+
+sub _format_prop {
+    my ($name, $value) = @_;
+    # print "in _format_prop. name: $name, value: $value\n";
+    if (exists($PropFormatTable->{$name})) {
+        return $PropFormatTable->{$name}($value);
+    } else {
+        return $value;
+    }
 }
 
 sub format_html{
@@ -65,7 +106,7 @@ sub format_html{
     my $rst=$pad."<".$self->prop(tag);
     my @ak = keys(%{$p});
     foreach my $k (@ak) {
-        $rst .= " ".$k."=\"".$p->{$k}."\"";
+        $rst .= " ".$k."=\""._format_prop($k, $p->{$k})."\"";
     }
     $rst.=">\n";
     print $rst;
