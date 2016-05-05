@@ -9,6 +9,8 @@ sub new {
     # $self->prop(data, {tag=>$spec->{tag},
     # prop=>$spec->{prop}});
 
+    $spec->{prop} = {} if not exists($spec->{prop});
+
     $self->prop(tag, $spec->{tag});
     $self->prop(prop, $spec->{prop});
     $self->prop(parent, $spec->{parent});
