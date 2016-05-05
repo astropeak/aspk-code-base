@@ -1,0 +1,12 @@
+* git
+** create a git repos on window
+   1. make a dir and cd that dir
+   2. git init --bare
+      
+      This command will make current dir a git repos
+   3. *add permisions*
+      #+begin_src sh
+      git config core.sharedRepository 0777
+      chmod a+w -R .
+      #+end_src
+      Elsewise other people may can't push to this repos.

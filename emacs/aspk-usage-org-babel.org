@@ -33,6 +33,8 @@
    
 ** 插入代码块
    手动输入代码块的标记头（如下），然后光标移到中间空行，按 ~C-c '\~ 键，在弹出的新的buffer里输入代码。输入完成后按 ~C-c '\~ 键返回。
+
+   运行的命令分别为： ~org-edit-special~, ~org-edit-src-exit~.
    #+begin_src org
    ,#+begin_src
    

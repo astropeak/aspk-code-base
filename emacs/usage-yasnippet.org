@@ -1,0 +1,22 @@
+* yasnippet
+** How to creat a new snippet
+   1. run ~yas-new-snippet~. shortkey is: ~C-c & C-n~.
+   2. enter the snippet content in the popup buffer 
+      
+      Below is an example of snippet
+      #+begin_src org
+      # -*- mode: snippet -*-
+      # name: src
+      # key: src
+      # --
+      ,#+begin_src ${1:language}
+      $0
+      ,#+end_src
+      #+end_src
+   3. press ~C-c C-c~ to save the snippet(command is ~yas-load-snippet-buffer-and-close~)
+      
+      Given the mode and name. 
+      
+      The snippet will be saved to *first directory* in ~yas-snippet-dirs~, which is ~Dropbox/project/emacs.d/local-snippet~ now. Great!!
+*** naming convention for a new snippet file
+    - for org mode source block, the name is 's' concat file suffix of that programming language. eg: 'spl' is for generating a src block with language set to perl; 'spy' for python; 'ssh' for shell.

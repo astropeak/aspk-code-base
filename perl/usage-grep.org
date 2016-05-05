@@ -1,0 +1,35 @@
+* grep
+  grep works on an array and return a new array. It works like a filter, you decide which elements in the given array should be kept in the result array.
+  
+  syntax:
+  #+begin_src perl
+  grep CODE_BLOCK ARRAY
+  #+end_src
+
+  The code block works as judging condition. If return value of the block is true, then the element will be kept, else deleted. ~$_~ is bind to current element in the code block.
+** examples
+*** delete some elements in an array
+    #+begin_src perl
+    grep {$_ ne "bb"} qw(aa bb cc);
+    #+end_src
+
+    #+RESULTS:
+    : aa
+    : cc
+
+    Will return a new array with all elements equal to "bb" deleted.
+    
+*** delete duplicate elements
+    like unique
+    #+begin_src perl
+    grep {++$count{$_} <= 1} qw(aa aa bb cc bb aa);
+    #+end_src
+
+    #+RESULTS:
+    : aa
+    : bb
+    : cc
+
+    How the code works?
+
+    For the first element 'aa', ~$count{'aa'}~ will be ~1~ before comparing(because $count{'aa'} is undef, so its initial value is 0), so code block result is ~true~, then this element will be put to result array; for the second 'aa', ~$count{'aa'}~ will be ~2~ before comparing, code block result is ~false~, then the element will not be put to result array.
