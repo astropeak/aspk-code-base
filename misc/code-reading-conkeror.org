@@ -1,0 +1,20 @@
+* code reading conkeror
+  Official development page: http://repo.or.cz/conkeror.git
+** rc files
+*** How rc files are loaded 
+    bind f5 to reinit
+    #+begin_src js
+    define_key(default_global_keymap, "f5", "reinit");
+    #+end_src
+
+    call stack
+    | function   | file                                                |
+    |------------+-----------------------------------------------------|
+    | reinit     | c:/Program Files (x86)/conkeror/modules/commands.js |
+    | load_rc    | c:/Program Files (x86)/conkeror/modules/rc.js       |
+    | load([[file]]) |                                                     |
+
+    It is ~load(file)~ that do the real work. File should be a string of full path. This function may defined in non js code.
+** idea
+*** put rc files in dropbox, and load it in default rc file
+    Works much like how emacs.d works.
