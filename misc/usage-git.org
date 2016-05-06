@@ -1,6 +1,6 @@
 * git
 ** create a git repos on window
-   1. make a dir and cd that dir
+   1. make a dir and cd to that dir
    2. git init --bare
       
       This command will make current dir a git repos
@@ -9,4 +9,15 @@
       git config core.sharedRepository 0777
       chmod a+w -R .
       #+end_src
-      Elsewise other people may can't push to this repos.
+      Otherwise other people may can't push to this repos.
+** config
+*** ignore file mode
+    #+begin_src sh
+    git config core.fileMode false
+    #+end_src
+
+    Or just edit the .git/config file, modify fileMode to false under [core] block(add the line if not exists)
+    #+begin_src gitconfig
+    [core]
+        filemode = false
+    #+end_src
