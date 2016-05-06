@@ -8,24 +8,24 @@
       (aspk/selectlist-create 1 1 '("AA") 9))
 
 (defun aspk/app-wubi-create-selectlist (&rest args)
-  (aspk/selectlist-config aspk/app-wubi-selectlist
-                          'aspk/tooltip-buffer (current-buffer))
+    (aspk/selectlist-config aspk/app-wubi-selectlist
+                            'aspk/tooltip-buffer (current-buffer))
 
-  (aspk/selectlist-config aspk/app-wubi-selectlist
-                          'aspk/tooltip-row (+ (aspk/window-row (point)) 1))
+    (aspk/selectlist-config aspk/app-wubi-selectlist
+                            'aspk/tooltip-row (+ (aspk/window-row (point)) 1))
 
-  (aspk/selectlist-config aspk/app-wubi-selectlist
-                          'aspk/tooltip-column (aspk/window-column (point)))
+    (aspk/selectlist-config aspk/app-wubi-selectlist
+                            'aspk/tooltip-column (aspk/window-column (point)))
 
-  (aspk/selectlist-config aspk/app-wubi-selectlist
-                          'candidates
-                          (mapcar
-                           (lambda (candidate)
-                             (format "%s"
-                                     (if (integerp (cdr candidate))
-                                         (make-string 1 (cdr candidate))
-                                       (cdr candidate))
-                                     (car candidate)))
+    (aspk/selectlist-config aspk/app-wubi-selectlist
+                            'candidates
+                            (mapcar
+                             (lambda (candidate)
+                               (format "%s"
+                                       (if (integerp (cdr candidate))
+                                           (make-string 1 (cdr candidate))
+                                         (cdr candidate))
+                                       (car candidate)))
                            (aspk/app-wubi-completion))))
 
 ;; (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
@@ -43,17 +43,22 @@
 (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-hide-selectlist)
 
 (defun aspk/app-wubi-display-selectlist (&rest args)
-  (aspk/selectlist-show aspk/app-wubi-selectlist)
-  (let  ((rst (aspk/selectlist-select aspk/app-wubi-selectlist)))
-    (tracel rst)
-    (if rst  ;;if rst not nil, then the user has make a selection
-        (progn
-          (quail-abort-translation)
-          (insert (substring rst 0 (string-match "(" rst))))
-      (aspk/keybind-temporary-keymap-highest-priority
-       '((return (progn
+  (let ((candidates (aspk/tooltip-get aspk/app-wubi-selectlist 'candidates)))
+    (cond ((= (length candidates) 1)
+           (quail-abort-translation)
+           (insert (substring (car candidates) 0 (string-match "(" (car candidates)))))
+          ((>= (length candidates) 2)
+           (aspk/selectlist-show aspk/app-wubi-selectlist)
+           (let  ((rst (aspk/selectlist-select aspk/app-wubi-selectlist)))
+             (tracel rst)
+             (if rst  ;;if rst not nil, then the user has make a selection
+                 (progn
                    (quail-abort-translation)
-                   (insert quail-current-key)) 1))))))
+                   (insert (substring rst 0 (string-match "(" rst))))
+               (aspk/keybind-temporary-keymap-highest-priority
+                '((return (progn
+                            (quail-abort-translation)
+                            (insert quail-current-key)) 1)))))))))
 
 ;; (aspk/keybind-temporary-keymap
 ;;  (list
