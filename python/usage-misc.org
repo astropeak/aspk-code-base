@@ -1,0 +1,226 @@
+* misc
+** items
+   *Important*:
+   To run all below code blocks, there should be a file named 'support.py' in current directory, with below content:
+   #+begin_src python
+   a_var = "I am a var"
+   
+   def print_name (name):
+       print("hello: "+name)
+       return
+   #+end_src
+
+*** hex number
+    1. literal notation
+       #+begin_src python
+       a = 0x1F
+       #+end_src
+
+       #+RESULTS:
+
+    2. convert a int to hex
+       #+begin_src python
+       b = hex(123)
+       return b
+       #+end_src
+
+       #+RESULTS:
+       : 0x7b
+
+*** function reference
+    Just the function name itself. eg:
+    #+begin_src python
+    a = map(int, ["1", "2", "3"])
+    return a
+    #+end_src
+
+    #+RESULTS:
+    : <map object at 0x0000000000BC0B38>
+
+    ~int~ is a function converting a string to a number.
+
+    example:
+    #+begin_src python :results output
+    def one():
+        print("hello from function one")
+    def two():
+        print("hello from function two")
+    def three():
+        print("hello from function three")
+    # stores the ref of function in variable
+    f1 = one
+    f2 = two
+    f3 = three
+    func_list = [f1, f2, f3]
+    for f in func_list:
+        # show the function reference
+        print(f)
+        # call the function
+        f()
+    #+end_src
+
+    #+RESULTS:
+    : <function one at 0x00000000012E1620>
+    : hello from function one
+    : <function two at 0x00000000012E16A8>
+    : hello from function two
+    : <function three at 0x00000000012E1730>
+    : hello from function three
+
+*** dictionary(hash in python)
+    1. literal notation
+       #+begin_src python
+       h = {1:2, 3:4, '3':5}
+       return h['3']
+       #+end_src
+
+       #+RESULTS:
+       : 5
+
+       KEY:VALUE
+    
+       KEY can be any type, string or number.
+
+    2. check if a key exists
+       #+begin_src python
+       h = {1:2, 3:4}
+       b = 2 in h
+       return b
+       #+end_src
+
+       #+RESULTS:
+       : False
+
+*** array
+    1. literal notation
+       #+begin_src python
+       a = [1,2,3]
+       return a
+       #+end_src
+
+       #+RESULTS:
+       | 1 | 2 | 3 |
+       
+*** module
+    A good tutorial: http://www.tutorialspoint.com/python/python_modules.htm
+
+    module name same as file name, and module name is also the namespace. Much simple than perl module.
+    1. define a module
+       1. just create a file and define classes or functions or variables in that file
+          
+          file ~support.py~:
+          #+begin_src python
+          def print_name (name):
+              print "hello: ", name
+              return
+          #+end_src
+    2. use a module
+       - import a module
+         #+begin_src python :results output
+         import support
+         support.print_name("Jim")
+         #+end_src
+
+         #+RESULTS:
+         : hello: Jim
+
+         All names defined in ~support.py~ will be under namespace ~support~
+       - import some names form a module to current namespace
+         #+begin_src python :results output
+         from support import print_name, a_var
+         print_name("Jim")
+         print(a_var)
+         #+end_src
+
+         #+RESULTS:
+         : hello: Jim
+         : I am a var
+       - import all names form a module to current namespace
+         #+begin_src python :results output
+         from support import *
+         print_name("Jim")
+         print(a_var)
+         #+end_src
+
+         #+RESULTS:
+         : hello: Jim
+         : I am a var
+    3. locates a module(the search sequence)
+       1. The current directory.
+       2. If the module isn't found, Python then searches each directory in the shell variable PYTHONPATH.
+       3. If all else fails, Python checks the default path. On UNIX, this default path is normally /usr/local/lib/python/.
+
+*** calling a function from string
+    http://stackoverflow.com/questions/3061/calling-a-function-of-a-module-from-a-string-with-the-functions-name-in-python
+    - calling a module's function
+      - ~getattr~: get a function from a module
+      - ~hasattr~: judge if a function exists in a module
+
+      Example:
+      #+begin_src python :results output
+      import support
+      if (hasattr(support, 'bar')):
+          getattr(support, 'bar')()
+      else:
+          print('function bar not exists in module support')
+      
+      if (hasattr(support, 'print_name')):
+          getattr(support, 'print_name')('Tom')
+      else:
+          print('print_name not exists')
+      #+end_src
+
+      #+RESULTS:
+      : function bar not exists in module support
+      : hello: Tom
+
+      *If module name not know*, then first import that module from a string.
+    - calling functions in current module
+      - ~locals~ returns a dictionary with a current local symbol table.
+      - ~globals~ returns a dictionary with global symbol table.
+
+      globals/locals is good if the method you need to call is defined in the same module you are calling from (don't sure if this statement right)
+      #+begin_src python :results output
+      import support
+      
+      def foo():
+          print("I am foo")
+      
+      locals()["foo"]()
+      # locals()["print_name"]() # this will fail
+      globals()["foo"]()
+      #+end_src
+
+      #+RESULTS:
+      : I am foo
+      : I am foo
+
+*** import module from string (so it can be loaded dynamicly)
+    Both ~importlib~ and ~__import__~ works!
+    #+begin_src python :results output
+    import importlib
+    try:
+        support = importlib.import_module('support')
+        # support = __import__('support')  # this will do the same work
+        support.print_name("Jim")
+    except:
+        print("module not exists")
+    else:
+        pass
+    #+end_src
+
+    #+RESULTS:
+    : hello: Jim
+
+*** format a string
+    https://pyformat.info/
+    1. the ~%~ operator
+       #+begin_src python :results output
+       rst = "result: %d. No of entries: %d" % (0, 71)
+       print(rst)
+       #+end_src
+
+       #+RESULTS:
+       : result: 0. No of entries: 71
+
+    
