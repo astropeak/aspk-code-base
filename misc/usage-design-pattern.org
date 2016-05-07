@@ -1,0 +1,79 @@
+* design pattern
+** vistor
+   Add new functions without modify a class's codes.
+
+   wiki上的定义： 为已有类增加虚函数（这个是通用的概念，见下面），而不改变已有类的代码。
+*** basic knowledge
+    1. virtual function
+       
+       OOP的概念，与普通函数最本质的区别是调用时的确认时间。 普通函数在编译期间就确定了调用的是哪个类的哪个函数（或通过看代码就能确定），而虚函数只有在运行时才能确定调用哪个类的哪个函数（依赖于实际对象）。
+       C++中的虚函数的定义只是一种特例。
+       
+       对于 ~obj.vfunc()~ ， 调用的vfunc在编译期间不能确定是哪个具体函数，需要两个条件：
+       1. obj的具体类型不确定，比如它是一个指针或引用
+       2. vfunc是一个虚函数
+
+       那由此看来，弱类型语言中函数都是虚函数？因为根本不知道对象的类型。
+
+*** 一些点
+    1. 之前实现的HtmlElement的 traverse 函数就是一个vistor模式。 
+       prefunc等输入参数就是vistor， HtmlElement就是不变的类， traverse就是这个类的基本函数。
+
+       不同的prefunc函数（也即不同的vistor），便能够实现不同的功能。
+
+    2. wiki上 common lisp的例子非常有意思。
+       common lisp 天生支持multi dispatch, 仅仅通过参数类型不同就可以实现vistor模式，都不需要额外的vistor类。
+
+       为什么在C++中需要vistor类呢？ 
+
+       C++实现cat 函数：
+       #+begin_src c++
+       Vistor cat;
+       Node* n;
+       n= File();
+       n.accept(cat);
+       n=Directory();
+       n.accept(cat);
+       #+end_src
+
+       Common lisp 实现 cat函数。
+       #+begin_src lisp
+       (defclass node ()
+         ((name :initarg :name)))
+       (defclass file (node)())
+       (defclass directory (node)())
+       (defmethod cat ((node file))
+         (print "cat file"))
+       (defmethod cat ((node directory))
+         (print "Error: can't cat a directory"))
+
+       (setq n (make-instance 'file :name "aaa"))
+       (cat n) ;;first cat method will be called
+       (setq n (make-instance 'directory :name "bbb"))
+       (cat n) ;; second cat method will be called
+       #+end_src
+       仅仅是分别增加对应参数类型的函数就行了。那为什么C++不定义两个这样的函数呢？
+       #+begin_src c++
+       void cat(File f){
+         printf("cat file");
+       }
+       void cat(Directory d){
+         printf("Error: can't cat a directory");
+       }
+       #+end_src
+       那么调用时，根本不能统一调用，因为调用前，你就需要知道对象的类型。但如果写为以下接口
+       #+begin_src c++
+       void cat(Node* n){
+         //
+       }
+       #+end_src
+       则需要在cat函数内部判断n的类型。还是不行。 一般的动态语言也不行（比如perl)，都得判断实际类型，才好知道如何操作。
+
+       由此，使用vistor对象的本质是：就是在vistor类中定义了class的虚函数（虽然与开头的结论相同，但理解不同了）。 vistor类中定义所有类型对应的viste函数，当object.accept调用时，就能够调用到viste(object)那个函数（从而实现虚函数）。
+
+
+       
+
+
+       
+       
