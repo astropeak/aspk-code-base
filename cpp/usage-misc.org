@@ -1,0 +1,7 @@
+* Misc
+** Items
+*** get runtime type of a object
+    #+begin_src c++
+    #include <typeinfo>
+    typeid(obj).name();
+    #+end_src
