@@ -32,10 +32,11 @@
     2. single dispatch
        dispatch的意思： 运行时，根据参数决定要调用哪个函数。 C++只支持single dispatch，即通过虚函数，根据当前真正的object类型决定调用哪个虚函数。根据参数不同的函数重载在编译期间确定。
     3. double dispatch
-       common lisp支持multi dispatch. 见vistor pattern wiki上的例子
+       common lisp支持multi dispatch. 见vistor pattern wikipedia上的例子
+       
+       vistor pattern是C++支持double dispatch 的方式。二者几乎是等价的。
 
     4. multi dispatch
-
 
 *** 一些点
     1. 之前实现的HtmlElement的 traverse 函数就是一个vistor模式。 
