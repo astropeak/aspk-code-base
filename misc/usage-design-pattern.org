@@ -3,6 +3,20 @@
    Add new functions without modify a class's codes.
 
    wiki上的定义： 为已有类增加虚函数（这个是通用的概念，见下面），而不改变已有类的代码。
+
+   优点：
+   - 更好的代码划分，类更小
+     类只实现基本地功能（这些功能是必须正交的）， 额外的功能通过定义不同的vistor类添加。
+   - 符合开放封闭原则
+     即对添加新功能开放，对修改源代码封闭。 现在才真正了解了这个概念。
+   - 因此也就适应了变化
+     但element类变化会造成较大的改动。
+
+   适用场景：
+   - 文件系统API。 Node类表示一个文件，或目录，是基类。只提供 1 写入内容，2 读取内容，3 获取名称 三个最基本的操作。其它操作比如cat Node内容不应该加在这些类中， 而是通过vistor实现。为什么？加入1 增加Node类的大小， 2 cat的需求可能改变，因此当改变时，Node类的所有子类的实现都要修改。
+   - 不同的Element子类对功能的处理不同，
+
+
 *** basic knowledge
     1. virtual function
        
@@ -14,6 +28,14 @@
        2. vfunc是一个虚函数
 
        那由此看来，弱类型语言中函数都是虚函数？因为根本不知道对象的类型。
+
+    2. single dispatch
+       dispatch的意思： 运行时，根据参数决定要调用哪个函数。 C++只支持single dispatch，即通过虚函数，根据当前真正的object类型决定调用哪个虚函数。根据参数不同的函数重载在编译期间确定。
+    3. double dispatch
+       common lisp支持multi dispatch. 见vistor pattern wiki上的例子
+
+    4. multi dispatch
+
 
 *** 一些点
     1. 之前实现的HtmlElement的 traverse 函数就是一个vistor模式。 
