@@ -20,3 +20,20 @@
       The snippet will be saved to *first directory* in ~yas-snippet-dirs~, which is ~Dropbox/project/emacs.d/local-snippet~ now. Great!!
 *** naming convention for a new snippet file
     - for org mode source block, the name is 's' concat file suffix of that programming language. eg: 'spl' is for generating a src block with language set to perl; 'spy' for python; 'ssh' for shell.
+** auto-yasnippet
+   https://github.com/abo-abo/auto-yasnippet
+   - function
+     create a snippet on the run, and use it.
+   - usage
+     - write the snippet templete
+     - creat the snippet, and the current line will also be expanded. aya-create
+     - use the snippet, aya-expand
+   - example
+     #+begin_src elisp
+     (setq ~var "~var") ;;(aya-create)
+
+     ;;(aya-expand)
+     #+end_src
+
+
+   
