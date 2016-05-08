@@ -55,3 +55,19 @@
 ** 编程习惯
    我习惯于自底向上编程。 如果底层没有实现好，则我不能够很好地思维上层的编写过程。
    这点我感觉不好。
+** github
+   github上信息给纷杂。 awesome系列文章(curation for some topics)， pondal的一些文章。
+   https://github.com/sindresorhus/awesome/blob/master/awesome.md
+   
+   https://github.com/phodal
+
+   开源软件：
+   - 提供不同产品线
+   - 提供服务
+   - 提供附加产品
+   - donation
+     
+   关键的是先提高影响力。向头条发文章，做有影响力的软件，写文章。
+
+   pondal 的 awesome-iot中的关于 home automation中可以看一下。可以先选个方向研究下。
+   
