@@ -78,3 +78,26 @@
    : I am printed to stdout, AAAAAB
    #+end_src
 
+** arguments
+*** C & C++
+    1. ~:includes~, 引用头文件
+       #+begin_src C++ :includes <iostream>
+       using namespace std;
+       cout<<"HERRL"<<endl;
+       #+end_src
+       
+       #+RESULTS:
+       : HERRL
+       
+    2. ~:var VARIABLE=VALUE~, 设置变量 
+       #+begin_src C++ :var name="AAAA" :includes <iostream>
+       using namespace std;
+       cout<<name;
+       #+end_src
+
+       #+RESULTS:
+       : AAAA
+
+       
+       
+    
