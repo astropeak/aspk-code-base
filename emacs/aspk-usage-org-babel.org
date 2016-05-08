@@ -80,7 +80,7 @@
 
 ** arguments
 *** C & C++
-    1. ~:includes~, 引用头文件
+    1. ~:includes <iostream>~, 引用单个头文件
        #+begin_src C++ :includes <iostream>
        using namespace std;
        cout<<"HERRL"<<endl;
@@ -89,15 +89,20 @@
        #+RESULTS:
        : HERRL
        
-    2. ~:var VARIABLE=VALUE~, 设置变量 
+    2. ~:includes '(<iostream> <cstring>)~, 引用多个头文件
+
+       参数可以是一个 lisp expression.
+
+       ~:includes (list "<iostream>" "<cstring>")~ 可达到相同的效果。
+       
+    3. ~:var VARIABLE=VALUE~, 设置变量 
        #+begin_src C++ :var name="AAAA" :includes <iostream>
        using namespace std;
        cout<<name;
        #+end_src
-
+       
        #+RESULTS:
        : AAAA
-
        
        
     
