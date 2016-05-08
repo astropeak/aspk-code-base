@@ -1,9 +1,9 @@
 * design pattern
 ** vistor
    Add new functions without modify a class's codes.
-
+   
    wiki上的定义： 为已有类增加虚函数（这个是通用的概念，见下面），而不改变已有类的代码。
-
+   
    优点：
    - 更好的代码划分，类更小
      类只实现基本地功能（这些功能是必须正交的）， 额外的功能通过定义不同的vistor类添加。
@@ -11,12 +11,11 @@
      即对添加新功能开放，对修改源代码封闭。 现在才真正了解了这个概念。
    - 因此也就适应了变化
      但element类变化会造成较大的改动。
-
+     
    适用场景：
    - 文件系统API。 Node类表示一个文件，或目录，是基类。只提供 1 写入内容，2 读取内容，3 获取名称 三个最基本的操作。其它操作比如cat Node内容不应该加在这些类中， 而是通过vistor实现。为什么？加入1 增加Node类的大小， 2 cat的需求可能改变，因此当改变时，Node类的所有子类的实现都要修改。
    - 不同的Element子类对功能的处理不同，
-
-
+     
 *** basic knowledge
     1. virtual function
        
@@ -35,6 +34,7 @@
        common lisp支持multi dispatch. 见vistor pattern wikipedia上的例子
        
        vistor pattern是C++支持double dispatch 的方式。二者几乎是等价的。
+       double dispatch 的二维输入为:(class Element, class Vistor)
 
     4. multi dispatch
 
@@ -96,9 +96,184 @@
 
        最终目标是用户代码要一致，不能根据对象类型不同进行判断。
 
+    3. C语言中的函数表，其实只是 single dispatch
+*** Implementation
+**** C++
+     - points
+       - both function ~accept~ of class ~Element~ and function ~visit~ of class ~Vistor~ should be virtual function.
+         virtual function is the only way that providing message dispatch at runtime in C++.
+       - call sequence
 
-       
+     #+begin_src C++ :includes <iostream> 
+     using namespace std;
 
+     class A1;
+     class A2;
+     class V {
+     public:
+       virtual void visit(A1& a1){
+         cout<<"V: a1"<<endl;
+       }
+       virtual void visit(A2& a2){
+         cout<<"V: a2"<<endl;
+       }
+     };
+     class V1:public V {
+     public:
+       void visit(A1& a1){
+         cout<<"V1: a1"<<endl;
+       }
+       void visit(A2& a2){
+         cout<<"V1: a2"<<endl;
+       }
+     };
+     class V2:public V {
+     public:
+       void visit(A1& a1){
+         cout<<"V2: a1"<<endl;
+       }
+       void visit(A2& a2){
+         cout<<"V2: a2"<<endl;
+       }
+     };
+     class A {
+     public:
+       virtual void accept(V& v)=0;
+     };
+     class A1:public A{
+     public:
+       void accept(V& v){
+         v.visit(*this);
+       }
+     };
+     class A2:public A{
+     public:
+       void accept(V& v){
+         v.visit(*this);
+       }
+     };
 
-       
-       
+     int main(){
+       A1 a1;
+       A2 a2;
+       A* a = &a1;
+       V1 v1;
+       V2 v2;
+       V* v=&v1;
+       a->accept(*v);
+       v=&v2;
+       a->accept(*v);
+       a = &a2;
+       v=&v1;
+       a->accept(*v);
+       v=&v2;
+       a->accept(*v);
+
+       return 0;
+     }
+     #+end_src
+
+     #+RESULTS:
+     | V1: | a1 |
+     | V2: | a1 |
+     | V1: | a2 |
+     | V2: | a2 |
+
+** C语言函数表与C++虚函数，对比
+   用两种方法实现处理一个命令。
+   command_handler(command)
+   | command        | result                          |
+   |----------------+---------------------------------|
+   | echo str       | print string str                |
+   | cat file_name  | print content of file file_name |
+   | size file_name | print size of file file_name    |
+*** C
+    command dispatched by function table.
+    #+begin_src C :includes <stdio.h>
+    struct command{
+      char* command_name;
+      void (*handler)(char* arg);
+    };
+
+    void handle_echo(char* arg){
+      printf("handle_echo\n");
+    }
+    void handle_cat(char* arg){
+      printf("handle_cat\n");
+    }
+    struct command command_table[]={{"echo", handle_echo},
+                                    {"cat", handle_cat}};
+
+    void command_handler(char* command, char* arg) {
+      int i=0;
+      for (i = 0; i < 2; i++) {
+        if (strcmp(command, command_table[i].command_name)==0){
+          command_table[i].handler(arg);
+          return;
+        }
+      }
+      printf("no handler for command %s\n", command);
+    }
+
+    int main(int argc, char *argv[])
+    {
+      command_handler("echo", "aaaaa");
+      command_handler("cat", "aaaaa");
+      return 0;
+    }
+
+    #+end_src
+
+    #+RESULTS:
+    | handle_echo |
+    | handle_cat  |
+
+*** CPP
+    #+begin_src C++ :includes '(<iostream> <cstring>)
+    using namespace std;
+    class CommandHandler {
+    public:
+      // command part 可以放在基类中。 或者把process定义成一个templete pattern, 子类只定义个性化的部分。
+      virtual void process(char* arg) = 0;
+    };
+    class EchoCommandHandler: public CommandHandler{
+    public:
+      void process(char* arg){
+        cout<<"handle echo"<<endl;
+      }
+    };
+    class CatCommandHandler: public CommandHandler{
+    public:
+      void process(char* arg){
+        cout<<"handle cat"<<endl;
+      }
+    };
+    void command_handler(char* name, char* arg) {
+      CommandHandler* ch;
+      //此外定义一个工厂模式更好,根据name生成相应的类。
+      if (strcmp(name, "echo")==0){
+        ch = new EchoCommandHandler();
+      } else {
+        ch = new CatCommandHandler();
+      }
+      ch->process(arg);
+    }
+      
+    int main(int argc, char *argv[])
+    {
+      command_handler("echo", "aaaaa");
+      command_handler("cat", "aaaaa");
+     
+      return 0;
+    }
+
+    #+end_src
+
+    #+RESULTS:
+    | handle | echo |
+    | handle | cat  |
+
+*** compare
+    一个函数表对应一个 virtual function， 感觉 二者实现的功能相同。
+** items
+   - coding on interface, not on concoret class. thus the code will not change when new classes added.
