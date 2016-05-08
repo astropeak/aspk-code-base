@@ -5,3 +5,17 @@
     #include <typeinfo>
     typeid(obj).name();
     #+end_src
+*** reference
+    1. references much be initialed when declare
+    2. references can't be rebound after initialization.
+       #+begin_src C++ :includes <iostream>
+       using namespace std;
+       int a = 10;
+       int c = 20;
+       int& b = a;
+       b=c;
+       cout<<b;
+       #+end_src
+
+       #+RESULTS:
+       : 20
