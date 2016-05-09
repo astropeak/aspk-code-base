@@ -104,13 +104,19 @@ sub format_html{
 
     # print "tag: ".$self->prop(tag).".\n";
     my $pad = " "x($para->{depth}*4);
-    my $p=$self->prop(prop);
-    my $rst=$pad."<".$self->prop(tag);
-    my @ak = keys(%{$p});
-    foreach my $k (@ak) {
-        $rst .= " ".$k."=\""._format_prop($k, $p->{$k})."\"";
+    my $rst = "";
+
+    if ($self->prop(tag) eq "text"){
+        $rst=$pad.$self->html_prop(content)."\n";
+    } else {
+        my $p=$self->prop(prop);
+        $rst=$pad."<".$self->prop(tag);
+        my @ak = keys(%{$p});
+        foreach my $k (@ak) {
+            $rst .= " ".$k."=\""._format_prop($k, $p->{$k})."\"";
+        }
+        $rst.=">\n";
     }
-    $rst.=">\n";
     # print $rst;
     return $rst;
 }
@@ -118,13 +124,17 @@ sub format_html{
 sub format {
     my ($self)=@_;
     return $self->traverse({prefunc=>\&format_html,
-                     postfunc=>sub {
-                         my $para=shift;
-                         my $self=$para->{node};
-                         my $pad = " "x($para->{depth}*4);
-                         # print "$pad</".$self->prop(tag).">\n";
-                         return "$pad</".$self->prop(tag).">\n";
-                     }})
+                            postfunc=>sub {
+                                my $para=shift;
+                                my $self=$para->{node};
+                                if ($self->prop(tag) eq "text") {
+                                    return "";
+                                } else {
+                                    my $pad = " "x($para->{depth}*4);
+                                    # print "$pad</".$self->prop(tag).">\n";
+                                    return "$pad</".$self->prop(tag).">\n";
+                                }
+                            }})
 }
 
 sub height {
