@@ -116,29 +116,33 @@ sub appendChild{
 # hash->{traversedChildCount}: child count that already be traversed.
 #
 # So to pre-order, just provide prefunc. to post-order, just provide post func. to middle order, just provide midfunc.
+#
+# return value
+# all result of funcs concat as string
 sub traverse {
     my ($self, $para)=@_;
     $para->{depth} || ($para->{depth}=0);
     my $depth = $para->{depth};
     my $data = $self->prop(data);
     my @children = @{$self->prop(children)};
+    my $rst;
 
     # if ($para->{node}) {
     if (1) {
         if ($para->{prefunc}) {
-            $para->{prefunc}({data=>$data,
+            $rst .= $para->{prefunc}({data=>$data,
                               depth=>$depth,
                               node=>$self});
         }
 
         my $len = scalar(@children);
         for (my $i=0;$i<$len;$i++){
-            @children[$i]->traverse({depth=>$depth+1,
+            $rst .= @children[$i]->traverse({depth=>$depth+1,
                                      prefunc=>$para->{prefunc},
                                      postfunc=>$para->{postfunc},
                                      midfunc=>$para->{midfunc}});
             if ($para->{midfunc} && $i < ($len-1)) {
-                $para->{midfunc}({data=>$data,
+                $rst.=$para->{midfunc}({data=>$data,
                                   depth=>$depth,
                                   node=>$self,
                                   traversedChildCount=>($i+1)});
@@ -147,7 +151,7 @@ sub traverse {
 
         if ($len<=1){
             if ($para->{midfunc}) {
-                $para->{midfunc}({data=>$data,
+                $rst.=$para->{midfunc}({data=>$data,
                                   depth=>$depth,
                                   node=>$self,
                                   traversedChildCount=>0});
@@ -155,12 +159,13 @@ sub traverse {
         }
 
         if ($para->{postfunc}) {
-            $para->{postfunc}({data=>$data,
+            $rst.=$para->{postfunc}({data=>$data,
                                depth=>$depth,
                                node=>$self});
         }
 
     }
+    return $rst;
 }
 
 # getter function. Get data of a node

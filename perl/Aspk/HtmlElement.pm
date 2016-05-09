@@ -111,18 +111,19 @@ sub format_html{
         $rst .= " ".$k."=\""._format_prop($k, $p->{$k})."\"";
     }
     $rst.=">\n";
-    print $rst;
+    # print $rst;
     return $rst;
 }
 
-sub print {
+sub format {
     my ($self)=@_;
-    $self->traverse({prefunc=>\&format_html,
+    return $self->traverse({prefunc=>\&format_html,
                      postfunc=>sub {
                          my $para=shift;
                          my $self=$para->{node};
                          my $pad = " "x($para->{depth}*4);
-                         print "$pad</".$self->prop(tag).">\n";
+                         # print "$pad</".$self->prop(tag).">\n";
+                         return "$pad</".$self->prop(tag).">\n";
                      }})
 }
 
