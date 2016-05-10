@@ -1,0 +1,54 @@
+* constructor and destructor
+** which parent constructor will be called when creating a subclass object?
+   1. 创建子类对象时，父类的构造函数会被自动调用，或者由子类显式调用。自动调用时，都是调用父类的无参数的构造函数。
+   2. 当父类只定义了有参数的构造函数时，子类必须显式调用这个构造函数。
+      因为如果不显式调用父类的构造函数，父类的无参数构造函数会被调用，但又不存在，则会出错。
+      
+      错误例子：
+      #+begin_src C++ :includes <iostream>
+      using namespace std;
+      class Base{
+        public:
+        Base(int n){
+        cout<<"parent constructor"<<endl;
+        }
+      };
+      class Derived:public Base{
+        public:
+        // Derived(int n):Base(n){
+        Derived(int n) {
+          cout<<"Derived constructor"<<endl;
+        }
+      };
+      int main(int argc, char *argv[])
+      {
+        Derived d(1);
+        return 0;
+      }
+
+      #+end_src
+
+      #+RESULTS:
+
+      Error message:
+      #+begin_src org
+      /tmp/babel-2192uNM/C-src-2192J9t.cpp: In constructor ‘Derived::Derived(int)’:
+      /tmp/babel-2192uNM/C-src-2192J9t.cpp:13:17: error: no matching function for call to ‘Base::Base()’
+         Derived(int n){
+                       ^
+      /tmp/babel-2192uNM/C-src-2192J9t.cpp:13:17: note: candidates are:
+      /tmp/babel-2192uNM/C-src-2192J9t.cpp:7:3: note: Base::Base(int)
+         Base(int n){
+         ^
+      /tmp/babel-2192uNM/C-src-2192J9t.cpp:7:3: note:   candidate expects 1 argument, 0 provided
+      #+end_src
+
+   
+   http://blog.csdn.net/hemmingway/article/details/7853713
+    1. 如果子类没有定义构造方法，则调用父类的无参数的构造方法。
+    2. 如果子类定义了构造方法，不论是无参数还是带参数，在创建子类的对象的时候,首先执行父类无参数的构造方法，然后执行自己的构造方法。
+    3. 在创建子类对象时候，如果子类的构造函数没有显示调用父类的构造函数，则会调用父类的默认无参构造函数。
+    4. 在创建子类对象时候，如果子类的构造函数没有显示调用父类的构造函数且父类自己提供了无参构造函数，则会调用父类自己的无参构造函数。
+    5. 在创建子类对象时候，如果子类的构造函数没有显示调用父类的构造函数且父类只定义了自己的有参构造函数，则会出错（如果父类只有有参数的构造方法，则子类必须显示调用此带参构造方法）。
+    6. 如果子类调用父类带参数的构造方法，需要用初始化父类成员对象的方式
+           比如在fish类的构造函数后，加一个冒号（:），然后加上父类的带参数的构造函数。这样，在子类的构造函数被调用时，系统就会去调用父类的带参数的构造函数去构造对象。
