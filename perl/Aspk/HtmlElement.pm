@@ -13,7 +13,8 @@ sub new {
 
     $self->prop(tag, $spec->{tag});
     $self->prop(prop, $spec->{prop});
-    $self->prop(parent, $spec->{parent});
+    $spec->{parent}->add_child($self) if defined $spec->{parent};
+
     # print "In HtmlElement new. tag: ".$spec->{tag}."\n";
     # print "In HtmlElement new. tag: ".$self->prop(tag)."\n";
 
