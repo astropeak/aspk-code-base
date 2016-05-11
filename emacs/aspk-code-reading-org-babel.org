@@ -1,0 +1,14 @@
+* org babel
+** the function called when evaluating a code block by ~C-c C-c~
+   ~org-babel-execute:LANG~
+
+   for C++, it is ~org-babel-execute:C++~.
+   for python: it is ~org-babel-execute:python~.
+   
+   This variable specify compiler: ~org-babel-C++-compiler~.
+
+   (setq org-babel-C++-compiler "e:/cygwin/bin/bash -c 'g++.exe")
+
+   It is this function that do the job:
+   (defun org-babel-C-execute (body params)
+ 
