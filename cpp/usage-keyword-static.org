@@ -1,0 +1,32 @@
+* keyword static
+** Items
+   static的类成员独立于类对象（类本身），相当于类的namespace下的独立的全局变量。
+   
+*** 修饰类成员函数时
+    - 这个函数只能访问static的类成员。因为它没有this指针。
+    - 这个函数可以在没有类对象直接调用。 因为这个函数不依赖于对象，相当于在这个类的namespace下定义了一个函数。
+*** 修饰类成员变量时
+    - 这个变量不属于类本身，只不过作用域在类的namespace下。
+    - sizeof(obj)不包含这个变量的大小。
+      #+begin_src C++ :includes <iostream>
+using namespace std;
+class AAA{
+    int a;
+    static int b;
+};
+
+AAA a;
+cout<<sizeof(a)<<endl;
+      #+end_src
+      
+      结果为4。
+      
+*** 只有const的类 static 成员变量可以直接在类定义中初始化
+    #+begin_src org
+    tmp1.cpp:42:23: error: ISO C++ forbids in-class initialization of non-const static member ‘person::_mySalary’
+      static int _mySalary=10;
+    #+end_src
+    TODO 原因是什么？
+    
+    
+    

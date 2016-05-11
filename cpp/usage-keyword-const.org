@@ -1,0 +1,16 @@
+
+* keyword const
+** Items
+*** const 修饰函数体时
+    表示这个函数的this指针是const的。因此，
+    1. 函数体中不能修改类成员变量
+    2. 不能调用非const的成员函数
+       调用时错误信息：
+       #+begin_src org
+       tmp1.cpp:28:28: error: passing ‘const person’ as ‘this’ argument of ‘void person::DoAction(behavior)’ discards qualifiers [-fpermissive]
+                    DoAction(eSmile);
+       
+       #+end_src
+
+
+    
