@@ -1,4 +1,10 @@
 * constructor and destructor
+** general points
+   - 派生类对象的构造函数，总是会自动调用其基类的构造函数，如果没有显式调用的话。
+   - 上面原则同样适用于析构函数。不同点为调用顺序不同。
+   - 对于析构函数和普通函数，虚函数的处理机制完全相同。
+   - 基类定义为虚函数的函数，子类中相应函数自动成为虚函数（而无需加virtual关键字）。适用于虚的析构函数。
+
 ** which parent constructor will be called when creating a subclass object?
    1. 创建子类对象时，父类的构造函数会被自动调用，或者由子类显式调用。自动调用时，都是调用父类的无参数的构造函数。
    2. 当父类只定义了有参数的构造函数时，子类必须显式调用这个构造函数。
@@ -52,3 +58,52 @@
     5. 在创建子类对象时候，如果子类的构造函数没有显示调用父类的构造函数且父类只定义了自己的有参构造函数，则会出错（如果父类只有有参数的构造方法，则子类必须显示调用此带参构造方法）。
     6. 如果子类调用父类带参数的构造方法，需要用初始化父类成员对象的方式
            比如在fish类的构造函数后，加一个冒号（:），然后加上父类的带参数的构造函数。这样，在子类的构造函数被调用时，系统就会去调用父类的带参数的构造函数去构造对象。
+
+** when destructor must be virtual
+   #+begin_src c++ :includes <iostream>
+   #include <iostream>
+   using namespace std;
+   class Base {
+   public:
+       Base() {
+           std::cout << "Constructor Base." << std::endl;
+       }
+       virtual ~Base() {
+           std::cout << "Destructor Base." << std::endl;
+       }
+   };
+   
+   class Derive: public Base {
+   public:
+       Derive() {
+           std::cout << "Constructor Derive." << std::endl;
+       }
+       ~Derive() {
+           std::cout << "Destructor Derive." << std::endl;
+       }
+   };
+   int main()
+   {
+       Base* b = new Derive();
+       delete b;
+       return 0;
+   }
+   #+end_src
+
+   output is:
+   #+begin_src org
+   Constructor Base.
+   Constructor Derive.
+   Destructor Derive.
+   Destructor Base.
+   #+end_src
+
+   If change ~Base to non-virtual function, then output will be:
+   #+begin_src org
+   Constructor Base.
+   Constructor Derive.
+   Destructor Base.
+   #+end_src
+   Destructor of derived class will not be called, which is wrong.
+
+   So if there is at lease one virtual function in a class, then the destructor should also be virtual.
