@@ -1,0 +1,4 @@
+* Misc
+** remove space between inline blocks
+   https://css-tricks.com/fighting-the-space-between-inline-block-elements/
+   
