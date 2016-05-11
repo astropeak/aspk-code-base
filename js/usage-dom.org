@@ -1,0 +1,15 @@
+* DOM
+** element
+*** property
+    | property name | type   | meaning                                  |
+    |---------------+--------+------------------------------------------|
+    | nodeName      | string | the tag name of this element, capital    |
+    | id            | string | id                                       |
+    | style         | object | style                                    |
+    | textContent   | string | all content include child node's content |
+
+    And there are many, to see all of these properties, using firebug console.
+    #+begin_src js
+    document.getElementById("ID").
+    #+end_src
+    Then all available properties will be prompted.

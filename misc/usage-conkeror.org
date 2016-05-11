@@ -1,0 +1,8 @@
+* conkeror
+** RC file
+   Official doc: http://conkeror.org/ConkerorRC
+*** Change RC file location
+    Just execute this statement in conkeror(by M-:). And it will take effect forever.
+    #+begin_src js
+    user_pref('conkeror.rcfile', '/home/foo/conkeror-rc');
+    #+end_src
