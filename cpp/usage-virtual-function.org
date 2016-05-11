@@ -1,0 +1,35 @@
+* Virtual Function
+** How virtual function implemented?
+   Reference: <<inside the c++ object model>>, pdf page 93. Section 4.2 Virtual member functions
+
+   1. each class has a virtual function table, it has the below structure
+      |-------------------------------|
+      | address of type info          |
+      |-------------------------------|
+      | address of virtual function 1 |
+      |-------------------------------|
+      | address of virtual function 2 |
+      |-------------------------------|
+      | ...                           |
+      |-------------------------------|
+      | address of virtual function n |
+      |-------------------------------|
+   2. Compiler will add a pointer to each object' data, the pointer point to the class's virtual function table.
+   3. Index for each virtual function in v-table is fixed, for all classes in the inheretance structure.
+
+   Example:
+   #+begin_src c++ :includes <iostream>
+   using namespace std;
+   Base *b = Derived();
+   b->output()
+   #+end_src
+
+   Is equivaltent to(suppose ~output~'s index in v-table is ~1~, ~vptr~ is the pointer name added by compiler):
+   #+begin_src c++ :includes <iostream>
+   using namespace std;
+   Base *b = Derived();
+   (*b->vptr[1])(b);
+   #+end_src
+
+
+
