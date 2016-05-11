@@ -51,7 +51,6 @@
    感觉软件不好，可以先放一下，之后再改进。只要坚持，就一定能够做好。
    前提是代码要整理好，这次写wubi-app感觉就是这样，一开始运行效率有问题，尝试了一些方法，效果不佳，都不想继续做下去。就几天没管。几天后再尝试，居然一下就改好了。其实之前已经改得差不多了，只需要这最后一步，但当时已经MENG了。
 
-   
 ** 编程习惯
    我习惯于自底向上编程。 如果底层没有实现好，则我不能够很好地思维上层的编写过程。
    这点我感觉不好。
@@ -71,3 +70,9 @@
 
    pondal 的 awesome-iot中的关于 home automation中可以看一下。可以先选个方向研究下。
    
+** OOP
+   解决条件判断的问题。
+   一种判断对应一组派生类对象，虚函数将这些连接在一起。
+
+   OOP and if conditional
+   http://stackoverflow.com/questions/7264145/if-less-programming-basically-without-conditionals
