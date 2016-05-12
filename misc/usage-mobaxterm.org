@@ -1,0 +1,6 @@
+* mobaxterm
+** Official PC setup
+   Default home directory is: ~/home/mobaxterm~
+   Then I change ~$HOME~ to the HOME dir I wanted. and source ~.bashrc~.
+
+   So under new HOME dir, it works as like the original one. I can just add thing to the new bashrc.
