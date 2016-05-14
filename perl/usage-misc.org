@@ -22,3 +22,73 @@
     exists($h->{value});
     #+end_src
 
+** string process
+*** TODO [format this item] remove line end 
+http://www.perlmonks.org/bare/?node_id=504626
+
+    The chomp function removes the current 'input record separator' (stored in $/, see perlvar) from the end of a given string of text. You have two options to make it behave in the given circumstance. I will assume, from here, that you are reading lines from a file with Windows-style line-endings (\r\n).
+
+First, you could simply adjust your $/:
+
+local $/ = "\r\n"; while (<DATA>) { chomp $_; print STDERR "'$_'\n"; }
+[download]
+
+Of course, if you don't know what kind of line endings you have, you can simply convert all line endings to newlines first:
+
+while (<DATA>) { s/\r[\n]*/\n/gm; # now, an \r (Mac) or \r\n (Win) becomes \n (UNIX +) chomp $_; print STDERR "'$_'\n"; }
+[download]
+
+Seems a waste to run a regex and chomp, but you could remove chomp from the code above, and replace the regex with:
+
+s/\r[\n]*//gm;
+[download]
+
+Of course, if your input separator isn't set, you'll read the whole file on the first pass through the while loop. You might consider an alternate strategy:
+
+open FH, '<', $file or die "Can't read '$file': $!"; # find out what kind of line endings we have my $buffer; local $/ = undef; while ( read( FH, $buffer, 1024 ) ) { if ( $buffer=~m/(\r[\n]*)/s ) { $/ = $1; # set the input separator to what we found last; # stop trying to find the separator } } close FH; # now reopen the FH and read line by line open FH, '<', $file or die "Can't read '$file': $!"; while (<FH>) { chomp; print STDERR "'$_'\n"; } close FH;
+[download]
+
+There are cases I haven't dealt with, etc. for purposes of simplicity. 
+*** store regexp to scalar variable
+    #+begin_src perl :results output
+    $regex1 = qr/(hello)/;
+    # $regex1 = 'he(ll)o';
+    $test = 'I hellothere!';
+    print $1 if $test =~ /I ($regex1)th/;
+    #+end_src
+
+    #+RESULTS:
+    : hello
+
+    
+** array
+*** reduce. Perl don't have this.
+    #+begin_src perl
+    $s = reduce {$_+1} (1, 2, 3);
+    # grep {$_ ne "bb"} qw(aa bb cc);
+    #+end_src
+
+    #+RESULTS:
+
+    #+begin_src perl :results output
+    $a = [1, 2 , 3];
+    @b = @{$a};
+    @c = (4,5,6);
+    @d=@c;
+    print @d;
+    #+end_src
+
+    #+RESULTS:
+    : 456
+
+** tmp
+   #+begin_src perl :results output
+$a="AAA";
+   @a = eval '$a, 2';
+
+   print @a;
+   #+end_src
+
+   #+RESULTS:
+   : AAA2
+
