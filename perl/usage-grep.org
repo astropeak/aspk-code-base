@@ -33,3 +33,13 @@
     How the code works?
 
     For the first element 'aa', ~$count{'aa'}~ will be ~1~ before comparing(because $count{'aa'} is undef, so its initial value is 0), so code block result is ~true~, then this element will be put to result array; for the second 'aa', ~$count{'aa'}~ will be ~2~ before comparing, code block result is ~false~, then the element will not be put to result array.
+*** return elements only match a pattern
+    #+begin_src perl
+    grep {/^[ \t]*([rc][0-9]{1,10}){1,100}[ \t]*$/} qw(r1 r1c1 c1 r1.a aa bb cc aaaaa);
+    #+end_src
+
+    #+RESULTS:
+    : r1
+    : r1c1
+    : c1
+
