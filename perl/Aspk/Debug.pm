@@ -1,15 +1,15 @@
-package Aspk::debug;
+package Aspk::Debug;
 use Exporter;
 
 use Scalar::Util qw(reftype);
 
 @ISA=qw(Exporter);
-@EXPORT_OK=qw(printHash);
+@EXPORT_OK=qw(print_obj);
 
 # first parameter is a references to a hash
 # TODO should be renamed to print_obj
 my $objs = {};
-sub printHash {
+sub print_obj {
 	my $h = $_[0];
 	my $header = $_[1];
 	unless ($header) {
@@ -29,7 +29,7 @@ sub printHash {
             my $t = $h->{$k};
             print "$header $k: $t\n";
             # if ($k ne "_parent"){ #TODO: this is only a workaround for Tree.pm. should be removed.
-                printHash($h->{$k}, $header."    ");
+                print_obj($h->{$k}, $header."    ");
             # }
 		}
     } elsif (reftype($h) eq 'ARRAY'){
@@ -37,7 +37,7 @@ sub printHash {
 		# print "$header $t\n";
         for(my $i=0; $i<scalar(@{$h});$i++) {
             print($header." [$i]:".$h->[$i]."\n");
-            printHash($h->[$i], $header."    ");
+            print_obj($h->[$i], $header."    ");
         }
     }
     else {

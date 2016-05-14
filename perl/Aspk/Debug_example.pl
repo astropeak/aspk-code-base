@@ -1,4 +1,4 @@
-use Aspk::debug qw(printHash);
+use Aspk::Debug qw(print_obj);
 
 my %h = ("name"=>"Tom", "gender"=>"male");
 my $h1 = {"aa"=>"bb",
@@ -6,4 +6,4 @@ my $h1 = {"aa"=>"bb",
           "AA"=>\%h,
           "BB"=>[1,2,\%h,4]};
 
-printHash($h1);
+print_obj($h1);

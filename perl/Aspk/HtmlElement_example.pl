@@ -1,5 +1,5 @@
 use Aspk::HtmlElement;
-use Aspk::debug qw(printHash);
+use Aspk::Debug qw(print_obj);
 
 print $Aspk::HtmlElement::PropFormatTable->{class}(["aa", "bb"])."\n";
 print $Aspk::HtmlElement::PropFormatTable->{style}({height=>10, width=>30})."\n";

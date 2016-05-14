@@ -1,5 +1,5 @@
 use Aspk::Tree;
-use Aspk::debug qw(printHash);
+use Aspk::Debug qw(print_obj);
 
 my $n = Aspk::Tree->new({data=>"aaaa"});
 my $cn = Aspk::Tree->new({data=>"bbbb", parent=>$n});
@@ -13,7 +13,7 @@ my @a = (keys(%{$n}));
 print "keys: @a\n";
 @a = @{$n->{_children}};
 print "child: @a\n";
-printHash($n);
+print_obj($n);
 
 sub printDiv{
     my $para = shift;
