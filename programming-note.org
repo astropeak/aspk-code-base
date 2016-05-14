@@ -76,3 +76,12 @@
 
    OOP and if conditional
    http://stackoverflow.com/questions/7264145/if-less-programming-basically-without-conditionals
+** 软件设计
+   目前太过于关注具体小的实现了，整体设计训练太少。
+*** 案例研究
+**** 聊天软件设计
+     1. 界面
+        界面=模板（静态）+数据（动态）。 因此界面模块对外只需要提供一个 ~update~ 接口就行了，用于更新动态数据。这是界面第一层。
+        
+        界面还应该包括一层：各个数据的 update关系。比如update了控件A，控件B也需要update。这是第二层。
+     
