@@ -38,7 +38,7 @@ my $num=33333;
 
 print "\n\n##########\n\n";
 
-dbgd $str $num;
+dbgl $str $num;
 
 sub ddd {
     my $str="XXXXX";
@@ -46,14 +46,15 @@ sub ddd {
 
     print "\n\n##########\n\n";
     $str="";
-    dbgd $str $num;
+    dbgl $str $num;
 }
 
-ddd();
+# ddd();
 # $h1 = "AAA";
-dbgd $h1;
-dbgd "BBB";
-print_obj($h1);
+dbgh $h1 $h1 $num;
+dbge "BBB", $num;
+
+# print_obj($h1);
 
 # print "scalar2str test:\n".Aspk::Debug::scalar2str($h1);
 # print "scalar2str test:\n".Aspk::Debug::scalar2str("AAAA");

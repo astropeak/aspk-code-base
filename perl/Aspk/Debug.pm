@@ -8,7 +8,7 @@ use Scalar::Util qw(reftype);
 @ISA=qw(Exporter);
 @EXPORT_OK=qw(print_obj);
 
-my $dbg_current_level= 8;
+my $dbg_current_level= 3;
 
 # first parameter is a references to a hash
 # TODO should be renamed to print_obj
@@ -75,7 +75,7 @@ sub print_vars {
                       $v = 'UNDEF';
                   };
                   $v = scalar2str($v);
-                  chomp $v;
+                  chomp $v unless $v =~ /\n.*\n$/;
                   $_->{name}."=".$v;
              } @varhash)."\n";
 }
@@ -170,25 +170,35 @@ FILTER {
     # my $file_name = $0;
     # my ($package, $filename, $line) = caller;
 
-    if ($dbg_current_level > 5) {
-        foreach (@all_lines) {
-            if ($_->{content} =~ /^\s*dbgd([^;]*)/) {
-                # $_->{content} = "print '[', __PACKAGE__, '::', __SUB__, ':', __LINE__, ']', "."' '."._aa($1);
-                # print "arg_list: $1\n";
-                my @a = split_arg_list($1);
+    foreach (@all_lines) {
+        if ($_->{content} =~ /^\s*(dbg[ewhml])([^;]*)/) {
+            # $_->{content} = "print '[', __PACKAGE__, '::', __SUB__, ':', __LINE__, ']', "."' '."._aa($2);
+            # print "arg_list: $2\n";
+            my $level_table = {"dbge"=>1,
+                               "dbgw"=>2,
+                               "dbgh"=>3,
+                               "dbgm"=>4,
+                               "dbgl"=>5
+            };
+
+            my $func=$1;
+            # my $real_level = $level_table->{$func};
+
+            if ($dbg_current_level >= $level_table->{$func}) {
+                my @a = split_arg_list($2);
                 # print "split_arg_list: @a\n";
                 my @b = format_array_hash(@a);
-                print "format_hash: @b\n";
-                $_->{content} = "Aspk::Debug::print_vars(@b);";
+                # print "format_hash: @b\n";
+                $_->{content} = "print \"[$func]\";Aspk::Debug::print_vars(@b);";
+            } else {
+                $_->{content} = "";
             }
         }
-
-        $_ = join("\n", map{$_->{content}} @all_lines);
-        # $_ = "\nuse feature 'current_sub';\n".$_;
-    } else {
-        s/dbgd(.*)//g;
     }
 
+    $_ = join("\n", map{$_->{content}} @all_lines);
+    # $_ = "\nuse feature 'current_sub';\n".$_;
+    # s/dbgd(.*)//g;
 
     # print_obj \@all_lines;
 
