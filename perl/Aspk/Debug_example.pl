@@ -27,7 +27,7 @@ sub bbb{
 sub ccc{
     bbb(4,5,7);
 }
-ccc();
+# ccc();
 
 # print __FILE__, ":", __LINE__, ":", __FUNCTION__, ": BBBB\n";
 
@@ -35,4 +35,25 @@ ccc();
 
 my $str="AAAABBBB";
 my $num=33333;
+
+print "\n\n##########\n\n";
+
 dbgd $str $num;
+
+sub ddd {
+    my $str="XXXXX";
+    my $num=5555;
+
+    print "\n\n##########\n\n";
+    $str="";
+    dbgd $str $num;
+}
+
+ddd();
+# $h1 = "AAA";
+dbgd $h1;
+dbgd "BBB";
+print_obj($h1);
+
+# print "scalar2str test:\n".Aspk::Debug::scalar2str($h1);
+# print "scalar2str test:\n".Aspk::Debug::scalar2str("AAAA");

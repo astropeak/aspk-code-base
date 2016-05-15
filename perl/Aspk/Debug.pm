@@ -1,5 +1,6 @@
 package Aspk::Debug;
 use Filter::Simple;
+use File::Basename;
 use Exporter;
 
 use Scalar::Util qw(reftype);
@@ -7,46 +8,125 @@ use Scalar::Util qw(reftype);
 @ISA=qw(Exporter);
 @EXPORT_OK=qw(print_obj);
 
+my $dbg_current_level= 8;
+
 # first parameter is a references to a hash
 # TODO should be renamed to print_obj
 my $objs = {};
-sub print_obj {
+sub print_call_stack {
+    my $i = 2;
+    my @rst;
+    my ($package, $filename, $line, $subroutine, $hasargs,
+        $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller($i++);
+
+    $filename = my_basename($filename, 2);
+    unshift @rst, [$filename, $line, $subroutine];
+    while ($subroutine ne "") {
+        ($package, $filename, $line, $subroutine, $hasargs,
+         $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller($i++);
+
+        $filename = my_basename($filename, 2);
+        unshift @rst, [$filename, $line, $subroutine];
+    }
+    print "call stack: ".join("\n", map {"  ".$_->[0].':'.$_->[1].', '.$_->[2]}@rst)."\n";
+}
+
+sub my_basename {
+    my ($name, $path, $suffix, $depth);
+    ($path, $depth) = @_;
+    my @t;
+    while ($depth-- && $path) {
+        $name = basename($path);
+        unshift @t, $name;
+        $path = dirname($path);
+    }
+    return join("/", @t);
+}
+
+sub my_caller{
+    my $i = shift;
+    ++$i;
+
+    my ($package, $filename, $line, $subroutine, $hasargs,
+        $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller($i+1);
+    $line = (caller($i))[2];
+    $filename = (caller($i))[1];
+    $subroutine = (caller($i))[0]."::noname" if $subroutine eq "";
+
+    return ($filename, $line, $subroutine);
+}
+sub format_header {
+    my ($filename, $line, $subroutine) = my_caller(1);
+    $filename = my_basename($filename, 2);
+    return "[$filename:$line, $subroutine]";
+}
+
+# print result of format_array_hash
+sub print_vars {
+    my @varhash = @_;
+    print format_header()." ".
+        join(", ",
+             map {my $v=$_->{value};
+                  if (defined($v)) {
+                      if ($v eq "") {
+                          $v = "EMPTY_STR";
+                      }
+                  } else {
+                      $v = 'UNDEF';
+                  };
+                  $v = scalar2str($v);
+                  chomp $v;
+                  $_->{name}."=".$v;
+             } @varhash)."\n";
+}
+
+# convert a scalar to a string. scalar can be a ref, number, string
+# there will always be a newline in the end of the result
+sub scalar2str {
 	my $h = $_[0];
 	my $header = $_[1];
+    my ($var, $header) = @_;
+    my $rst = "";
+
 	unless ($header) {
-        print "Root: $h\n";
+        $rst .= "$var\n";
         $header="    ";
         $objs = {};
     };
-    if (exists $objs->{$h}) {
-        print "$header Already printed\n";
-        return;
+    if (exists $objs->{$var}) {
+        $rst .= "$header Already printed\n";
+        return $rst;
     }
 
-    $objs->{$h} = 1 if (reftype($h) eq 'HASH' || reftype($h) eq 'ARRAY');
+    $objs->{$var} = 1 if (reftype($var) eq 'HASH' || reftype($var) eq 'ARRAY');
 
-	if (reftype($h) eq 'HASH') {
-        for my $k (keys %{$h}) {
-            my $t = $h->{$k};
-            print "$header $k: $t\n";
+	if (reftype($var) eq 'HASH') {
+        for my $k (keys %{$var}) {
+            my $t = $var->{$k};
+            $rst .= "$header $k: $t\n";
             # if ($k ne "_parent"){ #TODO: this is only a workaround for Tree.pm. should be removed.
-            print_obj($h->{$k}, $header."    ");
+            $rst .= scalar2str($var->{$k}, $header."    ");
             # }
 		}
-    } elsif (reftype($h) eq 'ARRAY'){
-        # my $t = join( ", " , @{$h});
-		# print "$header $t\n";
-        for(my $i=0; $i<scalar(@{$h});$i++) {
-            print($header." [$i]:".$h->[$i]."\n");
-            print_obj($h->[$i], $header."    ");
+    } elsif (reftype($var) eq 'ARRAY'){
+        # my $t = join( ", " , @{$var});
+		# $rst .= "$header $t\n";
+        for(my $i=0; $i<scalar(@{$var});$i++) {
+            $rst .=($header." [$i]:".$var->[$i]."\n");
+            $rst .= scalar2str($var->[$i], $header."    ");
         }
     }
     else {
-        # print "$header $h\n";
+        # print "$header $var\n";
     }
+
+    return $rst;
 }
 
-my $dbg_current_level= 8;
+sub print_obj {
+    print scalar2str(@_);
+}
+
 
 sub _aa {
     my $str = shift;
@@ -67,6 +147,19 @@ sub split_arg_list{
     return @a;
 }
 
+# given a list of variable string name, format a hash table
+# eg: input:string list, '("$a", "$b")'; output:string, "{'$a'=>$a, '$b'=$b}"
+sub format_hash{
+    return '{'.(join(',', map {"'$_'=>".$_} @_))
+        .'}';
+}
+
+# given a list of variable string name, format an array of  hash table
+# eg: input:string list, '("$a", "$b")'; output:string, "({name=>'$a',value=>$a}, {name=>'$b',value=>$b})"
+sub format_array_hash{
+    return '('.(join(',', map {"{name=>'$_', value=>".$_."}"} @_))
+        .')';
+}
 
 FILTER {
     # print "####### Enter FILTER: $_\n";
@@ -80,12 +173,18 @@ FILTER {
     if ($dbg_current_level > 5) {
         foreach (@all_lines) {
             if ($_->{content} =~ /^\s*dbgd([^;]*)/) {
-                $_->{content} = "print '[', __PACKAGE__, '::', __SUB__, ':', __LINE__, ']', "."' '."._aa($1);
+                # $_->{content} = "print '[', __PACKAGE__, '::', __SUB__, ':', __LINE__, ']', "."' '."._aa($1);
+                # print "arg_list: $1\n";
+                my @a = split_arg_list($1);
+                # print "split_arg_list: @a\n";
+                my @b = format_array_hash(@a);
+                print "format_hash: @b\n";
+                $_->{content} = "Aspk::Debug::print_vars(@b);";
             }
         }
 
         $_ = join("\n", map{$_->{content}} @all_lines);
-        $_ = "\nuse feature 'current_sub';\n".$_;
+        # $_ = "\nuse feature 'current_sub';\n".$_;
     } else {
         s/dbgd(.*)//g;
     }
