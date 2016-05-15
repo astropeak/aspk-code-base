@@ -2,9 +2,11 @@
 # Definition of a tree: a tree has a data, some child trees, and a parent tree.
 
 package Aspk::Tree;
+use Aspk::Debug qw(print_obj);
 
 sub new {
     my ($class, $spec)= @_;
+    dbgl $class $spec;
     $spec = {} if !defined($spec);
     my $self={};
     bless $self, $class;
@@ -20,6 +22,8 @@ sub new {
 sub prop {
     my ($self, $name, $value) = @_;
     # print "In prop. name: $name, value: $value\n";
+    dbgl $name $value;
+
     if (defined($value)) {
         $self->{"_$name"} = $value;
         return $self;
