@@ -1,0 +1,114 @@
+* hash
+** basic functions
+*** keys
+    get all key as an array:
+    #+begin_src perl :results output
+    %h = (name=>"Tom", gender=>"Male", age=>13);
+    print join ", ", keys %h;
+    #+end_src
+
+    #+RESULTS:
+    : name, age, gender
+*** values
+    get all values as an array:
+    #+begin_src perl :results output
+    %h = (name=>"Tom", gender=>"Male", age=>13);
+    print join ", ", values %h;
+    #+end_src
+
+    #+RESULTS:
+    : Tom, 13, Male
+
+*** each
+    official doc: http://perldoc.perl.org/functions/each.html
+
+    like an iterator on a hash, return the next key value pair as list.
+    #+begin_src perl :results output
+    %h = (name=>"Tom", gender=>"Male", age=>13);
+    while (my ($key, $value) = each %h) {
+        print "$key: $value\n";
+    }
+    #+end_src
+
+    #+RESULTS:
+    : name: Tom
+    : age: 13
+    : gender: Male
+
+    delete current key is safe, but add a new key is not.
+*** exists
+    check if a value exists.
+    #+begin_src perl :results output
+    %h = (name=>"Tom", gender=>"Male", age=>13);
+    print exists($h{value})."\n";
+    print exists($h{name})."\n";
+    #+end_src
+
+    #+RESULTS:
+    : 
+    : 1
+
+** Iterate on a hash
+   A good answer on sof
+   Full link: http://stackoverflow.com/questions/3033/whats-the-safest-way-to-iterate-through-the-keys-of-a-perl-hash
+   #+begin_src org
+   The rule of thumb is to use the function most suited to your needs.
+   
+   If you just want the keys and do not plan to ever read any of the values, use keys():
+   
+   foreach my $key (keys %hash) { ... }
+   
+   If you just want the values, use values():
+   
+   foreach my $val (values %hash) { ... }
+   
+   If you need the keys and the values, use each():
+   
+   keys %hash; # reset the internal iterator so a prior each() doesn't affect the loop
+   while(my($k, $v) = each %hash) { ... }
+   
+   If you plan to change the keys of the hash in any way except for deleting the current key during the iteration, then you must not use each(). For example, this code to create a new set of uppercase keys with doubled values works fine using keys():
+   
+   %h = (a => 1, b => 2);
+   
+   foreach my $k (keys %h)
+   {
+     $h{uc $k} = $h{$k} * 2;
+   }
+   
+   producing the expected resulting hash:
+   
+   (a => 1, A => 2, b => 2, B => 4)
+   
+   But using each() to do the same thing:
+   
+   %h = (a => 1, b => 2);
+   
+   keys %h;
+   while(my($k, $v) = each %h)
+   {
+     $h{uc $k} = $h{$k} * 2; # BAD IDEA!
+   }
+   
+   produces incorrect results in hard-to-predict ways. For example:
+   
+   (a => 1, A => 2, b => 2, B => 8)
+   
+   This, however, is safe:
+   
+   keys %h;
+   while(my($k, $v) = each %h)
+   {
+     if(...)
+     {
+       delete $h{$k}; # This is safe
+     }
+   }
+   
+   All of this is described in the perl documentation:
+   
+   % perldoc -f keys
+   % perldoc -f each
+   
+   
+   #+end_src
