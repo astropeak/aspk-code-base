@@ -4,7 +4,7 @@
    .   Match any character
    \w  Match "word" character (alphanumeric plus "_")
    \W  Match non-word character
-   \s  Match whitespace character (the same as [ \t\n\r\v])
+   \s  Match whitespace character (same as [ \t\n\r\v])
    \S  Match non-whitespace character
    \d  Match digit character
    \D  Match non-digit character
@@ -16,3 +16,18 @@
    \e  Match escape
    \021  Match octal char ( in this case 21 octal)
    \xf0  Match hex char ( in this case f0 hexidecimal)
+
+** create regexp form string
+   #+begin_src perl :results output
+   my $str = "a[1-3]";
+   my $regex      = qr/$str/;
+   
+   if ("a2" =~ $regex) {
+       print "Matched\n";
+   }
+   #+end_src
+
+   #+RESULTS:
+   : Matched
+
+   
