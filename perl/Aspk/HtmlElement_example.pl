@@ -4,7 +4,7 @@ use Aspk::Debug qw(print_obj);
 print $Aspk::HtmlElement::PropFormatTable->{class}(["aa", "bb"])."\n";
 print $Aspk::HtmlElement::PropFormatTable->{style}({height=>10, width=>30})."\n";
 
-my $e=Aspk::HtmlElement->new({tag=>"div", prop=>{class=>["active", "aab"],id=>"myDiv",href=>"http://112233aaa"}});
+my $e=Aspk::HtmlElement->new({tag=>"div", prop=>{id=>"myDiv",href=>"http://112233aaa"}});
 
 my $ee=Aspk::HtmlElement->new({tag=>"a", prop=>{class=>["active", "aab"],id=>"myDiv 2",href=>"http://112233aaa"}, parent=>$e});
 my $eec=Aspk::HtmlElement->new({tag=>"text", prop=>{content=>"I am a connect"}, parent=>$ee});

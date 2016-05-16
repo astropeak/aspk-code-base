@@ -1,5 +1,6 @@
 package Aspk::HtmlElement;
 use parent Aspk::Tree;
+use Aspk::Debug;
 
 sub new {
     # print "Enter HtmlElement new\n";
@@ -41,6 +42,7 @@ sub rm_prop{
 
 sub add_class{
     my ($self, $class)=@_;
+    $self->html_prop("class", []) if not defined($self->html_prop("class"));
     my $orig_class = $self->html_prop("class");
     push(@{$orig_class}, $class);
     # $self->html_prop("class", $orig_class.";".$class);
@@ -49,6 +51,7 @@ sub add_class{
 }
 sub style{
     my ($self, $name, $value)=@_;
+    dbgl $name, $value;
     $self->html_prop("style", {}) if not defined($self->html_prop("style"));
     my $orig_style = $self->html_prop("style");
 
