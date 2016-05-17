@@ -113,3 +113,43 @@
    
    
    #+end_src
+** init
+   An anonymous hash will be created automaticlly when assigning a hash value. Quiet good feature!
+   #+begin_src perl :results output
+   use strict;
+   use warnings;
+   my $a;
+   print $a, "\n";
+   $a->{name} ="Tom";
+   $a->{home}->{name} ="Mc";
+   print $a, "\n";
+   print $a->{home}, "\n";
+   print $a->{home}->{name}, "\n";
+   #+end_src
+
+   #+RESULTS:
+   : 
+   : HASH(0xa031170)
+   : HASH(0xa061384)
+   : Mc
+
+   
+   $a and %a are two different variable
+   #+begin_src perl :results output
+   my %a;
+   print %a, "\n";
+   $a->{name} ="Tom";
+   $a{name} = "Jim";
+   print $a, "\n";
+   print %a, "\n";
+   print $a->{name}, "\n";
+   print $a{name}, "\n";
+   #+end_src
+
+   #+RESULTS:
+   : 
+   : HASH(0xa031170)
+   : nameJim
+   : Tom
+   : Jim
+
