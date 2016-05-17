@@ -9,6 +9,7 @@
 
     #+RESULTS:
     : name, age, gender
+
 *** values
     get all values as an array:
     #+begin_src perl :results output
