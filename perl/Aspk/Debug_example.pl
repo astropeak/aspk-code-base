@@ -6,7 +6,7 @@ my $h1 = {"aa"=>"BB",
           "AA"=>\%h,
           "BB"=>[1,2,\%h,4]};
 
-print_obj($h1);
+# print_obj($h1);
 
 
 
@@ -36,8 +36,6 @@ sub ccc{
 my $str="AAAABBBB";
 my $num=33333;
 
-print "\n\n##########\n\n";
-
 dbgl $str $num;
 
 sub ddd {
@@ -49,12 +47,15 @@ sub ddd {
     dbgl $str $num;
 }
 
+$dbg_current_level = 5;
+
 # ddd();
 # $h1 = "AAA";
-dbgh $h1 $h1 $num;
+dbgh $h1 $num;
 dbge "BBB", $num;
 
 # print_obj($h1);
+# print_obj $h1 ,$num;
 
 # print "scalar2str test:\n".Aspk::Debug::scalar2str($h1);
 # print "scalar2str test:\n".Aspk::Debug::scalar2str("AAAA");

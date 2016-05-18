@@ -6,9 +6,9 @@ use Exporter;
 use Scalar::Util qw(reftype);
 
 @ISA=qw(Exporter);
-@EXPORT_OK=qw(print_obj);
+@EXPORT_OK=qw(print_obj dbg_current_level);
 
-my $dbg_current_level= 3;
+my $dbg_current_level= 5;
 
 # first parameter is a references to a hash
 # TODO should be renamed to print_obj
@@ -64,7 +64,7 @@ sub format_header {
 # print result of format_array_hash
 sub print_vars {
     my @varhash = @_;
-    print format_header()." ".
+    print format_header()." ".   #TODO: this should be formed before filter. But the problem is that line number will be wrong then.
         join(", ",
              map {my $v=$_->{value};
                   if (defined($v)) {
@@ -124,7 +124,7 @@ sub scalar2str {
 }
 
 sub print_obj {
-    print scalar2str(@_);
+    print scalar2str(shift);
 }
 
 
