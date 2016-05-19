@@ -1,0 +1,54 @@
+* string
+** create string that spreads on several lines
+   A quite good explanation: http://perlmaven.com/here-documents
+*** method 1: here doc
+    syntax: "<<LABEL; .... LABEL"
+    
+    #+begin_src perl :results output
+    $name="Jim";
+    $str = <<MMMM;
+    $name
+    this is a
+        string
+        that spreads on
+        several lines.
+    
+    Good
+    MMMM
+    print $str
+    #+end_src
+    
+    #+RESULTS:
+    : Jim
+    : this is a
+    :     string
+    :     that spreads on
+    :     several lines.
+    : 
+    : Good
+    
+*** ~q~ or ~qq~ operator
+    syntax: q{STR go here}, or qq{STR go here}.
+    for variable interpolating, q like ', qq line ".
+
+    #+begin_src perl :results output
+    $name="Jim";
+    $str = qq{$name
+    this is a
+        string
+        that spreads on
+        several lines.
+    
+    Good};
+    print $str;
+    #+end_src
+    
+    #+RESULTS:
+    : Jim
+    : this is a
+    :     string
+    :     that spreads on
+    :     several lines.
+    : 
+    : Good
+    
