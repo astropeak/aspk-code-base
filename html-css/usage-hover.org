@@ -8,11 +8,11 @@
     add an child element to the element, the child element has the content that to be displayed, and set it's 'visiblity' property to 'hidden' by default. Then add a css rule that set 'visiblity' to 'visible' when hovering the parent element.
     #+begin_src html
     <style>
-      #element:hover #fordispaly {
+      div:hover > .display-string {
       visibility:visible;
       }
     
-      #fordispaly {
+      .display-string {
       visibility:hidden;
       font-size:8px;
       position:absolute;
@@ -31,11 +31,12 @@
     </style>
     
     <div id="element">
-      <p id="fordispaly" >I will be displayed when hovering</p>
+      <p class="display-string" >I will be displayed when hovering</p>
     </div>
     #+end_src
 
-    'hover' works like a conditional.
+    1. 'hover' works like a conditional.
+    2. '*:hover' not work(tested on firefox)
 
 *** method 2
     wrap the element in a '<a>' element, and set 'title' property of '<a>' to the text wanting to be displayed. The text will be shown after about one second.
@@ -49,3 +50,11 @@
     Note: 'title' seems only avaliable in '<a>'.
 
     
+** dropdown menu by :hover
+   A quite good example:
+   https://mdn.mozillademos.org/files/3700/example.html
+
+   And here is some explanation on the example:
+   https://developer.mozilla.org/en-US/docs/Web/CSS/:hover
+
+   TODO: summary.
