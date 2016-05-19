@@ -1,0 +1,7 @@
+* css selector
+** select direct child
+   ref: https://developer.mozilla.org/en-US/docs/Web/CSS/Child_selectors
+
+   #+begin_src css
+   selector1 > selector2 { style properties }
+   #+end_src
