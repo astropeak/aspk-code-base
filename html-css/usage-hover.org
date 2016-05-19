@@ -1,0 +1,51 @@
+* hover
+** display a string when hovering
+   ref: http://stackoverflow.com/questions/14263594/how-to-show-text-on-image-when-hovering
+
+*** method 1
+    use 'hover' css modifier and 'visiblity' property.
+
+    add an child element to the element, the child element has the content that to be displayed, and set it's 'visiblity' property to 'hidden' by default. Then add a css rule that set 'visiblity' to 'visible' when hovering the parent element.
+    #+begin_src html
+    <style>
+      #element:hover #fordispaly {
+      visibility:visible;
+      }
+    
+      #fordispaly {
+      visibility:hidden;
+      font-size:8px;
+      position:absolute;
+      top:0;
+      left:0;
+      bottom:0;
+      right:0;
+      border:solid 1px red;
+      }
+      #element {
+      width:100;
+      height:100;
+      position:absolute; /* both absolute and relative works */
+      z-index:1000;
+      }
+    </style>
+    
+    <div id="element">
+      <p id="fordispaly" >I will be displayed when hovering</p>
+    </div>
+    #+end_src
+
+    'hover' works like a conditional.
+
+*** method 2
+    wrap the element in a '<a>' element, and set 'title' property of '<a>' to the text wanting to be displayed. The text will be shown after about one second.
+    #+begin_src html
+    <a title="I will be shown when hovering">
+      <div style="width:100;height:100;border:solid 1px red">
+      </div>
+    </a>
+    #+end_src
+
+    Note: 'title' seems only avaliable in '<a>'.
+
+    
