@@ -1,0 +1,15 @@
+* inbox
+** how to parse files
+   1. 将源文件解析成tocken
+      可只解析关心的tocken. 先获取字符串，正则表达式等可能包含其它tocken字符的，然后依次获取。
+      最后生成一个tocken的列表。
+   2. 根据tocken列表进行进一步的处理。 
+
+   example：
+   如果要解析一个perl文件，只关心所有定义的函数，则 tocken 为：
+   'sub', name, '{', '}', exp.
+   其中 exp又分为三类： string, regexp, other.
+   如何做： 先尝试获取一个string，如果成功，则重复，如果失败，则依次再尝试获取一个regexp, other, 'sub', .... 即要定好获取顺序。 因为string中可能包含'{'（也即其它tocken的组成元素，因此要最开始获取。
+
+   因此只需要先将源文件解析成一个tocken列表（只包括那5种），然后解析tocken列表就比较非常容易了。
+      
