@@ -1,0 +1,10 @@
+* imenu
+  officail doc:  https://www.emacswiki.org/emacs/ImenuMode
+** function
+   Imenu produces menus for accessing locations in documents, typically in the current buffer. 
+   
+** how it works
+   There are two ways to generate an Imenu menu (index):
+   
+   Provide regexps that match the locations to index. See variable ‘imenu-generic-expression’.
+    Provide a function that generates the index. See variable ‘imenu-create-index-function’.
