@@ -1,0 +1,36 @@
+* shell script
+** get current time
+   #+begin_src sh
+   date +"%y%m%d-%I%M%S"
+   #+end_src
+   
+   result will be: ~160520-105656~
+   
+   assing to a var:
+   #+begin_src sh
+   t=$(date +%y%m%d-%I%M%S)
+   #+end_src
+** get command line parameter
+   sh : Linux shell.
+   myScript.sh : Linux shell script.
+   10 : First command line parameter accessible by $1.
+   rahul : Second command line parameter accessible by $2.
+   tecadmin.net : Third command line parameter accessible by $3.
+** check if a variable is empty or not exist
+   #+begin_src sh
+   if [ -z $1 ]
+   then
+       echo '$1 not exist'
+   fi
+   #+end_src
+** get dir part and base part of a filename variable
+   #+begin_src sh
+   filename="/mnt/a/b/c"
+   dir=$(dirname $filename)
+   base=$(basename $filename)
+   #+end_src
+** print every command when executing a script
+   Just use the -x option.
+   #+begin_src sh
+   #!/bin/bash -x
+   #+end_src
