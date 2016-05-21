@@ -1,0 +1,24 @@
+* flow control
+** loop
+*** break and continue in a loop
+    | C        | perl |
+    |----------+------|
+    | break    | last |
+    | continue | next |
+
+    exampel:
+    #+begin_src perl :results output
+    while (1) {
+        ++$i;
+        next if $i==3;
+        print "$i\n";
+        last if $i==5;
+    }
+    #+end_src
+
+    #+RESULTS:
+    : 1
+    : 2
+    : 4
+    : 5
+
