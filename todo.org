@@ -2,3 +2,76 @@
 ** TODO add POD to perl module ~Aspk::Tree~
    Add delete unneeded codes.
    - State "TODO"       from ""           [2016-05-04 Wed 15:50]
+** TODO call stack
+*** for perl
+**** TODO trace sub enter and exit
+***** TODO convert source code to tokens
+      - State "TODO"       from ""           [2016-05-21 Sat 21:55]
+      tokens are in an array. each token has such property:
+      #+begin_src c
+      type;
+      value;
+      #+end_src
+      
+      For our current purpose, when only need below tokens:
+      | type    | value              |
+      |---------+--------------------|
+      | subname | sub\b+(name)?      |
+      | literal | {                  |
+      | literal | }                  |
+      | other   | all other contents |
+      
+      At any points, we match from top to bottom.
+      
+      实现：
+      #+begin_src org
+      1. try match a subname
+         if yes, goto 1
+         if no, goto next
+      2. try match a '{'
+         if yes, goto 1
+         if no, goto next
+      3. try match a '}'
+         if yes, goto 1
+         if no, goto next
+      4. [optional] match 可能包含以上字符的 量， 比如 字符串，正则表达式，注释。但这步刚开始时可先不做。
+         这些match 成功后， 也可放入当前的 other 变量。 这也是个好主意。 哈哈。
+      5. forward one character, then goto 1 (this idea is quite *GOOD* and *simple*. Great!)
+         and put the current character to the current other variable if it is not whitespace(We will discard all white space)
+         latter we can match a string or regexp before this step, to avoid a '}' in a string that will cause error.
+
+      Note: if matching result is yes in steps 1,2,3, then first exit and save current other variable and create a new one.
+      #+end_src
+      
+      方法论：
+      以上可以写成一个框架，重复使用，对于不同语言。
+***** TODO convert tokens to list of sub definitions
+      - State "TODO"       from ""           [2016-05-21 Sat 21:55]
+      首先将tokens转换为一个树状的结构，根结点为 “ROOT“， 每个ELEMENT为
+      1. 一个sub definition
+         sub definition可做为新的ROOT。
+      2. other
+         这个是叶结点。
+         
+      实现：
+      #+begin_src org
+      current token is:
+      1. other
+         yes: add a child node to current root. goto 1
+         no: goto next
+      2. subname
+         yes: add a child node to current root, and set current root to this child node. goto next
+         no: goto next
+      3. literal '{'
+         yes: add a child node to current root. and increase current 'left brace' by one. goto 1
+         no: goto next
+      4. literal '}'
+         yes: add a child node to current root. and descrease current 'left brace' by one. if then 'left brace' equals to 0, then exit current root, and recover the old current root. if 'left brace' less than 0, then error. goto 1
+         no: impossiable no here.
+      #+end_src
+
+      有了这个树结构后，生成所有的sub definitions的list 就非常简单了。
+
+      
+      
+      

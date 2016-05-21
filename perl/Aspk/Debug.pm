@@ -8,7 +8,7 @@ use Scalar::Util qw(reftype);
 @ISA=qw(Exporter);
 @EXPORT_OK=qw(print_obj dbg_current_level);
 
-my $dbg_current_level= 5;
+my $dbg_current_level= 4;
 
 # first parameter is a references to a hash
 # TODO should be renamed to print_obj
