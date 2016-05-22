@@ -52,3 +52,35 @@
     : 
     : Good
     
+** substr
+   return sub str or replace sub str
+
+   syntax:
+   substr EXP, offset, len, replacement
+
+   #+begin_src perl :results output
+   $s="AABB CC DD";
+   print substr($s, 8, 2)."\n";
+   print "$s\n";
+   print substr($s, 8, 2, "FF")."\n";
+   print "$s\n";
+   print substr($s, 0, 2, "")."\n";
+   print "$s\n";
+   #+end_src
+
+   #+RESULTS:
+   : DD
+   : AABB CC DD
+   : DD
+   : AABB CC FF
+   : AA
+   : BB CC FF
+
+** get string length
+   #+begin_src perl :results output
+   print length("AABBCCDD");
+   #+end_src
+
+   #+RESULTS:
+   : 8
+

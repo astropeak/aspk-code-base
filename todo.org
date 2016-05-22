@@ -50,12 +50,6 @@
 ****** 分步实现
 ******* source code迭代器封装接口
         接口:
-        #+begin_src perl
-        char get_char();
-        put_char(char);
-        matched_string match(regexp);
-        iterator_object new(file_name);
-        #+end_src
         | name | arguments     | return value                     | description                      |
         |------+---------------+----------------------------------+----------------------------------|
         | new  | a file name   | a new iterator object            | create a new iterator object     |
@@ -66,7 +60,9 @@
         | put  | a char string | no                               | put the argument to the front    |
 
         class name: FileCharIterator
-
+******** implementation
+         modle:
+         
 ******* generate token list
         This is just the translation of steps in 总体实现思路
 
@@ -108,6 +104,10 @@
             last if ($t eq '');
         }
         #+end_src
+       
+****** 这个可以做成一个通用的东西
+       如实现括号匹配。现在的代码就可以实现。
+       只匹配关心的数据，这个思路很好。不会太复杂。
        
 ***** TODO convert tokens to list of sub definitions
       - State "TODO"       from ""           [2016-05-21 Sat 21:55]
