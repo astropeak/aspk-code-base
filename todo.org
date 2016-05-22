@@ -5,7 +5,9 @@
 ** TODO call stack
 *** for perl
 **** TODO trace sub enter and exit
-***** TODO convert source code to tokens
+***** DONE convert source code to tokens
+      CLOSED: [2016-05-22 Sun 18:39]
+      - State "DONE"       from "TODO"       [2016-05-22 Sun 18:39]
       - State "TODO"       from ""           [2016-05-21 Sat 21:55]
 ****** 总体实现思路
        tokens are in an array. each token has such property:
@@ -109,7 +111,10 @@
        如实现括号匹配。现在的代码就可以实现。
        只匹配关心的数据，这个思路很好。不会太复杂。
        
-***** TODO convert tokens to list of sub definitions
+***** DONE convert tokens to list of sub definitions
+      CLOSED: [2016-05-22 Sun 22:22]
+      - State "DONE"       from "TODO"       [2016-05-22 Sun 22:22] \\
+        Great!! Works very good. See Dropbox/project/call-stack/ASTer.pm
       - State "TODO"       from ""           [2016-05-21 Sat 21:55]
       首先将tokens转换为一个树状的结构，根结点为 “ROOT“， 每个ELEMENT为
       1. 一个sub definition
@@ -139,3 +144,4 @@
       
       
       
+***** TODO add trace
