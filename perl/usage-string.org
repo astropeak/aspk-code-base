@@ -108,3 +108,13 @@
    #+RESULTS:
    : ccc
 
+** split string
+   #+begin_src perl :results output
+   $a="AAA BBB\t CCC";
+   @b=split(/\s+/, $a);
+   print join ", ", @b;
+   #+end_src
+
+   #+RESULTS:
+   : AAA, BBB, CCC
+
