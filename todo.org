@@ -4,7 +4,9 @@
    - State "TODO"       from ""           [2016-05-04 Wed 15:50]
 ** TODO call stack
 *** for perl
-**** TODO trace sub enter and exit
+**** DONE trace sub enter and exit
+     CLOSED: [2016-05-23 Mon 11:33]
+     - State "DONE"       from "TODO"       [2016-05-23 Mon 11:33]
 ***** DONE convert source code to tokens
       CLOSED: [2016-05-22 Sun 18:39]
       - State "DONE"       from "TODO"       [2016-05-22 Sun 18:39]
@@ -141,7 +143,130 @@
 
       有了这个树结构后，生成所有的sub definitions的list 就非常简单了。
 
+***** DONE add trace
+      CLOSED: [2016-05-23 Mon 11:03]
+      - State "DONE"       from "TODO"       [2016-05-23 Mon 11:03]
+****** DONE add trace node to AST tree
+       CLOSED: [2016-05-23 Mon 11:03]
+       - State "DONE"       from "TODO"       [2016-05-23 Mon 11:03]
+       - State "TODO"       from ""           [2016-05-23 Mon 10:20]
+       input: AST
+       output: traces added to all sub enter and exit position.
+
+       method:
+       if node type is 'subname', then add a enter trace node as the second child, and an exit trace node as the last second child. Because the first child is '{' and the last child is '}'.
+
+       Then should modify the add_child method of Tree, to given a second parameter to specify the position.
+       
+****** BUGs
+       1. 'sub{}' will not match as a subname, while 'sub {}' can.
+       2. string and comment and regexp and here doc will affect the result.
+
+**** DONE parse string, regexp, comment, here doc
+     CLOSED: [2016-05-23 Mon 17:21]
+     - State "DONE"       from "TODO"       [2016-05-23 Mon 17:21]
+***** DONE parse string
+      CLOSED: [2016-05-23 Mon 14:00]
+      - State "DONE"       from "TODO"       [2016-05-23 Mon 14:00]
+      - State "TODO"       from ""           [2016-05-23 Mon 13:21]
+        
+      interface:
+      string_or_empty get_string(fciter)
+      get a string at front, and consume the fciter. If can't get, then return empty string, and fciter not consumed.
       
+      impelment:
+      1. check first char
+         if it is ' or ", go to 2;
+         else return "";
+      2. for other char at any pos
+         if it is the same as string starter, the string matched. return that string;
+         if it is \, then read next char, and put both to result string, then go to 2.
+         else put the char to result string, then go to 2.
+         
+      code:
+     #+begin_src perl :results output
+     sub get_string {
+         my $fciter=shift;
+         my $starter=$fciter->get('\'|"');
+         if ($starter eq '') {
+             return '';
+         }
+     
+         my $result = $starter;
+         while (1){
+             my $c=$fciter->get();
+             last if $c eq '';
+     
+             if ($c eq $starter) {
+                 return $result.$c;
+             } else if ($c eq '\\') {
+                 $result.=$c.$fciter->get();
+             } else {
+                 $result.=$c;
+             }
+         }
+         return $result;
+     }
+     #+end_src
       
+***** DONE parse comment
+      CLOSED: [2016-05-23 Mon 16:33]
+      - State "DONE"       from "TODO"       [2016-05-23 Mon 16:33]
+      - State "TODO"       from "TODO"       [2016-05-23 Mon 14:01]
+      Interface:
+      string_or_empty get_comment(fciter)
+
+      Implement:
+      much like get_string.
+      1. check if first char is '#'
+         yes: goto 2
+         no: return '';
+      2. if char is "\n", then return the result
+         else put the char to result string.
       
-***** TODO add trace
+***** DONE parse regexp
+      CLOSED: [2016-05-23 Mon 17:21]
+      - State "DONE"       from "TODO"       [2016-05-23 Mon 17:21]
+      - State "TODO"       from ""           [2016-05-23 Mon 16:33]
+        
+      Perl regexp syntax:
+      m//xxx
+      s///xxx
+      qr//xxx
+      
+      This should be much like get_string.
+      Implement:
+      1. check if first chars are m/, s/ or qr/,
+         yes, init wanted_end = 1 if m/ or qr/, 2 if s/. go to 2;
+         no, return '';
+      2. for any char at any pos
+         1. if it is /, 
+            inc matched_end;
+            if (wanted_end == matched_end), get the xxx part, and return result.
+            else go to 2.
+            
+         2. if it is \, then read next char, and put both to result string, then go to 2.
+         3. else put the char to result string, then go to 2.
+      
+**** DONE [with bug] exit sub trace should be added before every 'return statement'
+     CLOSED: [2016-05-23 Mon 15:03]
+     - State "DONE"       from "TODO"       [2016-05-23 Mon 15:03]
+     - State "TODO"       from ""           [2016-05-23 Mon 14:40]
+     Or it will have no use. 
+     
+     implement:
+     查找subname的所有children, 将 exit trace加在 {literal, return} node之前。
+     
+***** BUGs
+      Not work in below two cases.
+
+      This one is invalid syntax in perl.
+      #+begin_src perl :results output
+      if (1)
+          return 1;
+      #+end_src
+      
+     #+begin_src perl :results output
+     return 1 if 1;
+     #+end_src
+      
