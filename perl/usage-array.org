@@ -1,0 +1,19 @@
+* array
+** splice
+   add or remove element anywhere in an array.
+   doc: http://www.perlmonks.org/?node=splice
+   
+   syntax:
+   splice ARRAY, OFFSET, LENGTH, LIST
+   replace (offset length) with list. If offset is negtive, then it count form end.
+   
+   Below lines are all have same effect:
+   #+begin_src perl :results output
+       push(@a,$x,$y)      splice(@a,@a,0,$x,$y)
+       pop(@a)             splice(@a,-1)
+       shift(@a)           splice(@a,0,1)
+       unshift(@a,$x,$y)   splice(@a,0,0,$x,$y)
+       $a[$x] = $y         splice(@a,$x,1,$y)
+   #+end_src
+   
+   
