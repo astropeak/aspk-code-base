@@ -270,3 +270,38 @@
      return 1 if 1;
      #+end_src
       
+**** DONE add filename, line number.
+     CLOSED: [2016-05-23 Mon 20:19]
+     - State "DONE"       from "TODO"       [2016-05-23 Mon 20:19]
+     - State "TODO"       from ""           [2016-05-23 Mon 17:39]
+     
+     add file name is quite simple, cause it is passed to main.pl.
+     可通过一次遍历来计算每个token的行号， 而不是在解析时。这样虽然多运行了一遍，但代码不容易乱。 则计算行号也可在main中进行。
+
+     实现：
+     对于每个token, calculate '\n' char in value(see usage-string.org for how), and cumulated.
+
+**** DONE print arguments
+     CLOSED: [2016-05-23 Mon 22:08]
+     - State "DONE"       from "TODO"       [2016-05-23 Mon 22:08]
+     - State "TODO"       from ""           [2016-05-23 Mon 17:39]
+     
+     arguments is easy, just print @_.
+     I will first add printing arguments.
+
+     implement:
+     @_[N]: possible type: string, number, ref.
+     format:
+     #+begin_src perl :results output
+     @_=("AAAAAAAAAAAAAAA", 234, "BBBBB", [1,3,4]);
+     $str = (join ", ", map {$____idx____++; my $a = "[$____idx____] $_"; if (length($a)>18) {substr($a, 18, 999999,"...");};$a;} @_);
+     print $str;
+     #+end_src
+
+     #+RESULTS:
+     : [1] AAAAAAAAAAAAAA..., [2] 234, [3] BBBBB, [4] ARRAY(0x9212a3...
+    
+**** TODO print return value
+     - State "TODO"       from ""           [2016-05-23 Mon 22:08]
+     return value is not that easy. we should get the remaining part of return statement, and extract it, and assign it to a variable, and print that variable and return variable. But, what type of variable should it be? It can be scalar or list, but we don't know at runtime. So this seems impossiable?
+
