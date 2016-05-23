@@ -22,3 +22,6 @@
     : 4
     : 5
 
+** conditional
+*** if
+    Both the parentheses around the condition and the curly braces {} are required. (A special note for people with background in the C programming language: Even if there is only one statement, that statement needs to be wrapped in a pair of curly braces.)
