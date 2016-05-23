@@ -84,3 +84,27 @@
    #+RESULTS:
    : 8
 
+** char count in a string
+   #+begin_src perl :results output
+   $str = "aabbb\nccc\nadddabcd";
+   # $cnt = map {$_} ($str=~/a/g);
+   $cnt = @{[$str=~/\n/g]};
+   print "$cnt";
+   #+end_src
+
+   #+RESULTS:
+   : 2
+
+   Problem:
+   what's the return value of '$s=~/a/g'?
+   => it is an array in list context. See below example.
+   #+begin_src perl :results output
+   $str = "aabbb\nccc\naddab";
+   # $cnt = map {$_} ($str=~/a/g);
+   @cnt = $str=~/c/g;
+   print @cnt;
+   #+end_src
+
+   #+RESULTS:
+   : ccc
+
