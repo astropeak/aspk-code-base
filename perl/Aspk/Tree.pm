@@ -33,14 +33,18 @@ sub prop {
 }
 
 sub _add_child {
-    my ($self, $child) = @_;
-    push(@{$self->prop(children)}, $child);
+    my ($self, $child, $pos) = @_;
+    if (defined $pos){
+        splice(@{$self->prop(children)}, $pos, 0, $child);
+    } else {
+        push(@{$self->prop(children)}, $child);
+    }
     return $self;
 }
 
 sub add_child {
-    my ($self, $child) = @_;
-    $self->_add_child($child);
+    my ($self, $child, $pos) = @_;
+    $self->_add_child($child, $pos);
     $child->prop(parent, $self);
     return $self;
 }
@@ -135,37 +139,37 @@ sub traverse {
     if (1) {
         if ($para->{prefunc}) {
             $rst .= $para->{prefunc}({data=>$data,
-                              depth=>$depth,
-                              node=>$self});
+                                      depth=>$depth,
+                                      node=>$self});
         }
 
         my $len = scalar(@children);
         for (my $i=0;$i<$len;$i++){
             $rst .= @children[$i]->traverse({depth=>$depth+1,
-                                     prefunc=>$para->{prefunc},
-                                     postfunc=>$para->{postfunc},
-                                     midfunc=>$para->{midfunc}});
+                                             prefunc=>$para->{prefunc},
+                                             postfunc=>$para->{postfunc},
+                                             midfunc=>$para->{midfunc}});
             if ($para->{midfunc} && $i < ($len-1)) {
                 $rst.=$para->{midfunc}({data=>$data,
-                                  depth=>$depth,
-                                  node=>$self,
-                                  traversedChildCount=>($i+1)});
+                                        depth=>$depth,
+                                        node=>$self,
+                                        traversedChildCount=>($i+1)});
             }
         }
 
         if ($len<=1){
             if ($para->{midfunc}) {
                 $rst.=$para->{midfunc}({data=>$data,
-                                  depth=>$depth,
-                                  node=>$self,
-                                  traversedChildCount=>0});
+                                        depth=>$depth,
+                                        node=>$self,
+                                        traversedChildCount=>0});
             }
         }
 
         if ($para->{postfunc}) {
             $rst.=$para->{postfunc}({data=>$data,
-                               depth=>$depth,
-                               node=>$self});
+                                     depth=>$depth,
+                                     node=>$self});
         }
 
     }

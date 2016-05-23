@@ -6,7 +6,9 @@ my $cn = Aspk::Tree->new({data=>"bbbb", parent=>$n});
 my $cn1 = Aspk::Tree->new({data=>"cccc", parent=>$n});
 my $cn11 = Aspk::Tree->new({data=>"dddd", parent=>$cn1});
 my $cn12 = Aspk::Tree->new({data=>"eeee"});
-$cn1->add_child($cn12);
+my $cn13 = Aspk::Tree->new({data=>"ffff"});
+$cn1->add_child($cn12); # default to last child.
+$cn1->add_child($cn13, 1); # add as the second child
 
 print "Hash of $n. data:".$n->{_data}."\n";
 my @a = (keys(%{$n}));
