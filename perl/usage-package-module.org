@@ -105,10 +105,6 @@
       1;
       #+end_src
 
-      
-   
-   
-   
 ** misc
 *** ~require~ function
     load a perl module.
@@ -127,7 +123,6 @@
     }
     #+end_src
 
-    
 ** how functions of a module are imported to another package
    Import functions of another module to current package will let you not giving the whole function name(moduleName::functionName) when calling that function.
 
@@ -156,3 +151,97 @@
    This function is called when ~use Aspk::debug qw(printHash)~ executed.
 
    This function is defined in class ~Exporter~, and ~Aspk::debug~ inheritatd it(by this line: ~@ISA=qw(Exporter)~).
+** symbol table
+   official doc: http://perldoc.perl.org/perlmod.html#Symbol-Tables
+   
+   The hash ~%PACKAGE_NAME::~ stores all symbols in that package, including all package variables and subs.
+   #+begin_src perl :results output
+   package A;
+   $a=1;
+   my $b=2; # this will not in symbol table of the package.
+   sub sub1{print "aaa";}
+
+   package main;
+   print join ", ", sort keys(%A::);
+   #+end_src
+   
+   #+RESULTS:
+   : a, sub1
+   
+** typeglob
+   ~*name~ is a typeglob.
+   
+   The value in each entry of the symbol table(here the symbol tabel should mean 'name' 's) is what you are referring to when you use the *name typeglob notation.
+   
+   Assign to a typeglob performs an aliasing operation.
+
+   Difference between ~*foo=*bar~ and ~*foo=\$bar~:
+
+   Result is 2
+   #+begin_src perl :results output
+   $bar = 1;
+   ,*foo = *bar;       # Make *foo an alias for *bar
+   {
+       local $bar = 2; # Restrict changes to block
+       print $foo;     # Prints '1'!
+   }
+   #+end_src
+
+   #+RESULTS:
+   : 2
+
+   Result is 1
+   #+begin_src perl :results output
+   $bar = 1;
+   ,*foo = \$bar;       # Make $foo an alias for $bar
+   {
+       local $bar = 2; # Restrict changes to block
+       print $foo;     # Prints '1'!
+   }
+   #+end_src
+
+   #+RESULTS:
+   : 1
+
+   and array will also be the same when using ~*foo=*bar~:
+   #+begin_src perl :results output
+   $bar = 1;
+   ,*foo = *bar;       # Make *foo an alias for *bar
+   @bar=(1,2,3);
+   print (@foo,"\n");
+   $bar[1]=4;
+   print (@foo,"\n");
+   #+end_src
+
+   #+RESULTS:
+   : 123
+   : 143
+
+** the ~*foo{THING}~ syntax
+   offcial doc: http://perldoc.perl.org/perlref.html
+
+   A reference can be created by using a special syntax, lovingly known as the *foo{THING} syntax. *foo{THING} returns a reference to the THING slot in *foo (which is the symbol table entry which holds everything known as foo).
+   #+begin_src perl :results output
+   $scalarref = *foo{SCALAR};
+   $arrayref  = *ARGV{ARRAY};
+   $hashref   = *ENV{HASH};
+   $coderef   = *handler{CODE};
+   $ioref     = *STDIN{IO};
+   $globref   = *foo{GLOB};
+   $formatref = *foo{FORMAT};
+   $globname  = *foo{NAME};    # "foo"
+   $pkgname   = *foo{PACKAGE}; # "main
+   #+end_src
+** subroutine definition in another package
+   Subroutine definitions (and declarations, for that matter) need not necessarily be situated in the package whose symbol table they occupy. You can define a subroutine outside its package by explicitly qualifying the name of the subroutine:
+
+   #+begin_src perl :results output
+   package main;
+   sub Some_package::foo { ... }   # &foo defined in Some_package
+   #+end_src
+
+   This is just a shorthand for a typeglob assignment at compile time:
+   #+begin_src perl :results output
+   BEGIN { *Some_package::foo = sub { ... } }
+   #+end_src
+
