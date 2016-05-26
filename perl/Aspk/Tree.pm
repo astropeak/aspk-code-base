@@ -179,7 +179,7 @@ sub traverse {
 # getter function. Get data of a node
 # Parameter:
 # node: the node
-sub get_data (){
+sub get_data {
     my ($self) = @_;
     return $self->prop(data);
 }
@@ -187,7 +187,7 @@ sub get_data (){
 # getter function. Get children as an array of a node
 # Parameter:
 # node: the node
-sub get_childeren(){
+sub get_childeren {
     my ($self) = @_;
     return $self->prop(children);
 }
