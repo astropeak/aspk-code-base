@@ -22,6 +22,12 @@
     exists($h->{value});
     #+end_src
 
+*** check calling context
+    ~wantarray~ function. Return true if list wanted else false.
+    #+begin_src perl :results output
+    my $context = (wantarray() ? LIST : SCALAR);
+    #+end_src
+
 ** string process
 *** TODO [format this item] remove line end 
 http://www.perlmonks.org/bare/?node_id=504626
@@ -60,7 +66,6 @@ There are cases I haven't dealt with, etc. for purposes of simplicity.
     #+RESULTS:
     : hello
 
-    
 ** array
 *** reduce. Perl don't have this.
     #+begin_src perl
