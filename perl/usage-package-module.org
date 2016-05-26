@@ -245,3 +245,30 @@
    BEGIN { *Some_package::foo = sub { ... } }
    #+end_src
 
+** change @INC
+   http://perlmaven.com/how-to-change-inc-to-find-perl-modules-in-non-standard-locations
+
+   Ways:
+   1. PERL5LIB envroment variable
+      #+begin_src sh
+      export PERL5LIB=~/perl/lib
+      perl test.pl
+      #+end_src
+      Add at the begining.
+   2. -I command line option
+      #+begin_src sh
+      perl -I ~/perl/lib test.pl
+      #+end_src
+      Add at the begining.
+   3. 'use lib' in source code
+      #+begin_src perl :results output
+      use lib '/home/astropeak/perl/lib';
+      use Aspk::Debug;
+      print join ", ", @INC;
+      #+end_src
+
+      #+RESULTS:
+      : /home/astropeak/perl/lib, /home/astropeak/Dropbox/project/aspk-code-base/perl, /etc/perl, /usr/local/lib/i386-linux-gnu/perl/5.20.2, /usr/local/share/perl/5.20.2, /usr/lib/i386-linux-gnu/perl5/5.20, /usr/share/perl5, /usr/lib/i386-linux-gnu/perl/5.20, /usr/share/perl/5.20, /usr/local/lib/site_perl, .
+
+      The dir will be added to @INC, at the begining.
+
