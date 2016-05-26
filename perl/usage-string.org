@@ -42,7 +42,7 @@
     Good};
     print $str;
     #+end_src
-    
+
     #+RESULTS:
     : Jim
     : this is a
@@ -117,4 +117,19 @@
 
    #+RESULTS:
    : AAA, BBB, CCC
+
+** interpolation function call in a string
+   #+begin_src perl :results output
+   sub aaa{my $a=shift; return "In aaa, arg $a\n";};
+   my $b="DDD";
+   my $str="AAAAA, ${\aaa($b)}";
+   #my $str=qq{AAAAA, ${\aaa($b)}}; # will doing the same thing.
+   print $str;
+   
+   my @aa=(4,5,6);
+   my $str1="BB, ${sub {join ', ', @aa}}"; #this doesn't work
+   print $str1;
+   #+end_src
+
+   #+RESULTS:
 
