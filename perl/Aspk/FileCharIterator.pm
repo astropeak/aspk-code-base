@@ -3,7 +3,7 @@ use Aspk::Debug;
 
 sub new {
     my ($class, $file)= @_;
-    dbgm $class $file;
+    # dbgm $class $file;
 
     my $self={};
     bless $self, $class;
