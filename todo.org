@@ -3,7 +3,8 @@
    Add delete unneeded codes.
    - State "TODO"       from ""           [2016-05-04 Wed 15:50]
 ** TODO call stack
-*** for perl
+*** TODO for perl
+    - State "TODO"       from ""           [2016-05-24 Tue 22:24]
 **** DONE trace sub enter and exit
      CLOSED: [2016-05-23 Mon 11:33]
      - State "DONE"       from "TODO"       [2016-05-23 Mon 11:33]
@@ -305,3 +306,56 @@
      - State "TODO"       from ""           [2016-05-23 Mon 22:08]
      return value is not that easy. we should get the remaining part of return statement, and extract it, and assign it to a variable, and print that variable and return variable. But, what type of variable should it be? It can be scalar or list, but we don't know at runtime. So this seems impossiable?
 
+     I think maybe I can make use of ~*name~ to save the return value. =>This doen't work.
+
+     Way:
+     Because return value can only be a scalar or a list, so it is easy.
+     Orig:
+     #+begin_src perl :results output
+     sub aaa {
+         my ($a, $b, $c)=(1,2,3);
+         return $a+$b+$c;
+     }
+     print aaa();
+     #+end_src
+
+     #+RESULTS:
+     : 6
+
+     Translated to :
+     #+begin_src perl :results output
+     sub aaa {
+         my ($a, $b, $c)=(1,2,3);
+         if (wantarray()){
+             print "list wanted\n";
+             my @a= ($a+$b+$c);
+             return @a;
+         } else {
+             print "scalar wanted\n";
+             my $aa=($a+$b+$c);
+             return $aa;
+         }
+     }
+     $a = aaa();
+     print $a;
+     #+end_src
+
+     #+RESULTS:
+     : scalar wanted
+     : 6
+
+     implement:
+     先实现简单情况：
+     1. 识别 ; 作为一个token。 则 ; 和 return 之前的内容即为 返回值表达式。
+     2. 在exit trace中打印这个表达式。
+     这样的问题是：返回值表达式被多次执行，不知是否会造成问题。如果有问题，后期可以再修正。比如先做转换，然后再加。转换为返回值表达式总为一个变量。
+        
+     具体步骤
+     1. 对于每个return结点，下一个结点为返回值或;结点。
+        如果下一个结点不为;结点，则将这个结点的字符串加到exit trace中。 用括号包起来。
+        
+** TODO figure out memory model for variable, ref, package, sub in perl
+   - State "TODO"       from ""           [2016-05-24 Tue 22:25]
+   Currently I am not clear about this. 只知道一些零散的知识。
+
+   Very usful doc: http://perldoc.perl.org/perlmod.html
