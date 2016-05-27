@@ -55,7 +55,7 @@
 *** 看底向上
     我习惯于自底向上编程。 如果底层没有实现好，则我不能够很好地思维上层的编写过程。
     这点我感觉不好。
-
+    
 *** 先想后编
     先想好怎么编，然后再开始敲代码，效率较高。call-stack实现时采用的方法，确实有效。
 ** github
@@ -89,6 +89,13 @@
         
         界面还应该包括一层：各个数据的 update关系。比如update了控件A，控件B也需要update。这是第二层。
      
+*** worse is better
+    https://en.wikipedia.org/wiki/Worse_is_better
+
+    完美主义者：什么时候都完不成。是一件坏事情。
+
+    提倡快速实现， 即使有缺陷。
+
 ** 软件工程
    改变方法论， programming by poking, instead of by creating everything.
    将软件组件组合起来，以达到目的。组合创新。
