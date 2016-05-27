@@ -17,7 +17,7 @@
    \021  Match octal char ( in this case 21 octal)
    \xf0  Match hex char ( in this case f0 hexidecimal)
 
-** create regexp form string
+** create regexp from string
    #+begin_src perl :results output
    my $str = "a[1-3]";
    my $regex      = qr/$str/;
@@ -31,3 +31,27 @@
    : Matched
 
    
+** modifiers
+   | modifier | function                                                   |
+   |----------+------------------------------------------------------------|
+   | /s       | let '.' match newline                                      |
+   | /x       | ignore whitespace in the pattern, so you can add blanks to |
+   |          | let the pattern more readable                              |
+   | /i       | ignore case                                                |
+   
+** anchors
+   | anchor | function                            |
+   |--------+-------------------------------------|
+   | ^      | match at begining of string         |
+   | $      | at end                              |
+   | \b     | match at word boundary. word is \w+ |
+   | \B     | match not at word boundary          |
+
+   examples:
+   #+begin_src perl :results output
+   /\bsearch\B/ #will match searching, searched, but not search
+   /\bfish\b/ #will only match fish, but not selfishness
+   #+end_src
+** misc
+*** `=~' is called binding operator
+    See chapter 8. Left is a variable or string, right is a regexp. Let the regexp match againest the left string.
