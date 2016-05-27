@@ -272,3 +272,11 @@
 
       The dir will be added to @INC, at the begining.
 
+** use a module in command line
+   ref: http://www.perlmonks.org/?node_id=138176
+
+   Use the ~-m~ or ~-M~ option.
+   #+begin_src perl :results output
+   perl -MAspk::Tree Tree_example.pl
+   #+end_src
+   ~-MAspk::Tree~ equals to ~use Aspk::Tree;~ in code.
