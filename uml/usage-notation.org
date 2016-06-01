@@ -1,0 +1,29 @@
+* notation
+** part of (also knows as composition association)
+   | A | filled diamond | solid line | B |
+   B is a part of A.
+   If A not exists, B also not exists any more.
+
+   Example:
+   A: building, B: rooms.
+   
+** has a (aggregation association)
+   | A | unfilled diamond | solid line | B |
+   A has a B.
+   If A not exists, B can sitll exists.
+
+   Example:
+   A: country, B: inhabitants.
+** association
+   | A | [arrow] | solid line | [arrow] | B |
+   A has some relation to B.
+   arrow specify the direction.
+
+   Example:
+   A: people, B: meeting. people attend meeting
+
+** implement, realize
+   | A | unfilled triangle | solid line | B |
+   B implement A.
+
+   A is an interface, B is a implementation.
