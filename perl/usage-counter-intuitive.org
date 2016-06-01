@@ -1,0 +1,5 @@
+
+* counter-intuitive
+** my and last
+   1. ~my $a, $b, $c~ 和预想的不一样， 其等价于 ~my $a;$b,$c~
+   2. ~last~ in ~do {} while~ 不起作用，他将会作用在外层loop.
