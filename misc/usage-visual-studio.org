@@ -1,0 +1,13 @@
+* visual studio
+** debug
+*** debugging CArray
+    Problem: only the first element be displayed.
+
+    Method:
+    1. Open a watch window. Debug=>Window=>Watch=>Watch 1
+    2. suppose CArray var is 'A', then input A.m_pData+1 to see the second element in 'A', in name filed of Watch window.
+
+    ref: https://social.msdn.microsoft.com/Forums/vstudio/en-US/4ff419da-63ee-4e3a-8b52-d6311a38d14c/debugging-carrays?forum=vcgeneral
+
+*** open call stack window
+    Debug=>Window=>Call stack
