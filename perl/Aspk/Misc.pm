@@ -7,8 +7,9 @@ use Exporter;
 # If not found, return empty string
 sub module_full_path {
     my $module=shift;
+    my $file = join "/", split "::", $module;
     foreach (@INC){
-        my $t="$_/$module.pm";
+        my $t="$_/$file.pm";
         if (-e $t) {
             return $t;
         }
