@@ -1,0 +1,68 @@
+* Set::FA::Element
+  https://metacpan.org/pod/Set::FA::Element#step_state-next
+
+  The module implement DFA, determistic finite automaton.
+
+  main function
+  | name    | function                                             | return           |
+  |---------+------------------------------------------------------+------------------|
+  | step    | move one step forward                                | uncomsumed input |
+  | accept  | move as more as possible steps, call steps repeatdly |                  |
+  | match   | get the matched input of last step                   |                  |
+  | final   | test if match done                                   | 0 or 1           |
+  | current | get current state                                    |                  |
+  
+
+  #+begin_src perl :results output
+  #!/usr/bin/perl
+  use strict;
+  use warnings;
+   
+  use Set::FA::Element;
+   
+  my($dfa) = Set::FA::Element -> new
+  (
+   accepting   => ['baz'],
+   start       => 'foo',
+   transitions =>
+   [
+    ['foo', 'b', 'bar'],
+    ['foo', '.', 'foo'],
+    ['bar', 'a', 'foo'],
+    ['bar', 'b', 'bar'],
+    ['bar', 'c', 'baz'],
+    ['baz', '.', 'baz'],
+   ],
+  );
+   
+  my $input=$ARGV[0] || 'aaaaabaaaabcccc';
+  print $input, "\n";
+  
+  my $i=0;
+  while($i<500 && ! $dfa->final)
+  {
+      $input = $dfa->step($input);
+  
+      print "\ni: $i\n";  
+      print "match: ".$dfa->match."\n";
+      print "data: ".$dfa->data."\n";
+      print "current: ".$dfa->current."\n";
+      print "input: $input\n";
+  
+      ++$i;
+  }
+  
+  print "\n";
+  if ($dfa->final){
+      print "dfa matched.\n";
+  } else {
+      print "dfa not matched.\n";
+  }
+  print "uncomsumed input: $input\n";
+  
+  #my($boolean)  = $dfa -> accept($input);
+  #my ($matched)=$dfa->match;
+  #print $boolean, "\n";
+  #print $matched, "\n";
+  
+  #+end_src
