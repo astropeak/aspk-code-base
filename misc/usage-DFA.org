@@ -1,0 +1,14 @@
+* DFA
+** definition
+   wiki: https://en.wikipedia.org/wiki/Deterministic_finite_automaton
+
+   by 
+   What is a DFA? Abusing any reasonable definition, let me describe them thusly. The Deterministic part means that given the same input at the same stage, you'll always get the same result. The Finite part means the input stream only contains a limited number of different tokens, which simplifies the code. The Automata is, essentially, a software machine—a program. DFAs are also often called STTs (State Transition Tables).
+** implementation
+*** perl
+    How do you make this all work in Perl? MetaCPAN is your friend! In particular, I like to use Set::FA::Element to drive the process. For candidate alternatives I assembled a list of Perl modules with relevance in the area, while cleaning up the docs for Set::FA. See Alternatives to Set::FA. I did not write Set::FA, nor Set::FA::Element, but I now maintain them.
+** application
+   
+*** writing lexer or parser
+    In this artical, the author write lexer by using Set::FA::Element module.
+    http://www.perl.com/pub/2012/10/an-overview-of-lexing-and-parsing.html
