@@ -1,0 +1,6 @@
+* cloud server
+  
+** linode
+   https://www.linode.com/pricing
+
+   10$/mo. 2TB transfer, 125MBps out speed, 24 GB storage.

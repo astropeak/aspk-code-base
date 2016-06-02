@@ -1,0 +1,18 @@
+* web app
+** iso web app
+*** docs
+   1. officail guide
+    https://developer.apple.com/library/safari/referencelibrary/GettingStarted/GS_iPhoneWebApp/_index.html
+   2. a detailed tutorial
+      http://matt.might.net/articles/how-to-native-iphone-ipad-apps-in-javascript/
+      
+      book recomanded in this artical: 
+   https://www.amazon.com/Building-iPhone-Apps-HTML-JavaScript/dp/0596805780?ie=UTF8&camp=1789&creative=390957&creativeASIN=0596805780&linkCode=as2&redirect=true&tag=ucmbread-20
+   3. this project seems different
+      https://github.com/ben-ng/phonegap-air
+      It make native apps form web, seems.
+      
+** andriod web app
+*** docs
+    1. official guide
+       https://developer.android.com/guide/webapps/index.html
