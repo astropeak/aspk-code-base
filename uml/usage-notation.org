@@ -23,7 +23,13 @@
    A: people, B: meeting. people attend meeting
 
 ** implement, realize
-   | A | unfilled triangle | solid line | B |
+   | A | unfilled triangle | dashed line | B |
    B implement A.
 
    A is an interface, B is a implementation.
+
+** inheritance
+   | A | unfilled triangle | solid line | B |
+   B inherites form  A.
+
+   A is an base class, B is a derived class
