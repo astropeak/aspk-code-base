@@ -280,3 +280,26 @@
    perl -MAspk::Tree Tree_example.pl
    #+end_src
    ~-MAspk::Tree~ equals to ~use Aspk::Tree;~ in code.
+** install a module
+   cpanm works good
+
+   
+   cpanm Set::FA
+   
+   or run:
+   
+   sudo cpan Set::FA
+   
+   or unpack the distro, and then either:
+   
+   perl Build.PL
+   ./Build
+   ./Build test
+   sudo ./Build install
+   
+   or:
+   
+   perl Makefile.PL
+   make (or dmake or nmake)
+   make test
+   make install
