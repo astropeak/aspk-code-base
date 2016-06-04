@@ -1,0 +1,8 @@
+* web content mining
+  Look for price information on jd.com website is a special problem of web content mining.
+  
+** docs
+   An artical on(written in 2005):
+   https://www.cs.uic.edu/~liub/WebContentMining.html
+   
+   wiki definition: https://en.wikipedia.org/wiki/Web_mining#Web_content_mining
