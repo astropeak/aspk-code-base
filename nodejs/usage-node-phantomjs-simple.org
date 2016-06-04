@@ -1,0 +1,57 @@
+* node phantomjs simple
+  https://github.com/baudehlo/node-phantom-simple
+
+** function
+   a wrapper to phantomjs API for nodejs
+** example
+*** web scraping
+    below is a script that scrap all h2 and p element of a website, and print these on console.
+    #+begin_src js
+    var driver = require('node-phantom-simple');
+    
+    driver.create({ path: require('phantomjs').path }, function (err, browser) {
+        return browser.createPage(function (err, page) {
+            // return page.open("http://tilomitra.com/repository/screenscrape/ajax.html", function (err,status) {
+            return page.open("http://phantomjs.org/examples", function (err,status) {
+                console.log("opened site? ", status);
+                page.includeJs('http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function (err) {
+                    // jQuery Loaded.
+                    // Wait for a bit for AJAX content to load on the page. Here, we are waiting 5 seconds.
+                    setTimeout(function () {
+                        return page.evaluate(function () {
+                            //Get what you want from the page using jQuery. A good way is to populate an object with all the jQuery commands that you need and then return the object.
+                            var h2Arr = [],
+                                pArr = [];
+    
+                            $('h2').each(function () { h2Arr.push($(this).html()); });
+                            $('p').each(function () { pArr.push($(this).html()); });
+    
+                            return {
+                                h2: h2Arr,
+                                p: pArr
+                            };
+                        }, function (err,result) {
+                            console.log(result);
+                            browser.exit();
+                        });
+                    }, 5000);
+                });
+            });
+        });
+    });
+    #+end_src
+
+    Notes:
+    1. the_module.create, result is a browser
+    2. browser.createPage, result is a page
+    3. page.open, result is open status(success or fail)
+
+    page obejct has many method:
+    1. page.includeJs, include a js file to the page.
+       jquery is inject to the page in this example, to manipulate DOM.
+    2. page.evaluate, execute a js function in current page(the html file).
+
+
+
+    
+    
