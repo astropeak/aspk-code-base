@@ -1,0 +1,7 @@
+* phantomjs
+** api
+*** page.injectJs
+    从本地向页面注入JS文件。
+*** page.includeJs
+    从网络向页面加入JS文件。
+    
