@@ -1,0 +1,10 @@
+* underscore
+** list
+*** contains
+    check if array contains the element. return true or false.
+    #+begin_src js
+    _.contains([1,2,3], 3);
+    #+end_src
+
+
+    
