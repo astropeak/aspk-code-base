@@ -1,0 +1,27 @@
+* function
+** get function name from reference
+   func.name.
+
+   or if func.name not exist, use this function:
+   #+begin_src js
+   // Add a new method available on all function values
+   Function.prototype.getName = function(){
+       // Find zero or more non-paren chars after the function start
+       return /function ([^(]*)/.exec( this+"" )[1];
+   };
+   #+end_src
+
+   add func.name if it not exists:
+   #+begin_src js
+   if (Function.prototype.name === undefined){
+     // Add a custom property to all function values
+     // that actually invokes a method to get the value
+     Object.defineProperty(Function.prototype,'name',{
+       get:function(){
+         return /function ([^(]*)/.exec( this+"" )[1];
+       }
+     });
+   }
+   #+end_src
+
+   ref: http://stackoverflow.com/questions/10624057/get-name-as-string-from-a-javascript-function-reference
