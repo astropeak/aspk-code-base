@@ -1,0 +1,167 @@
+* mongodb
+  Usage of mongodb module for nodejs.
+  
+
+  first mongodb itself should be installed.
+  nodejs mongodb client.
+
+  1. start a deamon
+  2. connect that deamon
+
+** mongodb the database
+   https://docs.mongodb.com/getting-started/node/introduction/
+
+   Only document and collection knowledge is enough.
+*** installation on windows 7
+    Download the installer and install it.
+    mongod will be installed here:
+    #+begin_src sh
+    export PATH=$PATH:/drives/c/Program\ Files\ \(x86\)/MongoDB/Server/3.2/bin/
+    #+end_src
+
+    Then start the server with:
+    #+begin_src sh
+    mongod --dbpath=./data --port 27017 --storageEngine=mmapv1
+    #+end_src
+    
+*** basic concept
+**** document
+     document is a record
+     consists of key:value pairs. Much like a JSON data.
+
+     example:
+     #+begin_src js
+     var mydoc = {
+         _id: ObjectId("5099803df3f4948bd2f98391"),
+         name: { first: "Alan", last: "Turing" },
+         birth: new Date('Jun 23, 1912'),
+         death: new Date('Jun 07, 1954'),
+         contribs: [ "Turing machine", "Turing test", "Turingery" ],
+         views : NumberLong(1250000)
+     }
+     #+end_src
+
+**** collection
+     collection is a table.
+     consists of many documents. Each document must has a '_id' field used as primary key.
+     collection has a name.
+** mongodb the driver
+   https://www.npmjs.com/package/mongodb
+   There are many example codes, like insertDocument, updateDocument, deleteDocument. Good to start to use.
+*** connect
+    | name                | arguments | notes                                 |
+    |---------------------+-----------+---------------------------------------|
+    | MongoClient.connect | url, cb   | the db opened is second arg to the cb |
+
+    Code example:
+    #+begin_src js
+    var MongoClient = require('mongodb').MongoClient
+    , assert = require('assert');
+    
+    // Connection URL 
+    var url = 'mongodb://localhost:27017/myproject';
+    // Use connect method to connect to the Server 
+    MongoClient.connect(url, function(err, db) {
+        assert.equal(null, err);
+        console.log("Connected correctly to server");
+    
+        db.close();
+    });
+    #+end_src
+
+*** get/create a collection(table)
+    | name          | arguments       | notes               |
+    |---------------+-----------------+---------------------|
+    | db.collection | collection name | return a collection |
+
+*** insert a document(record)
+    | name                 | arguments  | notes                                 |
+    |----------------------+------------+---------------------------------------|
+    | collection.insertOne | record, cb | the db opened is second arg to the cb |
+
+    below is a function that doing the job:
+    #+begin_src js
+    var insertDocuments = function(db, callback) {
+      // Get the documents collection 
+      var collection = db.collection('documents');
+      // Insert some documents 
+      collection.insertMany([
+        {a : 1}, {a : 2}, {a : 3}
+      ], function(err, result) {
+        assert.equal(err, null);
+        assert.equal(3, result.result.n);
+        assert.equal(3, result.ops.length);
+        console.log("Inserted 3 documents into the document collection");
+        callback(result);
+      });
+    }
+    #+end_src
+    notes on the result parameter:
+    1. result Contains the result document(s) from MongoDB
+    2. ops Contains the documents inserted with added _id fields
+       So the _id field is not mondary.
+    
+*** update a document(record)
+    | name                 | arguments               | notes |
+    |----------------------+-------------------------+-------|
+    | collection.updateOne | selector, new value, cb |       |
+
+    a key:value pair can be a selector.
+    #+begin_src js
+    var updateDocument = function(db, callback) {
+      // Get the documents collection 
+      var collection = db.collection('documents');
+      // Update document where a is 2, set b equal to 1 
+      collection.updateOne({ a : 2 }
+        , { $set: { b : 1 } }, function(err, result) {
+        assert.equal(err, null);
+     
+    
+        console.log("Updated the document with the field a equal to 2");
+        callback(result);
+      });  
+    }
+    #+end_src
+    
+*** delete a document
+    #+begin_src js
+    var deleteDocument = function(db, callback) {
+      // Get the documents collection 
+      var collection = db.collection('documents');
+      // Insert some documents 
+      collection.deleteOne({ a : 3 }, function(err, result) {
+        assert.equal(err, null);
+        assert.equal(1, result.result.n);
+        console.log("Removed the document with the field a equal to 3");
+        callback(result);
+      });
+    }
+    #+end_src
+
+*** find all document
+    #+begin_src js
+    var findDocuments = function(db, callback) {
+        // Get the documents collection 
+        var collection = db.collection('documents');
+        // Find some documents 
+        collection.find({}).toArray(function(err, docs) {
+            assert.equal(err, null);
+            assert.equal(2, docs.length);
+            console.log("Found the following records");
+            console.dir(docs);
+            callback(docs);
+        });
+    }
+    #+end_src
+
+** mongoose
+   make a record an object.
+   http://mongoosejs.com/docs/index.html
+*** steps
+    1. create a schema
+       This is the definition to your document(record) in a collection.
+    2. compile this schema to a Class(or Model say in the document).
+    3. new a Model, the returned object will be a document.
+    4. call save method to save the object to db.
+    5. find all document in the Model.
+
