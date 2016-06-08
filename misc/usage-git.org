@@ -21,3 +21,8 @@
     [core]
         filemode = false
     #+end_src
+*** ignore end of line
+    git config core.autocrlf true
+
+    http://stackoverflow.com/questions/20496084/git-status-ignore-line-endings-identical-files-windows-linux-environment
+    
