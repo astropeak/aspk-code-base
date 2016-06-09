@@ -6,5 +6,12 @@
     _.contains([1,2,3], 3);
     #+end_src
 
+** memoize
+   将一个函数转换为缓存版本的。
+   #+begin_src js
+   var fib = function (n){
+       return n<2 ? n : fib(n-1) + fib(n-2);
+   }
 
-    
+   var fib1 = memoize(fib);
+   #+end_src
