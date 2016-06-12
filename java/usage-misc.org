@@ -1,0 +1,112 @@
+* misc
+** tutorial
+   A good tutorial to get started:
+   http://www.tutorialspoint.com/java/java_basic_syntax.htm
+*** misc
+    1. a java program consists of may classes which comunicate with each other by calling method of other classes.
+    2. file name and class name should be the same, or it will not compile.
+    3. source file
+       1. only one public class, unlimitted non-public class
+       2. source file name same as public class name
+    4. program start point: public static void main(String []args){}
+    5. interface
+       Used to define a contract between objects on how to communicate with each other. 
+       It define methods, that a deriving class should use.
+    6. package
+       categorizing the classes and interfacing. Usfull when there are lots of classes.
+    7. don't need to include another class, just compile all classes, and run the main.
+*** access control modifier
+    variable, class, method, constructor
+    | type        | function                              |
+    |-------------+---------------------------------------|
+    | no modifier | visible to package                    |
+    | public      | visible to world                      |
+    | private     | visible to class                      |
+    | protected   | visible to package and all subclasses |
+
+*** non access modifier
+    | type         | function                 |
+    |--------------+--------------------------|
+    | static       | class variable or method |
+    | final        |                          |
+    | abstract     | abstract class or method |
+    | synchronized | used in thread           |
+    | volatile     | same as above            |
+          
+*** enhanced for loop in java 5
+    used to tranvse collection.
+    #+begin_src java
+    int [] numbers = {10, 20, 30, 40, 50};
+    
+    for(int x : numbers ){
+        System.out.print( x );
+        System.out.print(",");
+    }
+    #+end_src
+*** polymorphism
+    An object has many forms.
+    1. all functions behaver as virtual functions in C++.
+    
+*** inheritance
+    1. a class can extends at most one class, but can implements many interfaces.
+
+*** interface
+    Similar to a class, is a collection of abstract methods.
+    A class implements a interface, therefore inheriting the abstract methods of the interface.
+
+    1. interface can extends other interfaces
+    2. interface is defaultly abstract, and methods is also abstract
+    3. interface is compiled to a .class file.
+    4. classes that implement a interafce should give definition to all methods.
+*** abstraction
+    describe idea. Via abstract class and interface.
+    1. an abstract class can't be instanced.
+       To use the class, you should first extends the class.
+    2. an abstract class can has 0 to N abstract methods.
+
+    An abstract method is the same as pure virtual function in C++.
+*** packages
+    namespace in C++.
+    1. package name should be the same with directory structure
+       e.g.
+       #+name Dell.java
+       #+begin_src java
+       package com.app.computer;
+       public class Dell {
+           void printInfo() {
+               System.io.println("I am Dell class");
+           }
+           public static void main(String []args){
+               Dell d=new Dell();
+               d.printInfo();
+           }
+       }
+       #+end_src
+       the directory structure should be :
+       ROOT/com/app/computer/Dell.java
+    2. class files directory structure should also be the same as package name. But it can be another root path.
+    3. CLASSPATH variable control class searching root path.
+    4. with package, name of a class become PACKAGE_NAME.CLASS_NAME
+    5. import
+       import classes in other package into current package.
+       #+begin_src java
+       import com.apple.computer.*; //import all classes in package com.app.computer
+       import com.app.computer.Dell; //import class com.app.computer.Dell
+       #+end_src
+    6. package name better to start from lower case chars.
+    7. the -d option to javac
+       specify output(.class files) path.
+       Source codes and .class files can be in diferent directory.
+
+*** compile and run
+    1. compile
+       javac SourceCode.java
+       note:
+       1. -d option specify the output directory.
+    2. run 
+       #+begin_src sh
+       java ClassName
+       #+end_src
+       Notes:
+       1. ClassName should be full name of a class, include package name
+       2. System variable CLASSPATH specify class searching path.
