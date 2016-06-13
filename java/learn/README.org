@@ -1,0 +1,10 @@
+* run
+  cd to .../learn
+
+  compile:
+  javac test/*.java
+
+  run:
+  java test/TestShape
+  
+  
