@@ -106,3 +106,18 @@
        
        
     
+*** java
+    ~:classname~ argument must be provideded. it specify which class is the main class(that contain the main method)
+
+    Test.java will be generated after evaluate it.
+    #+begin_src java :classname Test
+class Test {
+    public static void main(String[] args) {
+        System.out.println("HHHHH");
+    }
+}
+    #+end_src
+
+    #+RESULTS:
+    : HHHHH
+
