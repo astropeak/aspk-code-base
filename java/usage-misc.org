@@ -23,7 +23,7 @@
     | public      | visible to world                      |
     | private     | visible to class                      |
     | protected   | visible to package and all subclasses |
-
+    
 *** non access modifier
     | type         | function                 |
     |--------------+--------------------------|
@@ -32,7 +32,7 @@
     | abstract     | abstract class or method |
     | synchronized | used in thread           |
     | volatile     | same as above            |
-          
+    
 *** enhanced for loop in java 5
     used to tranvse collection.
     #+begin_src java
@@ -46,14 +46,14 @@
 *** polymorphism
     An object has many forms.
     1. all functions behaver as virtual functions in C++.
-    
+       
 *** inheritance
     1. a class can extends at most one class, but can implements many interfaces.
-
+       
 *** interface
     Similar to a class, is a collection of abstract methods.
     A class implements a interface, therefore inheriting the abstract methods of the interface.
-
+    
     1. interface can extends other interfaces
     2. interface is defaultly abstract, and methods is also abstract
     3. interface is compiled to a .class file.
@@ -63,7 +63,7 @@
     1. an abstract class can't be instanced.
        To use the class, you should first extends the class.
     2. an abstract class can has 0 to N abstract methods.
-
+       
     An abstract method is the same as pure virtual function in C++.
 *** packages
     namespace in C++.
@@ -97,7 +97,7 @@
     7. the -d option to javac
        specify output(.class files) path.
        Source codes and .class files can be in diferent directory.
-
+       
 *** compile and run
     1. compile
        javac SourceCode.java
@@ -110,3 +110,233 @@
        Notes:
        1. ClassName should be full name of a class, include package name
        2. System variable CLASSPATH specify class searching path.
+*** numbers
+**** primitive type
+     byte, int, short, long, float, double etc
+     
+**** wrapper classes
+     Abstract class: Number
+     Derived class:
+     Byte, Integer, Short, Long, Float, Double.
+     
+     int will be boxed to a Integer when consturcting by compiler automaticlly;
+     Interger will be unboxed to a int when doing arithmatic operations automaticlly.
+     #+begin_src java :classname Test
+     class Test {
+         public static void main(String[] args) {
+             Integer x = 7;
+             A a= new A(new Float(10.8));
+             System.out.println("x = "+x);
+             System.out.println("a = "+a.get());
+         }
+     }
+     class A{
+         Float a;
+         A(Float ra) {
+             a=ra;
+         }
+         Float get(){
+             return a;
+         }
+     }
+     #+end_src
+     
+     #+RESULTS:
+     : x = 7
+     : a = 10.8
+     
+*** many Math static methods
+    http://www.tutorialspoint.com/java/java_numbers.htm
+    
+    1. random
+     #+begin_src java :classname Test
+     class Test {
+         public static void main(String[] args) {
+             Double n = new Double(100);
+             Double r = Math.random();
+             System.out.println(Math.sqrt(n));
+             System.out.println(r);
+             System.out.println(Math.floor(r));
+         }
+     }
+     #+end_src
+       
+       #+RESULTS:
+     : 10.0
+     : 0.23222088111335182
+     : 0.0
+       
+    2. others
+       sqrt, pow, ceil, floor, abs, sin, cos, tan, log, round, rint, and so on.
+       
+*** char
+    1. primitive type: char
+    2. wrapper class : Character
+       The same as Integer.
+       #+begin_src java :classname Test
+       class Test {
+           public static void main(String[] args) {
+               Character ch='A';
+               System.out.println(Character.toLowerCase(ch));
+           }
+       }
+       #+end_src
+       
+       #+RESULTS:
+       : a
+    3. many Character method:
+       isDigit, isLetter, isWhiteSpace, isUpperCase, isLowerCase, toUpperCase, toLowerCase, toString.
+       
+       Call by: Character.isDigit('A');
+       
+*** String
+    string is object, and is imutable. StringBuffer and StringBuilder can be modified.
+**** create a string
+       1. by use of string literal
+          #+begin_src java :classname Test
+          class Test {
+              public static void main(String[] args) {
+                  String s="AAAABB BBBB";
+          System.out.println(s);
+              }
+          }
+          #+end_src
+          
+          #+RESULTS:
+          : AAAABB BBBB
+          
+       2. by constructer
+          String has 11 constructer.
+          Below use a char array.
+          #+begin_src java :classname Test
+          class Test {
+              public static void main(String[] args) {
+                  char[] ac={'a', 'b', 'c'};
+                  String s= new String(ac);
+                  System.out.println(ac);
+              }
+          }
+          #+end_src
+          
+          #+RESULTS:
+          : abc
+          
+          
+     
+     
+**** string method
+     http://www.tutorialspoint.com/java/java_strings.htm
+     1. concat, can also use '+'.
+     2. format. Works like System.out.printf
+     3. char charAt(int index).
+     4. int length().
+     5. boolean endsWith(String suffix)
+     6. int indexOf(int ch).
+        has many forms.
+     7. int lastIndexOf(int ch)
+        has many forms.
+     8. String replace(char old, char new)
+     9. String replaceAll(String regex, String replacement)
+     10. String replaceFirst(String regex, String replacement)
+     11. String[] split(String regex)
+     12. String[] split(String regex, int limit)
+     13. boolean startsWith(String prefix)
+     14. String substring(int beginIndex, int endIndex)
+     15. char[] toCharArray()
+     16. String toLowerCase()
+     17. String toUpperCase()
+     18. String trim()
+         remove leading and tailing whitespace
+         
+*** array
+**** create a array:
+     dataType[] ref=new dataType[arraySize];
+     or:
+     dataType[] ref={value0, value1, ...};
+     
+    #+begin_src java :classname Test
+    class Test {
+        public static void main(String[] args) {
+            Integer[] ai = {1,2,3};
+            for(Integer i:ai){
+                System.out.println(i);
+            }
+        }
+    }
+    #+end_src
+     
+     #+RESULTS:
+    : 1
+    : 2
+    : 3
+     
+     
+     
+     
+     
+     
+**** java.util.Arrays static method
+     1. public static void fill(int[]a, int val)
+        fill an array with value. argument type can be any other primitive type.
+        #+begin_src java :classname Test
+        import java.util.Arrays;
+        class Test {
+            public static void main(String[] args) {
+                int[] ai={1,2,3};
+        Arrays.fill(ai, 5);
+        for(int i:ai){
+        System.out.println(i);
+        }
+            }
+        }
+        #+end_src
+        
+        #+RESULTS:
+        : 5
+        : 5
+        : 5
+        
+     2. public static int binarySearch(Object[]a, Object key)
+        #+begin_src java :classname Test
+        import java.util.Arrays;
+        class Test {
+            public static void main(String[] args) {
+                int[] ai={1,2,3};
+        // Arrays.fill(ai, 5);
+                System.out.println(Arrays.binarySearch(ai, 2));
+            }
+        }
+        #+end_src
+        
+        #+RESULTS:
+        : 1
+
+     3. public static boolean equals(long[] a, long[] b)
+        Check if two arrays have same content.
+
+     4. public static void sort(Object[] a)
+        Sort an array.
+        
+        #+begin_src java :classname Test
+        import java.util.Arrays;
+        class Test {
+            public static void main(String[] args) {
+                int[] ai={5, 1, 4, 2,3};
+        Arrays.sort(ai);
+        for(int i:ai){
+        System.out.println(i);
+        }
+            }
+        }
+        #+end_src
+
+        #+RESULTS:
+        : 1
+        : 2
+        : 3
+        : 4
+        : 5
+
+        
+        
+     
