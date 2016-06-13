@@ -1,3 +1,4 @@
 *.html
 *.pyc
 */node_modules/*
+*.class
