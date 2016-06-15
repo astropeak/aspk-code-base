@@ -1,0 +1,36 @@
+* win32 programming
+** WinMain: the entry function
+   line main function in console program.
+** infinite loop in WinMain
+   #+begin_src C :includes <stdio.h>
+   while(GetMessage(&msg, NULL,0,0)){
+     TranslateMessage(&msg);
+     DispatchMessage(&msg);
+   }
+   #+end_src
+   不管有多少个子窗口，所有消息总是传给WinMain函数中。然后会根据msg中的相关参数，发给具体的窗口去处理。
+** window callback
+   每个window都有一个callback函数，用于处理发送给该窗口的消息。
+   窗口函数的原型为：
+   #+begin_src C :includes <stdio.h>
+   LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+     switch (message) {
+     case WM_COMMAND:
+       int wmId=LOWORD(wParam);
+       int wmEvent=HIWORD(wParam);
+     case WM_DESTROY:
+     default:
+       return (DefWindowProc(hWnd, message, wParam, lParam));
+     }
+   
+     return 0;
+   }
+   #+end_src
+   接收到一个消息时，再创建一个新的window,则新的window中也会有相应的消息处理机制。
+** 创建窗口，同时提供窗口回调函数
+   在回调函数中， 又可以创建新的窗口。
+
+   窗口回调函数主要是处理消息，通过switch case语句。MFC中的message map是对这一函数的包装。
+
+
+   
