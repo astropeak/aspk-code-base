@@ -100,7 +100,16 @@
 
        #+RESULTS:
        | 1 | 2 | 3 |
-       
+
+    2. get array length: len()
+       #+begin_src python
+       a=[1,2,3];
+       return len(a)
+       #+end_src
+
+       #+RESULTS:
+       : 3
+
 *** module
     A good tutorial: http://www.tutorialspoint.com/python/python_modules.htm
 
@@ -212,15 +221,25 @@
     #+RESULTS:
     : hello: Jim
 
-*** format a string
-    https://pyformat.info/
-    1. the ~%~ operator
-       #+begin_src python :results output
-       rst = "result: %d. No of entries: %d" % (0, 71)
-       print(rst)
-       #+end_src
+*** string
+**** format a string
+     https://pyformat.info/
+     1. the ~%~ operator
+        #+begin_src python :results output
+        rst = "result: %d. No of entries: %d" % (0, 71)
+        print(rst)
+        #+end_src
 
-       #+RESULTS:
-       : result: 0. No of entries: 71
+        #+RESULTS:
+        : result: 0. No of entries: 71
 
-    
+**** functions
+***** endswith
+      judge if endswith a substring
+      #+begin_src python
+      return "AAAAABBBCC".endswith('BCC');
+      #+end_src
+
+      #+RESULTS:
+      : True
+
