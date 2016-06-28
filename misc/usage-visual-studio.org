@@ -11,3 +11,18 @@
 
 *** open call stack window
     Debug=>Window=>Call stack
+*** change variable value
+    https://msdn.microsoft.com/en-us/library/aa6fy2x5.aspx
+    In variable windows, Autos, Locals or Watch.
+    Double click the value column of a variable row, then input the new value.
+*** skip a line: set next statement, CTRL+SHIFT+F10
+    Use set next statement function. (CTRL+SHIFT+F10)
+    1. set a breakpoint at the start line that should be skiped.
+    2. move curser to the next line of the end line, and press CTRL+SHIFT+F10.
+    3. then F5.
+    https://blogs.msdn.microsoft.com/habibh/2009/07/30/debugging-101-how-to-skip-over-code-in-the-visual-studio-debugger/
+*** run to cursor, CTRL+F10
+    invisible one-shot breakpoint. Excute upto where your cursor is.
+    
+https://blogs.msdn.microsoft.com/habibh/2009/07/30/debugging-101-how-to-skip-over-code-in-the-visual-studio-debugger/
+    
