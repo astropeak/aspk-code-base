@@ -1,0 +1,40 @@
+* MFC
+** view and document
+   http://www.codeproject.com/Articles/721/Creating-your-first-MFC-Doc-View-application
+
+   CDocument: load, save, manipulate data
+   CView: display data.
+
+   So a CDocument object can have many CView objects.
+   But a CView object can have only one CDocument object.
+   
+** 基本框架
+   1. CWinMain 继承一个类， 重载InitInstance函数。
+   2. 在InitInstance函数中， 创建一个CFrameWnd的继承类的对象
+   3. 然后生成一个对象，则程序完成。
+      在构造函数里，会调用 InitApplication, InitInsance, Run等函数。
+** API
+*** rect related function
+**** GetClientRect
+     http://stackoverflow.com/questions/7561049/what-is-the-difference-between-getclientrect-and-getwindowrect-in-winapi
+     
+     Get the rectagle of windows's client area. client area means content part of a window, exculdes border, header and caption bar.
+     Return the upper-left and lower-right corordinates.
+     Relative to itself.
+
+**** GetWindowRect
+     Get whole window rectangle. Relative to screen.
+     
+**** MoveWindow
+     Change position and dimensions.
+     参数可为四个尺寸，也可为一个rect对象。
+
+**** DeflateRect
+     缩小一个rect 对象：
+     editRect.DeflateRect(toEdge, toEdge, toEdge, toEdge);
+
+*** window
+**** GetParent
+**** GetParentFrame
+**** frame window and its view window
+     https://msdn.microsoft.com/en-us/library/5c2fsa5a.aspx
