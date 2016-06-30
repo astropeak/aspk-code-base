@@ -34,3 +34,39 @@
 
 
    
+** a tutorial
+*** a simple window application
+    http://www.winprog.org/tutorial/simple_window.html
+    1. 注册window class
+       指定WndProc, 颜色，图标等。保存通用配置。
+       一个window class 可以创建多个window 实例。
+       API： RegisterClassEx
+    2. 创建窗口。
+       新建一个窗口。
+       给定window class, 标题， 位置，大小等（这些属性都可能变化，因此没有加在window class里）。
+       API： CreateWindowEx
+    3. 接收消息，处理消息。
+       一个死循环。
+       DispatchMessage: 判断消息是发送给哪个window的，找到这个window的WinProc，然后调用这个函数。
+       可以通过调用GetWindowLong函数找到一个window的WinProc,然后手动调用这个函数，达到相同的效果（但对于一些特殊情况无法处理）。 Msg里面包含hwnd，message, wParam, lParam.
+
+       关闭程序时的消息：
+       当用户点击X时，WM_CLOSE消息就会被发送给窗口。调用DestroyWindow来处理这个消息。系统发送WM_DESTROY, 调用 PostQuitMessage, 系统最后发送WM_QUIT，这个时候GetMessage()会返回false, 程序结束。
+       
+    4. 消息处理函数
+       每个窗口都有一个窗口处理函数。
+       用户点击等操作后（包括点击任何一个菜单，控件），窗口就会收到一个消息。此时消息将被处理。
+*** windows 程序还是比较内聚的。基本上就是处理消息。
+    因此学习重点可能就是处理消息了。
+*** windows messages list
+**** WM_LBUTTONDOWN
+     鼠标左键按下。
+     
+    
+*** wParam and lParam
+    消息的参数。 并不是每个消息都有参数，不同的消息参数意义不同。
+    WM_COMMAND: wParam, HIWORD(wParam)是notification message, LOWORD(wParam)是control or menu id that sent the message. lParam是HWND to the control sent the message.
+*** dialog
+    dialog也是一个windows， 只不过做了一些方便的特性，方便做交互。
+
+    猜测： model and modeless: 前者不能再点其它窗口的控件，后者则可以。
