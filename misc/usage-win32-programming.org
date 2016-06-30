@@ -70,3 +70,77 @@
     dialog也是一个windows， 只不过做了一些方便的特性，方便做交互。
 
     猜测： model and modeless: 前者不能再点其它窗口的控件，后者则可以。
+
+    从rc ID创建DialogBox，并指定这个dialog box的window proc：
+    DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), hwnd, AboutDlgProc);
+    这个函数只有在diglog box 被关闭后才会返回。它会有一个处理消息的循环，处理它的所有消息。
+    这将创建一个model dialog box
+
+    CreateDialog() 会创建一个modeless diglog box, 函数立即返回，需要显示调用 ShowWindow来显示它。发给这个dialog box的消息会在主循环中调用处理, dialog box没有自己单独的消息处理循环。
+    #+begin_src C :includes <stdio.h>
+        g_hToolbar = CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_TOOLBAR),
+            hwnd, ToolDlgProc);
+        if(g_hToolbar != NULL)
+        {
+            ShowWindow(g_hToolbar, SW_SHOW);
+        }
+        else
+        {
+            MessageBox(hwnd, "CreateDialog returned NULL", "Warning!",  
+                MB_OK | MB_ICONINFORMATION);
+        }
+    #+end_src
+
+*** resource file(.rc file)
+    定义资源文件，比如对话框，图标，菜单等。是一个脚本，通过'RC' 编译成.res文件，最后link到代码。
+    每个资源有一个ID， 代码通过这个ID使用这个资源。比如对于菜单，可以加载菜单。对于对话框，可以创建这个对话框。
+    一般都会有个编辑器专门编辑，不会手动修改。
+
+    例子：
+    #+begin_src C :includes <stdio.h>
+    IDD_HANDLE_CONNECTION_PARAMETERS DIALOGEX 0, 0, 196, 252
+    STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION
+    CAPTION "Favorite List"
+    FONT 8, "MS Sans Serif", 400, 0, 0x0
+    BEGIN
+        PUSHBUTTON      "Save Connection As...",IDC_SAVE,7,7,91,14,WS_DISABLED
+        PUSHBUTTON      "Remove",IDC_REMOVE,7,27,50,14,WS_DISABLED
+        PUSHBUTTON      "Add Folder",IDC_NEW_FOLDER,139,27,50,14,WS_DISABLED
+        CONTROL         "",IDC_PARAMETER_SET_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,56,182,168
+        DEFPUSHBUTTON   "OK",IDOK,39,231,50,14
+        PUSHBUTTON      "Cancel",IDCANCEL,108,231,50,14
+    END
+    #+end_src
+    定义了一个对话框，这个对话框中包含5个PUSHBUTTON, 一个CONTROL。
+    四个数字指定了位置及大小。
+
+*** standard control
+    a control is a window! (这里的window的意思应该是指接收、发送、处理消息的一个东西）。
+    比如list box, 它会给包含它的dialog box发送消息，也能够接收消息。如，当前selection变化时，会发送 WM_COMMAND， LBN_SELCHANGE。
+    为了获取当前selection值，可以发送 LB_GETCURSEL 给list box。
+** add a button control to a window as child
+   Note: every conotrol is just a window.
+
+   Just use CreateWindow. To specify a ID to this control, use the last third parameter.
+   Second parameter specify the control type, which is predefined window classes.
+   The message will be send back to the main message process loop. 
+   #+begin_src C :includes <stdio.h>
+	hwndButton = CreateWindow( 
+    L"BUTTON",  // Predefined class; Unicode assumed 
+    L"OK",      // Button text 
+    WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+    200,         // x position 
+    10,         // y position 
+    100,        // Button width
+    100,        // Button height
+    hWnd,     // Parent window
+    (HMENU)300,       // No menu.
+    (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), 
+    NULL);      // Pointer not needed.
+   #+end_src
+
+
+   LOWORD of wParam is ID, HIWORD is control event(for clicking a button, it is BT_CLICKED).
+   		wmId    = LOWORD(wParam);
+		wmEvent = HIWORD(wParam);
+   Usually we will assign a unique ID to all controls. so we can distinguage them in one judgement.
