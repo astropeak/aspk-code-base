@@ -139,8 +139,10 @@
     NULL);      // Pointer not needed.
    #+end_src
 
-
    LOWORD of wParam is ID, HIWORD is control event(for clicking a button, it is BT_CLICKED).
    		wmId    = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
    Usually we will assign a unique ID to all controls. so we can distinguage them in one judgement.
+
+   ref: http://www.win32developer.com/tutorial/windows/windows_tutorial_3.shtm
+   https://msdn.microsoft.com/en-us/library/windows/desktop/ms632679(v=vs.85).aspx
