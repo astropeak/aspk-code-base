@@ -339,4 +339,22 @@
 
         
         
+*** InputStream and OutputStream
+    Deal with binary raw data.
+    
+    DataInputStream: subclass of InputStream. can read UTF strings, Integer, and other formated data.
+
+    Change a InputStream to a DataInputStream:
+    InputStream is = new InputStream(XXX);
+    dis = new DataInputStream(is);
      
+** setup development environment
+   1. install jdk
+   2. add bin diretory under jdk installation dir to PATH
+      C:\Program Files (x86)\Java\jdk1.8.0_25\bin
+   3. compile with javac, run with java
+      #+begin_src sh
+      javac Test.java
+      java Test
+      #+end_src
+
