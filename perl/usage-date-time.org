@@ -1,0 +1,27 @@
+* date time
+  
+** format data and time
+   A good tutorial: http://www.tutorialspoint.com/perl/perl_date_time.htm
+   
+   There are many method, I tried this way and it works good.
+   #+begin_src perl :results output
+   use POSIX qw(strftime);
+   my $date= strftime "%Y-%m-%d", localtime;
+   my $week = strftime "%U", localtime;
+   print "$date\n$week\n";
+   
+   $datestring = strftime "%a %b %e %H:%M:%S %Y", localtime;
+   printf("date and time - $datestring\n");
+   
+   # or for GMT formatted appropriately for your locale:
+   $datestring = strftime "%a %b %e %H:%M:%S %Y", gmtime;
+   printf("date and time - $datestring\n");
+   #+end_src
+   
+   #+RESULTS:
+   : 2016-07-06
+   : 27
+   : date and time - Wed Jul  15:50:35 2016
+   : date and time - Wed Jul  07:50:35 2016
+   
+   There are many specifier, see the web page for more.

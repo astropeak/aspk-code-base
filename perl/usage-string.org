@@ -133,3 +133,15 @@
 
    #+RESULTS:
 
+** increase string
+   #+begin_src perl :results output
+   $s = "AB";
+   ++$s;
+   print $s;
+   #+end_src
+
+   #+RESULTS:
+   : AC
+
+
+   But when number contained in the string, then the string will be treated as a number.

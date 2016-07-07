@@ -97,3 +97,14 @@ $a="AAA";
    #+RESULTS:
    : AAA2
 
+** get current user
+   #+begin_src perl :results output
+   my $username = $ENV{LOGNAME} || $ENV{USER} || getlogin || getpwuid($<);
+   print $username;
+   #+end_src
+
+   #+RESULTS:
+   : luooofuq
+
+   Note: getpwuid not implemented on windows.
+

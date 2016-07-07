@@ -52,6 +52,17 @@
    /\bsearch\B/ #will match searching, searched, but not search
    /\bfish\b/ #will only match fish, but not selfishness
    #+end_src
+** capture named groups
+   Syntax: ~(?<name>xxxxx)~
+   The captured content will be saved in ~%+~
+   #+begin_src perl :results output
+   my $s="This is Tom Green";
+   $s =~ m/This is (?<FirstName>\w+) (?<SecondName>\w+)/;
+   print "$+{FirstName}, $+{SecondName}\n";
+   #+end_src
+
+   #+RESULTS:
+
 ** misc
 *** `=~' is called binding operator
     See chapter 8. Left is a variable or string, right is a regexp. Let the regexp match againest the left string.
