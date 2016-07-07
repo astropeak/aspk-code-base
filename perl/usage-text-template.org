@@ -1,3 +1,7 @@
 * Text::Template
+** philosophy
+   1. The choose of subsitution
+      Don't create a new syntax, just use perl it self, so you can use the whole lanuage.
+
 ** example
    ./usage-text-template/letter.pl
