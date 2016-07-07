@@ -1,0 +1,44 @@
+* network programming
+  http://www.tutorialspoint.com/java/java_networking.htm
+** socket programming
+   Comunicate via TCP.
+   The client and server communicate by writing to and reading form the socket object.
+*** server side: java.net.ServerSocket
+*** client side: java.net.Socket
+    1. In the constructer, client connect to server.
+       
+       public Socket(String host, int port) throw UnknownHostException, IOExecption;
+
+       #+begin_src java :classname Test
+       import java.net.Socket; 
+       import java.net.UnknownHostException; 
+       import java.io.IOException;
+       
+       class Test {
+           public static void main(String[] args) {
+               try {
+                   Socket sk = new Socket("localhost", 9999);
+               } catch (UnknownHostException e){
+                   System.out.println("UnknownHostException");
+                   e.printStackTrace();
+               } catch (IOException e) {
+                   System.out.println("IOException");
+                   e.printStackTrace();
+               }
+           }
+       }
+       #+end_src
+       
+       #+RESULTS:
+       : UnknownHostException
+       
+       Notes:
+       1. When define a method, specify all exceptions that will be thrown. Can the caller must catch all exceptions(or it can't compile).
+    2. write to server
+       First get output stream: sk.getOutputStream();
+       Then create an DataOutputStream();
+       Then write data to the DataOutputStream, and message will be sent to server's inputStream.
+    3. receive from server is similar
+       sk.getInputStream();
+
+       
