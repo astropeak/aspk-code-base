@@ -1,0 +1,56 @@
+* auto load
+  AUTOLOAD is used to handle undefined sub. If a sub is not defined, then the AUTOLOAD sub will be called. The parameter is the same, and the sub name can be accessed from $AUTOLOAD.
+  #+begin_src perl :results output
+  sub AUTOLOAD {
+      my $program = $AUTOLOAD;
+print "name: $AUTOLOAD\n";
+      $program =~ s/.*:://;
+      system($program, @_);
+  }
+  
+  # date();
+  # who('am', 'i');
+  # ls('-l');
+  
+  # or if predeclared, then parantheses are not needed.
+  use subs qw(date who ls);
+  date;
+  who "am", "i";
+  ls '-l';
+  
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+  name: main::date
+  Tue Jul 12 13:31:34 CST 2016
+  name: main::who
+  name: main::ls
+  total 35
+  -rw-r--r--    1 luooofuq Administ     3248 Jul 11 17:42 #usage-misc.org#
+  drwxr-xr-x    1 luooofuq Administ     4096 Jul 11 14:37 Aspk
+  -rwxr-xr-x    1 luooofuq Administ      285 Apr 29 16:52 app_process_each_line.pl
+  -rwxr-xr-x    1 luooofuq Administ      378 May  9 22:14 app_set_system_time.pl
+  -rw-r--r--    1 luooofuq Administ     1887 Jun  2 15:52 usage-Set-FA-Element.org
+  -rw-r--r--    1 luooofuq Administ      593 May 23 11:29 usage-array.org
+  -rw-r--r--    1 luooofuq Administ     2483 Jul 12 13:31 usage-auto-load.org
+  -rw-r--r--    1 luooofuq Administ     3816 May 15 08:33 usage-caller.org
+  -rw-r--r--    1 luooofuq Administ      190 May 31 16:01 usage-counter-intuitive.org
+  -rw-r--r--    1 luooofuq Administ      856 Jul  6 15:51 usage-date-time.org
+  -rw-r--r--    1 luooofuq Administ      650 May 23 15:34 usage-flow-control.org
+  -rw-r--r--    1 luooofuq Administ     1455 May 13 17:21 usage-grep.org
+  -rw-r--r--    1 luooofuq Administ     3719 May 17 15:38 usage-hash.org
+  -rw-r--r--    1 luooofuq Administ     1096 Apr 25 16:21 usage-io-pipe.org
+  -rw-r--r--    1 luooofuq Administ     2346 May  9 15:10 usage-io.org
+  -rw-r--r--    1 luooofuq Administ     3354 Jul  7 14:12 usage-misc.org
+  -rw-r--r--    1 luooofuq Administ     4721 May  4 21:10 usage-oop.org
+  -rw-r--r--    1 luooofuq Administ     7626 Apr 26 13:25 usage-package-module.html
+  -rw-r--r--    1 luooofuq Administ     9848 Jun  2 10:32 usage-package-module.org
+  -rw-r--r--    1 luooofuq Administ     1024 May  4 10:04 usage-perlstyle.org
+  -rw-r--r--    1 luooofuq Administ     2348 Jul  7 17:15 usage-regexp.org
+  -rw-r--r--    1 luooofuq Administ      609 Jul 11 17:49 usage-special-literal.org
+  -rw-r--r--    1 luooofuq Administ     2946 Jul  6 15:56 usage-string.org
+  drwxr-xr-x    4 luooofuq Administ        0 Jun 24 09:57 usage-text-template
+  -rw-r--r--    1 luooofuq Administ      205 Jun 24 10:07 usage-text-template.org
+#+end_example
+
