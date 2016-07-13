@@ -1,0 +1,57 @@
+
+* RTF writer and converter
+  There is no editor for RTF file. But RTF::Writer, and RTF::TEXT::Converter are avaliable.
+  
+  http://search.cpan.org/~sburke/RTF-Writer-1.11/lib/RTF/Writer.pod
+  http://search.cpan.org/~sargie/RTF-Parser-1.12/lib/RTF/TEXT/Converter.pm
+  
+  So to edit a rtf file, first convert it to text(using RTF::TEXT::Converter), then edit the text file(perl itself), and generate the RTF file(RTF::Writer).
+  
+  The two example works good:
+  ./usage-rtf-writer-converter/rtf_writer_example.pl
+  ./usage-rtf-writer-converter/rtf_text_converter.pl
+
+
+** RTF cookbook:
+   http://search.cpan.org/~sburke/RTF-Writer-1.11/lib/RTF/Cookbook.pod
+   THis is the RTF reference.
+
+   RTF consists of plaintext, commands, escapes, groups
+   1. plaintext: [^\{}]+
+      example: "I like pie";
+   2. command: \\[a-z]+[-]?[0-9]
+      example: "\f3", "\li-320"
+   3. escape: \\[^a-z]+
+      example: \{, \}, \\, \'BB(which is used to represent non 7bit ascii)
+   4. group: {ANY_RTF_CODE}
+      example: {I like \i pie}
+** rtf spec
+   http://www.biblioscape.com/rtf15_spec.htm#Heading20
+   Seems good.
+*** STARTED learn this spec
+    - State "STARTED"    from ""           [2016-07-13 Wed 13:03]
+    :LOGBOOK:
+    CLOCK: [2016-07-13 Wed 13:03]--[2016-07-13 Wed 15:53] =>  2:50
+    :END:
+    :PROPERTIES:
+    :Effort:   100
+    :END:
+
+      
+    rtf bullet example:
+    http://stackoverflow.com/questions/15367975/rtf-bullet-list-example
+
+** rtf codes
+   1. bookmark
+      #+begin_src org
+      \par {\*\bkmkstart _Toc451344873} XXXX {\*\bkmkend _Toc451344873}
+      #+end_src
+
+      #+begin_src org
+      {\field{\*\fldinst{HYPERLINK \\l _Toc451344873}}{\fldrslt{\ul XXXAAA}
+      #+end_src
+
+      #+begin_src org
+      {\field{\*\fldinst{HYPERLINK "D:\\Folder\\File.doc"}}{\fldrslt{\ul <link text>}
+      #+end_src
+
