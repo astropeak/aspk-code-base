@@ -1,0 +1,23 @@
+* special literal
+  http://perldoc.perl.org/perldata.html#Special-Literals
+
+** __DATA__
+   Used to save text data in a script file.
+   Text after __DATA__ may be read via the filehandle PACKNAME::DATA, where the PACKNAME is the current package name when the __DATA__ token was encounterd.
+   #+begin_src perl :results output
+   while (<DATA>){
+       $_=~/(\w+) +(\w+)/;
+       print "First name: $1, Family name: $2\n";
+   }
+   
+   __DATA__
+   Jim Green
+   Tim Cooker
+   #+end_src
+
+   #+RESULTS:
+   : First name: Jim, Family name: Green
+   : First name: Tim, Family name: Cooker
+
+   
+  
