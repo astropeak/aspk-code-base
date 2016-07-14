@@ -1,0 +1,14 @@
+* rtf
+** hyperlink
+   1. to url
+      {\field{\*\fldinst HYPERLINK "http://www.google.com/"}{\fldrslt http://www.google.com}}
+   2. to another document
+      {\field{\*\fldinst HYPERLINK "E:/home/tmp/1.c"}{\fldrslt 1.c}}
+   3. to a location at current file
+      {\field{\*\fldinst HYPERLINK \\l ID_OF_LOCATION}{\fldrslt DISPLAY_NAME}}
+
+      The bookmark:
+      {\field{\*\fldinst {\*\bkmkstart ID_OF_LOCATION}} {\fldrslt Testing the formtext field}}{\*\bkmkend ID_OF_LOCATION}
+
+      above method can't display text. This works: 
+      \par {\*\bkmkstart _Toc451344873} XXXX {\*\bkmkend _Toc451344873}
