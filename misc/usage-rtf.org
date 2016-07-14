@@ -1,4 +1,10 @@
 * rtf
+** docs
+   1. a tutorial
+      http://www.pindari.com/rtf1.html
+   2. spec
+      http://www.biblioscape.com/rtf15_spec.htm#Heading20
+
 ** hyperlink
    1. to url
       {\field{\*\fldinst HYPERLINK "http://www.google.com/"}{\fldrslt http://www.google.com}}
@@ -12,3 +18,11 @@
 
       above method can't display text. This works: 
       \par {\*\bkmkstart _Toc451344873} XXXX {\*\bkmkend _Toc451344873}
+
+** bullets and numbering
+   1. number list
+      Below code works:
+      {\pntext \'B7}{\*\pn\pnlvl3\pnrestart{\pntxtb \'B7}}
+      pnlvl3 will display as number. But \pndec never works. And I still don't know how to display 1.1.1(the \pnprev also not work!). Maybe I can skip this part.
+   2. bullet list
+      
