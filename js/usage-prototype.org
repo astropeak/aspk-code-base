@@ -1,0 +1,43 @@
+* prototype
+** ref
+   1. EASY a github page that describe prototype in detailed
+      https://github.com/stevekwan/experiments/blob/master/javascript/constructor-vs-prototype.html
+   2. 
+
+** what
+   1. When a function is defined, an object named prototype will be automaticlly created as a property of that function object.
+      So only function objects have a prototype property. And the this property is empty by default.
+   2. __proto__ point to the parent object's prototype.
+      For example:
+      Function.prototype.__proto__ = Object.prototype
+      and Object.prototype.__proto__ = null(because Object is the root in prototype chain).
+      #+begin_src js
+      function Food(name){
+          this.name = name;
+      }
+      
+      Food.prototype.print = function (){
+          console.log("Name: ", this.name);
+      }
+      
+      var f=new Food("bread");
+      f.print();
+
+      # all belows are true.
+      console.log('f.__proto__ equals to Food.prototype? ', f.__proto__ === Food.prototype);
+      console.log('Food.prototype.__proto__ equals to Object.prototype? ', Food.prototype.__proto__ === Object.prototype);
+      console.log('Function.prototype.__proto__ equals to Object.prototype? ', Function.prototype.__proto__ === Object.prototype);
+      console.log('Food.__proto__ equals to Function.prototype? ', Food.__proto__ === Function.prototype);
+      #+end_src
+
+   3. Function.prototype.constructor = Function. This is the constructor fucntion that will be called when 'new Function(XXX)';
+** why
+   1. why only functions have prototype property?
+      Because prototype is only used when the function is used as a construction. Any other object will never be used as a constructor, so no needed of prototype property.
+   2. 
+
+
+** problems
+   1. why Food.prototype.constructor is needed? 
+      Seems it will never be called.
+

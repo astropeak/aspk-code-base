@@ -1,0 +1,43 @@
+* oop
+** prototype based oop
+   Example: Rect and Circle inheritant form Shape.
+   #+begin_src js
+   function Shape (type) {
+       this.type = type;
+   }
+   Shape.prototype.print = function () {
+       console.log("Type: ", this.type, ", Area: ", this.area());
+   }
+   
+   function Rect (w, h){
+       this.width= w;
+       this.height=h;
+   }
+   Rect.prototype = new Shape('rect');
+   Rect.prototype.area = function (){
+       return this.width*this.height;
+   }
+   
+   function Circle (r){
+       this.radius= r;
+   }
+   Circle.prototype = new Shape('circle');
+   Circle.prototype.area = function (){
+       return 3.14*this.radius*this.radius;
+   }
+   
+   var r = new Rect(2,4);
+   r.print();
+   
+   var c = new Circle(2);
+   c.print();
+   #+end_src
+
+   Notes:
+   1. Put all common property in base class(here it is shape class, the property is type).
+      and set Rect's prototype to new Shape('rect').
+      这样便可达到传统OOP的效果，父类的构造函数先调用，子类的构造函数后调用。但不同点为此时父类的构造函数只调用了一次。
+   2. 只有公共的方法才放在你父类的prototype中。子类特有的函数放在子类中。
+      例如 print放在父类中，area放在子类中。
+   3. 构造函数里赋值的成员直接出现在new出来的对象中，prototype中的成员出现在__proto__里。
+
