@@ -1,0 +1,12 @@
+* README
+** v0.0.1
+*** run
+    1. start server for 1 and 2
+       #+begin_src sh
+       node server1.js
+       node server2.js
+       #+end_src
+    2. browser http://127.0.0.1:8080
+    3. many alert will be displayed indicates that messag posted and received.
+*** note
+    the first alert in post.js is necessary. it works like a delay.
