@@ -9,16 +9,24 @@
 var dest= "http://127.0.0.1:9090";
 var src = "http://127.0.0.1:8080";
 
-var popup = window.open(dest+"/index2.html", "Test");
+window.addEventListener("load", function(event) {
 
-// This does nothing, assuming the window hasn't changed its location.
-var rst = popup.postMessage("The user is 'bob' and the password is 'secret'",
-                   "https://secure.example.net");
-alert("Rst: "+rst);
-// This will successfully queue a message to be sent to the popup, assuming
-// the window hasn't changed its location.
-rst=popup.postMessage("hello there!", dest);
-// alert("Rst: "+rst);
+    var popup = window.open(dest+"/index2.html", "Test");
+
+    // This does nothing, assuming the window hasn't changed its location.
+
+    var rst = popup.postMessage("The user is 'bob' and the password is 'secret'",
+                                "https://secure.example.net");
+    // alert("Rst: "+rst);
+    // This will successfully queue a message to be sent to the popup, assuming
+    // the window hasn't changed its location.
+    sleep(500).then(() => {
+        // Do something after the sleep!
+        rst=popup.postMessage("hello there!", dest);
+    });
+    // alert("Rst: "+rst);
+
+}, false);
 
 function receiveMessage(event)
 {
@@ -35,3 +43,11 @@ function receiveMessage(event)
     alert("Data: "+ event.data);
 }
 window.addEventListener("message", receiveMessage, false);
+
+
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+// sleep(500).then(() => {
+//     // Do something after the sleep!
+// });

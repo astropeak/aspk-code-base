@@ -10,3 +10,6 @@
     3. many alert will be displayed indicates that messag posted and received.
 *** note
     the first alert in post.js is necessary. it works like a delay.
+** v0.0.2
+*** change log
+    1. remove the alert, using settimeout.
