@@ -6,3 +6,45 @@
     #+begin_src js
     user_pref('conkeror.rcfile', '/home/foo/conkeror-rc');
     #+end_src
+** add an interactive command
+   1. Write a function, which accepts one parameter
+      The parameter is an object, ~I.buffer.document~ refers to curent document, ~I.window~ refers to current window.
+   2. bind the function to a command with ~interactive~ function.
+      First parameter is the command string, second parameter is the doc, third is the function created in step 1.
+      
+   A perfect example:
+   #+begin_src js
+   function darken_page (I) {
+       var styles='* { background: black !important; color: grey !important; }'+
+           ':link, :link * { color: #4986dd !important; }'+
+           ':visited, :visited * { color: #d75047 !important; }';
+       var document = I.buffer.document;
+       var newSS=document.createElement('link');
+       newSS.rel='stylesheet';
+       newSS.href='data:text/css,'+escape(styles);
+       document.getElementsByTagName("head")[0].appendChild(newSS);
+   }
+   
+   interactive("darken-page", "Darken the page in an attempt to save your eyes.",
+               darken_page);
+   
+   define_key(content_buffer_normal_keymap, "C-d", "darken-page");
+   #+end_src
+
+** define key to an interactive command
+   Define a key in a keymap. The action should be an interactive command string.
+
+   keymaps:
+   | text_keymap                  |
+   | default_global_keymap        |
+   | content_buffer_normal_keymap |
+   |                              |
+   
+   #+begin_src js
+   interactive("my-start-solaris-hub", "", my_start_solaris_hub);
+   
+   define_key(default_global_keymap, "f9", "my-start-win-hub");
+   define_key(default_global_keymap, "C-f10", "my-start-solaris-hub");
+   define_key(default_global_keymap, "C-c C-c", "my-start-solaris-hub");
+   #+end_src
+
