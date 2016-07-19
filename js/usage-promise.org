@@ -1,0 +1,59 @@
+* promise
+  A promise is used for asynchronous computations. A Promise represent an operation that hasn't completed yet, but is expected in the future.
+** docs
+   1. general promise
+      https://en.wikipedia.org/wiki/Futures_and_promises
+      A promise object acts as a proxy for a result that is initially unknown, usually because the computation of its value is yet incomplete.
+   2. benefit of promise
+      http://stackoverflow.com/questions/2160100/what-is-the-benefit-of-a-promise-abstraction-in-commonjs
+      好处就是更整洁的写法。
+   3. promise doc on MDN
+      https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+** examples
+   #+begin_src js :result output
+   // this is an asynchronous operation
+   function downloadFile(file, cb) {
+       var percent = 0;
+       setTimeout(function ddd(){
+           percent+=20;
+           console.log("Progress: "+percent+"%");
+           if (percent < 100){
+               setTimeout(ddd, 1000);
+           } else {
+               cb(0);
+           }
+       }, 200);
+   }
+   
+   var p1=new Promise(function(resolve, reject){
+       downloadFile("http://xxx/yyy/zzz/c", function (rst){
+           if (rst) {
+               resolve(rst);
+           } else {
+               reject(rst);
+           }
+       })
+   });
+   
+   p1.then(function(rst){
+       console.log("Download finished.");
+   }).catch(function(rst){
+       console.log("Download failed.");
+   });
+   #+end_src
+
+   #+RESULTS:
+   : undefinedProgress: 20%
+   : Progress: 40%
+   : Progress: 60%
+   : Progress: 80%
+   : Progress: 100%
+   : Download failed.
+
+   好处： 不用嵌套写函数。将异步的写法写成同步的写法。
+
+** thinkings
+   1. 适用于任何需要异步处理的事情，并且我们对于这个事情的结果比较关心。
+      如果对结果不关心，则没有必要做这个事情（但sleep的实现好像不是这样，仅仅是起到一个延时作用）。
+
