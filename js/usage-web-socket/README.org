@@ -1,0 +1,8 @@
+* README
+** how to run
+   1. start the server: 
+      node index.js
+   2. browser http:://127.0.0.1:3000
+   3. input a message in the bottom input box, and then press send.
+
+   Effect: the message will be send back to all window opended.
