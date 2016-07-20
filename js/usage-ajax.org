@@ -1,0 +1,67 @@
+* ajax
+  Ajax is an aproatch that combine many existing technology such as HTML, javascript, CSS, DOM, XML, and the XMLHttpRequest object, first introduced in 2005.
+  
+  ajax stand for asynchronous javascript and XML. But json is widely used now instead of XML.
+  
+  The MDN page:
+  https://developer.mozilla.org/en/docs/AJAX
+  
+  
+  Note on XMLHttpRequest:
+  Designed by Microsoft, adopted by Mozilla, Apple, and Google. Now it is stardarded. Despite its name, it can retrive any type of data, not just XML, and can use many protocal, not only http.
+  
+  The official stardard website:
+  https://xhr.spec.whatwg.org/
+  The mdn page:
+  https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+  
+** example
+   1. create the XMLHttpRequest object:
+      #+begin_src js
+      // Old compatibility code, no longer needed.
+      if (window.XMLHttpRequest) { // Mozilla, Safari, IE7+ ...
+          httpRequest = new XMLHttpRequest();
+      } else if (window.ActiveXObject) { // IE 6 and older
+          httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      #+end_src
+   2. register readyState change event handler
+      #+begin_src js
+      httpRequest.onreadystatechange = function() {
+          if (httpRequest.readyState === XMLHttpRequest.DONE) {
+              // ajax operation done here
+          }
+      }
+      #+end_src
+      The event handler will be called when readyState changed. readyState will have below values:
+      | value | state            | meaning                                       |
+      |-------+------------------+-----------------------------------------------|
+      |     0 | UNSENT           | Client has been created, open() not be called |
+      |     1 | OPENED           | open() has been called                        |
+      |     2 | HEADERS_RECEIVED | sent() has been called, and headers           |
+      |       |                  | and status are avaliable                      |
+      |     3 | LOADING          | downloading, responseText holds partial data  |
+      |     4 | DONE             | the operation is complete                     |
+      Ref: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState
+      
+      The handler function will be called when open() and send() called, so register should be done before calling those two functions.
+   3. open connection
+      #+begin_src js
+      httpRequest.open('GET', "http://localhost:3000/aaa.bbb", true);
+      #+end_src
+      After this line, httpRequest.readyState will be changed to 1.
+   4. send data
+      #+begin_src js
+      httpRequest.send(null);
+      #+end_src
+      Because the method is 'GET', so no data to send.
+      After this line, httpRequest.readyState will be changed to 2.
+
+
+
+ 
+** property
+   1. readyState: current ajax state, see example step 2.
+   2. status: http response status. 200 is the fine value.
+   3. responseText: the data as text
+   4. responseXML: the data as XML
