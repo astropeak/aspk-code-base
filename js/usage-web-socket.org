@@ -1,0 +1,42 @@
+* web socket
+** APIs
+*** client side
+    1. Create and open a websocket connection
+       WebSocket(url, prototal)
+       example:
+       #+begin_src js
+       var ws = new WebSocket("ws://127.0.0.1:3000/index.js", "echo-protocal");
+       #+end_src
+    2. Send data
+       send(data)
+       example:
+       #+begin_src js
+       ws.send("Hello, web socket");
+       #+end_src
+    3. event
+       1. open: when connection opened, this event will be fired
+       2. error
+       3. close
+       4. message: when server send message to client, this event will happen.
+          e.data is the data.
+          #+begin_src js
+          ws.addEventListener('message', function(e){
+              console.log("Received message: "+e.data);
+          }, false);
+          #+end_src
+    4. property
+       1. bufferedAmount: unsent data to server
+          Can be used to control sent rate.
+*** server side
+    Don't find any documents. But this page describe an implementation in nodejs
+    http://cjihrig.com/blog/creating-your-own-node-js-websocket-echo-server/
+    And the page has a link to the client code.
+
+** example
+   See ./usage-web-socket/REAMDE.org
+
+** points
+   1. seems socket.io is a stardard way of doing web socket for nodejs.
+      An example of using socket.io:
+      http://socket.io/get-started/chat/
+
