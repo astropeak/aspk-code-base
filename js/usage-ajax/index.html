@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Test</title>
+    <style>
+     /* * { margin: 0; padding: 0; box-sizing: border-box; } */
+     body { font: 13px Helvetica, Arial; }
+    </style>
+  </head>
+  <body>
+    <h1>Test Page</h1>
+    <p></p>
+    <script>
+     if (window.XMLHttpRequest) { // Mozilla, Safari, IE7+ ...
+       httpRequest = new XMLHttpRequest();
+     } else if (window.ActiveXObject) { // IE 6 and older
+       httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+     }
+
+     httpRequest.onreadystatechange = function() {
+       if (httpRequest.readyState === XMLHttpRequest.DONE) {
+         // ajax operation done here
+         if (httpRequest.status === 200) {
+           document.getElementsByTagName('p')[0].innerHTML = "Ajax data:<br>"+httpRequest.responseText;
+         } else {
+           alert('There was a problem with the request.');
+           alert(httpRequest.getAllResponseHeaders());
+         }
+       }
+     }
+
+     httpRequest.open('GET', "aaa.bbb");
+     httpRequest.send();
+    </script>
+  </body>
+</html>

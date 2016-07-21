@@ -1,0 +1,6 @@
+* README
+** how to run
+   1. start the server: 
+      node index.js
+   2. browser http:://127.0.0.1:8080
+   3. ajax data will be loaded in the page, the url is ~aaa.bbb~
