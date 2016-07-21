@@ -1,0 +1,65 @@
+* this
+  
+** docs
+   MDN docs, quite extensive:
+   https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/this
+
+** what will ~this~ refers to
+   1. in global execution context, this refers to the global object ~window~
+      #+begin_src js
+      console.log(this===window);//true
+      #+end_src
+   2. inside a function
+      1. the function is called without any object, this refers to global object
+         #+begin_src js
+         function f1(){
+             return this;
+         }
+         f1() === window; //true
+         #+end_src
+         In this case, the value of this is not set by the call.
+      2. the function is invoked by a object, this refers to that object
+         #+begin_src js
+         var o={'name':"Jim",
+               f:function(){
+                   console.log(this.name);
+               }};
+         o.f(); //"Jim"
+         #+end_src
+   3. as a DOM event handler
+      this will be bound the element the event fired from.
+   4. notes on strict mode
+      ~this~ will not be rebinded to an object if a function is called without any object.
+
+** the bind method
+   f.bind(some_object) creates a new function with the same body as f, but with ~this~ bound to the first argumetns(some_object here), regardless of how the function being used.
+   #+begin_src js
+   function f(){
+     return this.a;
+   }
+   
+   var g = f.bind({a:"azerty"});
+   console.log(g()); // azerty
+   
+   var o = {a:37, f:f, g:g};
+   console.log(o.f(), o.g()); // 37, azerty
+   #+end_src
+** call and apply
+   f.call(some_object, args) will set ~this~ to some_object.
+
+   With apply, we can implement bind as:
+   #+begin_src js
+   Function.prototype.bind= function(some_obj) {
+       var func = this;
+       return function {
+           func.apply(some_obj, argumetns);
+       };
+   };
+   #+end_src
+   Note: the code not checked!
+
+
+
+
+
+
