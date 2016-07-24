@@ -1,0 +1,83 @@
+* size
+** units
+*** pt
+    point: one pt equals to 1/72 inch.
+    
+*** px
+    one px = one pt * DPI/72. DPI is dot per inch. In windows, it is 96; in mac os, it is 72.
+    
+    The tranditional way, reliable and consistent.
+    
+    CONS:
+    1. IE 9 and lower version can't resize the font
+       
+*** em
+    em is a relative unit. It defines the fontsize relative to its current fontsize.
+
+    只有定义了font-size为em的元素才会变化，这个元素的所有子元素的font-size为计算后的绝对值，而为仍然为定义的em值。即子元素母以子元素继承的font-size为绝对值，而非相对值。可以在./usage-size/em.html中看出。
+    
+    One em equals to the width of 'M' at first. But because some lanuage don't have 'M', so em means the height of a character. It doesn't matter whether em means width or height, the important point is that one em means the same font size as the parent.
+    
+    Most browser's default font size if 16px, so one em equals to 16px. So if set body's font-size to 62.5%, the one em will equal to 10px.
+    #+begin_src css
+body {
+font-size:62.5%;
+}
+    #+end_src
+    
+    CONS:
+   1. when element nested, the font size will be unpredicable.
+      
+*** rem
+    rem stand for root em. one rem unit equals to the computed value of font-size on the root element(that is the html element).
+
+    To fix the em compond problem, intrudoced by css3, and well supported by browsers.
+    
+    #+begin_src css
+html { font-size: 62.5%; }
+body { font-size: 14px; font-size: 1.4rem; } /* =14px */
+h1   { font-size: 24px; font-size: 2.4rem; } /* =24px */
+    #+end_src
+** best practice
+   1. 给出了一种实践方式： root element使用px(that is html element), module 使用rem(module这里指的是网页上的区域划分，比如header, footer, adise, section, artical等），其它所有实际内容元素使用em(如h1, p, li).
+   https://css-tricks.com/rems-ems/
+
+   2. Always use rem, but to ease the conversion to px form rem, set html's font-size to 62.5%, then one rem will equal to 10px. So to express 14px, just use 1.4rem.
+
+   For browser that not support rem, put a line before rem that use px.
+
+   The whole example.
+   #+begin_src css
+   html { font-size: 62.5%; }
+   body { font-size: 14px; font-size: 1.4rem; } /* =14px */
+   h1   { font-size: 24px; font-size: 2.4rem; } /* =24px */
+   #+end_src
+   3. em确实比px要好。
+
+** pitfuls
+   1. the ~html{font-size:62.5%}~ trick doesn't work for @media query breakpoints, which will always use the default font size of browser as one em or rem.
+** docs
+   A discuss on rem, both advatage and disadvantage.
+   https://www.sitepoint.com/understanding-and-using-rem-units-in-css/
+   And there are three links. one recomand rem, one aginst rem, one give a good usage.
+
+   给出了一种实践方式： root element使用px(that is html element), module 使用rem(module这里指的是网页上的区域划分，比如header, footer, adise, section, artical等），其它所有实际内容元素使用em(如h1, p, li).
+   https://css-tricks.com/rems-ems/
+   文中指出全部使用rem的问题在于，缩放时大小字体的比例不一致。而使用em则没有这个问题。
+
+** points
+*** html{font-size:62.5%}的问题
+    文中提到：这种方法的问题在于，定义的基础字体大小并非自己实际需要的。由此比如实际需要的大小为14px,则需要为所有的元素添加font-size:1.4em的规则。
+
+    但这个问题可以非常轻松的通过再加一条规则解决：
+    #+begin_src css
+body {font-size:1.4em;}
+    #+end_src
+
+    这样不就把基准字体大小定义为14px了吗（由此也可以为任意想要的值）。 所以原文简直就是放屁（当只是阅读时，根本想不到这些，阅读的无用性，练习的重要性）。
+
+    思考2： 为不么不直接设置为10px呢？效果不是一样吗，还更加可靠。
+
+    
+    
+    
