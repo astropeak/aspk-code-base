@@ -1,0 +1,48 @@
+* float & clear
+  The float CSS property specifies that an element should be taken from the normal flow and placed along the left or right side of its container, where text and inline elements will wrap around it.
+
+  float will modify the calculated ~display~ value in some cases(原来有这种情况，难怪之前会出现不符合预期的情况。):
+  Specified value 	Computed value
+inline 	block
+inline-block 	block
+inline-table 	table
+table-row 	block
+table-row-group 	block
+table-column 	block
+table-column-group 	block
+table-cell 	block
+table-caption 	block
+table-header-group 	block
+table-footer-group 	block
+flex 	flex, but float has no effect on such elements
+inline-flex 	inline-flex, but float has no effect on such elements
+other 	unchanged
+
+Note: when specified is inline, it will be changed to block.
+
+** docs
+   MDN page:
+   https://developer.mozilla.org/en/docs/Web/CSS/float
+  
+** value
+   | value | description                                |
+   |-------+--------------------------------------------|
+   | left  | float on left side of its containing block |
+   | right | float on right side                        |
+   | none  | don't float                                |
+** how float element is positioned
+   if will be shift to left or right until it touch the edges of its containing box or another floated element.
+
+** clear
+   The clear CSS property specify whether an element can be next to a float element that precede it or must be moved down(cleared) below them.
+
+   MDN doc:
+   https://developer.mozilla.org/en-US/docs/Web/CSS/clear
+
+   So clear specify the property of the elemnt that after a float element.
+*** value
+    | value | description                                   |
+    |-------+-----------------------------------------------|
+    | left  | moved down to clear pass a left float element |
+    | right | ... right ...                                 |
+    | both  | ... both left and right ...                   |
