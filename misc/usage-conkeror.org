@@ -48,3 +48,5 @@
    define_key(default_global_keymap, "C-c C-c", "my-start-solaris-hub");
    #+end_src
 
+** TODO look overlay.js under conkerorrc dir
+   capture some notes to org remember.
