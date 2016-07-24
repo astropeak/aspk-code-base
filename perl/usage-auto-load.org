@@ -1,5 +1,7 @@
 * auto load
   AUTOLOAD is used to handle undefined sub. If a sub is not defined, then the AUTOLOAD sub will be called. The parameter is the same, and the sub name can be accessed from $AUTOLOAD.
+
+  But now I don't see the real usage of this feature.
   #+begin_src perl :results output
   sub AUTOLOAD {
       my $program = $AUTOLOAD;
