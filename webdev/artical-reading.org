@@ -1,0 +1,10 @@
+* artical reading
+** 工作五年，后面四年重复着第一年的活儿？
+   http://www.barretlee.com/blog/2016/07/21/donnot-repeat-yourself/
+*** summary
+    这篇文章里讲到了在公司里，前端开发的总体流程，及需要注意的一些问题。给出了一个js模块的编写模板。
+    可以仔细研究下提到的问题，及学习流程。
+*** points
+**** 切图
+     指将设计图切割为小图，然后用html + css 布局出来的过程。
+     ref: http://baike.baidu.com/subview/4101070/18274378.htm
