@@ -1,0 +1,18 @@
+* apply
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply
+  
+** application
+   1. used to pactching a function
+      #+begin_src js
+      var originalfoo = someobject.foo;
+      someobject.foo = function() {
+        // Do stuff before calling function
+        console.log(arguments);
+        // Call the function as it would have been called normally:
+        originalfoo.apply(this, arguments);
+        // Run stuff after, here.
+      }
+      #+end_src
+      For example: if you want debug a function, you can add traces before and after calling the function, and you can print the arguments.
+      
+      But why apply is needed? why just ~originalfoo(arguments)~? What's the difference? What will ~this~ bind to in the second case(I guess it should be bind to a global object, that is ~window~)?
