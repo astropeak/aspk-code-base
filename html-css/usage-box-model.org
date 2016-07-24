@@ -1,0 +1,14 @@
+* box model
+** tranditional box model
+   Two type of element: block and inline. Most of are block.
+   Block elements are positioned vertically, inline elements are positioned horizonlly, and if no enough space in current line, it will go next line.
+
+*** centering an block element
+    set a width and set left and right margin to auto.
+*** centering text
+    #+begin_src css
+    text-align:center;
+    #+end_src
+*** multi column position
+    1. by use of float.
+       When a float element encounter, it will be shift to left or right.
