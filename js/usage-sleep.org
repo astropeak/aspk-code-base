@@ -1,0 +1,15 @@
+* sleep
+  Sleep implemented by Promise. Looks quite good!
+  
+  #+begin_src js
+  function sleep (time) {
+      return new Promise((resolve) => setTimeout(resolve, time));
+  }
+  
+  // Usage!
+  sleep(500).then(() => {
+      // Do something after the sleep!
+  })
+  #+end_src
+
+  ref: http://stackoverflow.com/questions/951021/what-do-i-do-if-i-want-a-javascript-version-of-sleep
