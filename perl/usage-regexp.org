@@ -66,3 +66,15 @@
 ** misc
 *** `=~' is called binding operator
     See chapter 8. Left is a variable or string, right is a regexp. Let the regexp match againest the left string.
+** match unicode
+   just \x{AA}.
+   #+begin_src perl :results output
+   use utf8;
+   $str = "ङ    Support for BFU Parallel Operations";
+   if ($str =~ /\x{e0}/) {
+       print "aaa";
+   }
+   #+end_src
+
+   #+RESULTS:
+
