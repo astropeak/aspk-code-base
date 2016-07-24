@@ -1,0 +1,66 @@
+* server
+  
+** examples
+   
+
+*** a simple http server
+    Function:
+    1. server any file
+    2. if url is '/', return '/index.html';
+    3. listen on port 8080.
+
+    How to run:
+    1. save the code to index.js
+    2. node index.js
+    #+begin_src js
+    //Lets require/import the HTTP module
+    var http = require('http');
+    var fs = require('fs');
+    
+    //Lets define a port we want to listen to
+    const PORT=8080;
+    
+    //We need a function which handles requests and send response
+    function handleRequest(req, res){
+        res.writeHead(200);
+        var file= req.url.substring(1);
+        if (file === '') {
+            file = "index.html";
+        }
+        console.log("File: "+file);
+        if (fs.existsSync(file)) {
+            res.end(fs.readFileSync(file));
+        } else {
+            res.end('It Works!! Path Hit: ' + req.url);
+        }
+    }
+    
+    //Create a server
+    var server = http.createServer(handleRequest);
+    
+    //Lets start our server
+    server.listen(PORT, function(){
+        //Callback triggered when server is successfully listening. Hurray!
+        console.log("Server listening on: http://localhost:%s", PORT);
+    });
+    #+end_src
+*** a html page
+    #+begin_src html
+    <!doctype html>
+    <html>
+      <head>
+        <title>Test</title>
+        <style>
+          ,* { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font: 13px Helvetica, Arial; }
+        </style>
+      </head>
+      <body>
+        <h1>Test Page</h1>
+        <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+        <script>
+          alert("Page loaded");
+        </script>
+      </body>
+    </html>
+    #+end_src
