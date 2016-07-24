@@ -81,3 +81,6 @@
     
     window.addEventListener("message", receiveMessage, false);
     #+end_src
+*** notes
+    1. postMessage should be called after the target window is loaded, or it will not work.
+    
