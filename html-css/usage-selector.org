@@ -5,3 +5,48 @@
    #+begin_src css
    selector1 > selector2 { style properties }
    #+end_src
+** select direct sibling
+   #+begin_src css
+   #wrapper + p
+   #+end_src
+   select all p elements that is the direct next sibling of element with id #wrapper, and they all has same direct parent.
+** select all following sibling
+   #+begin_src css
+   #wrapper ~ p
+   #+end_src
+   select all p elements that following element with id #wrapper, and they all has same direct parent.
+
+** psudo class
+   Start with a ~:~.
+   1. :not(XXX)
+      select the negtive element of XXX selector
+      #+begin_src css
+      :not(div#wapper)
+      #+end_src
+      all elements that are not selected by ~div#wapper~.
+
+   2. :nth-child(N)
+      this element is the nth child of its parent element.
+      N can be 1, 2, 3, ..., and ~odd~, ~even~
+      #+begin_src css
+:nth-child(even)
+      #+end_src
+      All elements that are the eventh child.
+
+   3. :first-child, :last-child, :only-child
+      special case of :nth-child.
+      :first-child = :nth-child(1)
+      
+
+
+      
+** select by any property 
+   #+begin_src css
+   p[name="mytext"]
+   #+end_src
+
+   #+begin_src css
+   p[name^="my"]
+   p[name$="my"]
+   p[name*="my"]
+   #+end_src
