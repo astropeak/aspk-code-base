@@ -1,0 +1,49 @@
+* flex box
+  弹性框，Html5推出的。
+
+** property
+   1. 要使用flex box, 需要将display 设置为box
+      #+begin_src css
+      display:box;
+      display:-moz-box;
+      display:-webkit-box;
+      #+end_src
+
+   2. 设置为弹性长度
+      #+begin_src css
+box-flex:0;
+box-flex:1;
+box-flex:2;
+      #+end_src
+      0表示不为弹性长度，大于0的数字表示为弹性长度，且数字的大小为长度的比例。
+
+   3. set property of child element 
+      注：以下属性，都需要加前缀才能工作。
+      1. set oritation, 元素是垂直分布还是水平分布（只能为单行或单列）
+         #+begin_src css
+box-orient: vertical;
+box-orient: horizontal;
+         #+end_src
+      2. set 对齐方式
+         #+begin_src css
+box-pack: start;
+box-pack: end;
+box-pack: center;
+box-pack: justify;
+         #+end_src
+         justify为拉伸，只有当所有元素的flex-box都为0时才有真正效果。
+      3. set 垂直方向的对齐方式
+         #+begin_src css
+box-align: start;
+box-align: end;
+box-align: center;
+box-align: strench;
+         #+end_src
+         默认为strench, 即占据所有空间。
+** 可以和min-width, max-width合用，规定尺寸限制
+   box-flex指定的值，其实就是百分比。
+** flex box的思想与我之前做的auto-html的思路相同
+** 缺点
+   1. 当总宽度变小时， 一些元素无法在第二行显示，而是总是占据在同一行。
+      这各响应式设置不同。
+
