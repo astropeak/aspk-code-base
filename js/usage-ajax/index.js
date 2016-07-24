@@ -20,6 +20,11 @@ function handleRequest(req, res){
             console.log('fetch aaa.bbb');
             res.writeHead(200);
             res.end("dddddd");
+        } else if(req.url==="/json") {
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.write(JSON.stringify({"name":"Tom", "age":18}));
+            res.end('');
+
         } else {
             res.writeHead(200, {'Content-Type': 'text/text'});
             res.end('It Works!! Path Hit: ' + req.url);

@@ -30,7 +30,13 @@
       httpRequest.onreadystatechange = function() {
           if (httpRequest.readyState === XMLHttpRequest.DONE) {
               // ajax operation done here
+              if (httpRequest.status === 200) {
+                  alert(httpRequest.responseText);
+              } else {
+                  alert('There was a problem with the request.');
+              }
           }
+      
       }
       #+end_src
       The event handler will be called when readyState changed. readyState will have below values:
@@ -57,11 +63,34 @@
       Because the method is 'GET', so no data to send.
       After this line, httpRequest.readyState will be changed to 2.
 
-
-
- 
 ** property
    1. readyState: current ajax state, see example step 2.
    2. status: http response status. 200 is the fine value.
    3. responseText: the data as text
    4. responseXML: the data as XML
+** set request header
+   Note that if you want to POST data, you may have to set the MIME type of the request. For example, use the following line before calling send() for form data sent as a query string:
+   #+begin_src js
+httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+   #+end_src
+   But seems this doesn't work if it is application/json.
+   
+** thinkings
+   1. With ajax, web service can be built.
+      and also web API.
+      Because you can request any data(expeciallly JSON) instead of only HTML.
+** get JSON data
+   1. on client side, use JSON.parse
+      #+begin_src js
+           var a = JSON.parse(httpRequest.responseText);
+      #+end_src
+   2. on server side, use JSON.stringify
+      #+begin_src js
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.write(JSON.stringify({"name":"Tom", "age":18}));
+            res.end('');
+      #+end_src
+      Note: if Content-Type not given, the responseText will be treated as application/xml.
+      
+      
+   

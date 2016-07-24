@@ -21,7 +21,8 @@
        if (httpRequest.readyState === XMLHttpRequest.DONE) {
          // ajax operation done here
          if (httpRequest.status === 200) {
-           document.getElementsByTagName('p')[0].innerHTML = "Ajax data:<br>"+httpRequest.responseText;
+           var a = JSON.parse(httpRequest.responseText);
+           document.getElementsByTagName('p')[0].innerHTML = "Ajax data:<br>"+a.name+", "+a.age;
          } else {
            alert('There was a problem with the request.');
            alert(httpRequest.getAllResponseHeaders());
@@ -29,7 +30,9 @@
        }
      }
 
-     httpRequest.open('GET', "aaa.bbb");
+     httpRequest.open('GET', "json");
+     /* this doesn't work seems, */
+     /* httpRequest.setRequestHeader('Content-Type', 'application/json'); */
      httpRequest.send();
     </script>
   </body>
