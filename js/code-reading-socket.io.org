@@ -8,7 +8,6 @@
    
    Search current directory, there is a file named socket.io.js:
    #+begin_src sh
-   luooofuq@WW301731 /cygdrive/e/home/Dropbox/project/aspk-code-base/js/usage-web-socket
    $ find . -name socket.io.js
    ./node_modules/socket.io/node_modules/socket.io-client/socket.io.js
    #+end_src
