@@ -56,4 +56,30 @@
 ** thinkings
    1. 适用于任何需要异步处理的事情，并且我们对于这个事情的结果比较关心。
       如果对结果不关心，则没有必要做这个事情（但sleep的实现好像不是这样，仅仅是起到一个延时作用）。
-
+      
+** todo
+*** TODO think more when promise should be used
+*** DONE learn js promise
+    CLOSED: [2016-07-19 Tue 17:13]
+    - State "DONE"       from "STARTED"    [2016-07-19 Tue 17:13]
+    - Note taken on [2016-07-19 Tue 09:56] \\
+      和直接写setTimeout有什么区别？ 仅仅是写法不一样？
+    - Note taken on [2016-07-19 Tue 09:50] \\
+      another way to write a function as parameter:
+      p1.then((val)=>{console.log(val);});
+      Is equivalent to 
+      p1.then(function(val){console.log(val);});
+    - Note taken on [2016-07-19 Tue 09:49] \\
+      a promise represent a future value.
+    - State "STARTED"    from ""           [2016-07-19 Tue 09:37]
+    :LOGBOOK:
+    CLOCK: [2016-07-19 Tue 14:31]--[2016-07-19 Tue 15:41] =>  1:10
+    CLOCK: [2016-07-19 Tue 09:39]--[2016-07-19 Tue 10:49] =>  1:10
+    CLOCK: [2016-07-19 Tue 09:37]--[2016-07-19 Tue 09:38] =>  0:01
+    :END:
+    :PROPERTIES:
+    :Effort:   40
+    :END:
+    https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+    A promise is used for asynchronous computations. A Promise represent an operation that hasn't completed yet, but is expected in the future.
+    
