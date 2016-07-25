@@ -19,3 +19,9 @@
      指将设计图切割为小图，然后用html + css 布局出来的过程。
      ref: http://baike.baidu.com/subview/4101070/18274378.htm
 **** ？ mock接口
+** 使用Flexible实现手淘H5页面的终端适配
+   https://github.com/amfe/article/issues/17
+*** summary
+    讲解了lib-flexible的实现方法。讲了很多概念，给出了一个例子。
+    目的是适应各种各样屏幕尺寸的终端（怎么会这么复杂呢？）。
+   
