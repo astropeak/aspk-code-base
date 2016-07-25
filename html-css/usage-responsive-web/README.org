@@ -1,0 +1,5 @@
+* README
+** how to run
+   1. browser the ~index.html~ file
+   2. ajust broswer size, when width is larger than 800px, nav, section, and aside will be displayed horizontally, else vertically(and width of section also change to a smaller value). @media is used to implement this.
+
