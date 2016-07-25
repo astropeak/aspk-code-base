@@ -50,3 +50,6 @@
 
 ** TODO look overlay.js under conkerorrc dir
    capture some notes to org remember.
+** remove download
+   When conkeror startup, all unfinished download will be opened.
+   command download-remove removes unneeded download(should be executed in the download buffer).
