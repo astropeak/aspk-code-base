@@ -1,0 +1,10 @@
+* sticky footer
+  
+  A great link on sticky-footer:
+  https://web.archive.org/web/20160118055113/http://www.lwis.net/journal/2008/02/08/pure-css-sticky-footer/
+  
+  1. strench body to take 100% height
+  2. set footer margin-top to minus its height, the effect is lift the footer by its height.
+
+  The example is saved in ./usage-sticky-footer/index.html.
+  Problem in this example: the scrool bar will be displayed. But after set margin to 0, the problem solved.
