@@ -1,0 +1,33 @@
+* responsive web design
+  responsive web design makes a web page looks good on all devices, because it will change its appearence when the device changes.
+  
+  responsive web design is about using CSS and html to resize, shrink, move, hide the content to make it look good on any screen.
+  
+** docs
+   In this artical, just use float:left to implement responsive web.
+   http://www.w3schools.com/html/html_responsive.asp
+   But it also give a link to w3.css, which is a pure css framework to design responsive web:
+   http://www.w3schools.com/w3css/default.asp
+   
+** thinking
+   Use @media to set different css for different screen width.
+   
+   3列float:left元素可以自动实现‘换行’，当总宽度变化时。
+   
+** problems
+   1. 如何将footer置底？
+      使用absolute当然可以，但当页面高度大于屏幕高度时，footer仍然显示在屏幕最底端，这是错误的。
+      
+** points
+   1. ~float:left~ is same as ~display:inline-block~ when display element in one line
+      #+begin_src css
+      nav, section, aside {
+        /* float:left; */
+        display:inline-block;
+        vertical-align:top;
+      }
+      #+end_src
+      
+      
+   
+  
