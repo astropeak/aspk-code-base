@@ -3,3 +3,14 @@
    1. browser the ~index.html~ file
    2. ajust broswer size, when width is larger than 800px, nav, section, and aside will be displayed horizontally, else vertically(and width of section also change to a smaller value). @media is used to implement this.
 
+** v0.0.2
+   effect:
+   1. 当width小于680px时， nav, section, and aside三行显示。并且三者都为弹性框（即随浏览器大小而变化）。
+   2. 当width大于680px且小于850px时， nav, section 显示在同一行， aside显示在第二行。仍然为弹性框
+   3. 当width大于850px时， nav, section, and aside显示在同一行， section为弹性框。
+
+   implementation:
+   1. 如何实现弹性框？ 设置width为百分比。 1：三者都为100%；2：section, aside为100%，nav为150px，为了section, nav显示在同一行，设置nav,section在同一个div中，且设置nav的margin-right为-200px, section的padding-left为200px且box-sizing为border-box（后面讲的这个方法其实是实现两个元素同行，一个元素固定宽度，另一个元素占据剩余所有宽度的方法）.
+   2. nav, section , aside 同行，section为弹性框使用了相同的方法，只不过要再多加一个container.
+
+

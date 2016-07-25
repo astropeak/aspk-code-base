@@ -30,7 +30,7 @@
        min-width:200px;
      }
      aside {
-       width:150px;
+       width:100%;
      }
      footer {
        clear:both;
@@ -41,47 +41,124 @@
      /* reponsive design */
      /* default value */
      #wrapper {
-       width:400px;
+       /* min-width:400px; */
+       max-width:960px;
+       width:100%;
      }
      section {
-       width:400px;
+       /* min-width:300px; */
+       max-width:9999px;
+       width:100%;
      }
      /* if width larger than 800px, then use this rule */
-     @media (min-width: 800px){
-       #wrapper {
-         width:780px;
+     /* @media (min-width: 800px){
+        #wrapper {
+        width:780px;
+        }
+        section {
+        width:500px;
+        }
+        } */
+
+
+     /* remove the bullet of li */
+     ul {
+       list-style-type:none;
+       margin:1.5em 0 0 0 0;
+       padding:0;
+     }
+     li {
+       box-sizing:border-box;
+       padding:0em 1em;
+     }
+     li:nth-child(odd) {
+       background-color:#ccccff;
+     }
+     li:nth-child(even) {
+       background-color:#ddddff;
+     }
+     nav, ul, li {
+       width:100%;
+     }
+     aside{
+       background-color:#ddddff;
+       margin-top:1em;
+     }
+     #nav-sec-container{
+       float:left;
+       /* border:1px solid blue; */
+     }
+     @media (min-width:680px){
+       nav {
+         width:150px;
+         margin-right:-200px;
        }
        section {
-         width:500px;
+         /* max-width:650px; */
+         /* width:510px; */
+         padding-left:200px;
+         box-sizing:border-box;
+         width:105%;
        }
+
+       #nav-sec-container{
+         width:100%;
+       }
+       li{
+         /* width:100%; */
+         width:auto;
+       }
+     }
+
+     @media (min-width:850px){
+       #nav-sec-aside-container{
+         float:left;
+       }
+       #nav-sec-container{
+         box-sizing:border-box;
+         /* width:680px; */
+         padding-right:200px;
+       }
+       aside{
+         width:150px;
+         margin-left:-200px;
+       }
+     }
+
+     article {
+       background: #dddddd;
      }
     </style>
   </head>
   <body>
     <div id="wrapper">
       <header><h1>Reponsive Web Design</h1></header>
-      <nav>
-        <ul>
-          <li>Home</li>
-          <li>Func</li>
-          <li>About</li>
-        </ul>
-      </nav>
-      <section>
-        <article>
-          <h2>London</h2>
-          <p>London is the capital city of England.</p>
-          <p>It is the most populous city in the United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
-        </article>
-        <article>
-          <h2>New York</h2>
-          <p>The City of New York is the most populous city in the United States.</p>
-          <p>New York is an important center for international diplomacy and has been described as the cultural and financial capital of the world.</p>
-        </article>
-      </section>
-      <aside>
-        This is a aside
-      </aside>
+      <div id="nav-sec-aside-container">
+        <div id="nav-sec-container">
+          <nav>
+            <ul>
+              <li>Home</li>
+              <li>Func</li>
+              <li>About</li>
+            </ul>
+          </nav>
+          <section>
+            <article>
+              <h2>London</h2>
+              <p>London is the capital city of England.</p>
+              <p>It is the most populous city in the United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+            </article>
+            <article>
+              <h2>New York</h2>
+              <p>The City of New York is the most populous city in the United States.</p>
+              <p>New York is an important center for international diplomacy and has been described as the cultural and financial capital of the world.</p>
+            </article>
+          </section>
+        </div>
+        <aside>
+          This is a aside
+        </aside>
+      </div>
       <footer>
         Copyright 2009-2016
       </footer>
