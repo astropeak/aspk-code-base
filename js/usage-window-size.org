@@ -1,0 +1,13 @@
+* window size
+  http://stackoverflow.com/questions/3437786/get-the-size-of-the-screen-current-web-page-and-browser-window
+
+  The blow script get window width and height.
+  #+begin_src js
+  var w = window,
+      d = document,
+      e = d.documentElement,
+      g = d.getElementsByTagName('body')[0],
+      x = w.innerWidth || e.clientWidth || g.clientWidth,
+      y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+  alert(x + ' × ' + y);
+  #+end_src
