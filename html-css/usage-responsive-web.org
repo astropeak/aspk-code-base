@@ -9,6 +9,9 @@
    But it also give a link to w3.css, which is a pure css framework to design responsive web:
    http://www.w3schools.com/w3css/default.asp
    
+   This a thread that discuss w3css, seems it is not good.
+   https://www.reddit.com/r/web_design/comments/35at03/w3css_this_is_new/
+
 ** thinking
    Use @media to set different css for different screen width.
    
