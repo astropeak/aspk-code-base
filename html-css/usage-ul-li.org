@@ -1,0 +1,23 @@
+* ul & li
+  
+** docs
+   A very detailed tutorial on list:
+   http://css.maxdesign.com.au/listutorial/index.htm
+
+   
+** no bullet
+   #+begin_src css
+   ul {
+       list-style-type:none;
+   }
+   #+end_src
+   Notes:
+   1. doesn't work on IE9. Should use the rule on li element.
+      #+begin_src css
+      li {
+          list-style-type:none;
+      }
+      #+end_src
+
+   ref:
+   http://stackoverflow.com/questions/1027354/need-an-unordered-list-without-any-bullets
