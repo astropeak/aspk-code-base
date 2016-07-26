@@ -1,0 +1,15 @@
+* web api
+** docs
+   wiki page:
+   https://en.wikipedia.org/wiki/Web_API
+
+   Web API has two forms, one is SOAP, one is RESTful. Now RESTful is much popular.
+   SOAP:
+   https://en.wikipedia.org/wiki/SOAP
+** what
+   A web API is a programming interfaces consists of one or moer publicly exposed endpoints to a defined request-response message systems, typically expressed in XML or JSON.
+
+   The endpoint for the tagging functionality within the web API has the following URI: "https://api.clarifai.com/v1/tag/". The "/v1/" part of the URI specifies access to the first version of the web API. If clarifai decides to update to version two, they can do this while still maintaining support for third party software that uses the first version.
+
+
+   SO the input is an URI, the output is a JSON or XML data.
