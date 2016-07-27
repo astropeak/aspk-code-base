@@ -15,7 +15,7 @@
   The mdn page:
   https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
   
-** example
+** example of get data
    1. create the XMLHttpRequest object:
       #+begin_src js
       // Old compatibility code, no longer needed.
@@ -94,3 +94,15 @@ httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'
       
       
    
+** post data and get response
+   Just set the requeset herder Content-Type to application/x-www-form-urlencoded, and send the data in post form data format, which is "key1=value1&key2=value2&...&keyN=valueN". values should not contain special chars, can be done with function 'encodeURIComponent'
+   #+begin_src js
+   function makeRequest(url, userName) {
+     httpRequest.onreadystatechange = alertContents;
+     httpRequest.open('POST', url);
+     httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+     httpRequest.send('userName=' + encodeURIComponent(userName));
+   }
+   #+end_src
+   Note: the server side should also be updated to receive the post data.
+*** TODO practice this
