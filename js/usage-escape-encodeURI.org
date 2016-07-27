@@ -1,0 +1,19 @@
+* escape & encodeURI
+  Encode special characters in an URI to %XX(where XX is the hex ascii code for that character), so that these characters are not parsed as special characters. Such as if '/' should be parsed as a regular character instead of a component seperator, then is should be encoded to %XX.
+
+  Note: URI is part of URL.
+
+** docs
+   Compare escape, encodeURI, encodeURIComponent: 
+   http://xkr.us/articles/javascript/encode-compare/. 
+   And give a live example.
+   
+** functions
+   | name               | description             | not encodeded     |
+   |--------------------+-------------------------+-------------------|
+   | escape             | encode any string       | @*/+              |
+   | encodeURI          | encode entrie URI       | ~!@#$&*()=:/,;?+' |
+   | encodeURIComponent | used to encode a single | ~!*()'            |
+   |                    | component of a URI      |                   |
+
+   All special characters: '~!@#$%^&*(){}[]=:/,;?+\'"\\'
