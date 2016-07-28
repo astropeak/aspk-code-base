@@ -1,0 +1,41 @@
+* form
+  
+** content type
+   https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1
+
+   Content type can be set by the `enctype' property of form element. It is used to encode the form data set for submission to the server.
+   
+*** application/x-www-form-urlencoded
+    This is the default value.
+    1. control names and values are escaped
+    2. name and value are seperated by '=', name-value pairs are seperated by '&'.
+       
+*** multipart/form-data
+    This one is used when sending large quantity of binary data or text containing non-ascii data.
+    
+*** encode example
+    The following example illustrates "multipart/form-data" encoding. Suppose we have the following form:
+    
+    <FORM action="http://server.com/cgi/handle"
+    enctype="multipart/form-data"
+    method="post">
+    <P>
+    What is your name? <INPUT type="text" name="submit-name"><BR>
+    What files are you sending? <INPUT type="file" name="files"><BR>
+    <INPUT type="submit" value="Send"> <INPUT type="reset">
+    </FORM>
+    
+    If the user enters "Larry" in the text input, and selects the text file "file1.txt", the user agent might send back the following data:
+    
+    Content-Type: multipart/form-data; boundary=AaB03x
+    
+    --AaB03x
+    Content-Disposition: form-data; name="submit-name"
+    
+    Larry
+    --AaB03x
+    Content-Disposition: form-data; name="files"; filename="file1.txt"
+    Content-Type: text/plain
+    
+    ... contents of file1.txt ...
+    --AaB03x--
