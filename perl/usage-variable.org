@@ -1,0 +1,33 @@
+* variable
+** difference between my and local
+   A good thread on the topic:
+   http://www.perlmonks.org/?node_id=94007
+
+   Summary:
+   1. my creates lexical variables, local only works with package variables(dynamic scoped).
+   2. local is used to change an existing variable value. Why need change? =》改变函数的行为($/变量是一个好的例子，用于改变读取文件的行为。)
+   3. In most cases, we should use my.
+
+   Example:
+   #+begin_src perl :results output
+   $a=123;
+   package Foo;
+   # $a=456;
+   local $::a=789;
+   print "a=$::a\n";
+
+   #+end_src
+
+   #+RESULTS:
+   : a=789
+
+   
+** how variables are resolved
+   1. For package variable(which is dynamic scoped). Syntax for a variable name is: ~PACKAGE_NAME::VARIABLE_NAME~, such as ~Foo::tmp~. If ~PACKAGE_NAME::~ not exists, ~PACKAGE_NAME~ will be current package; if ~PACKAGE_NAME~ not exists, ~PACKAGE_NAME~ will be ~main~ (which is the default package).
+   2. For lexical variable. Just its name.
+   3. For special variable, such as ~$_~, ~$/~. Predefined variables that can be accessed in all packages, and belone to no package.
+   
+   
+
+
+   
