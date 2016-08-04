@@ -3,3 +3,18 @@
    Org mode syntax reference: https://github.com/fniessen/refcard-org-mode
 ** text markup
    I know I can use *bold*, /italic/, _underlined_, =verbatim= and ~code~, and, if you must, ‘+strike-through+’ to do some markup to text according to org-mode documentation,
+** list
+   The official doc: http://orgmode.org/guide/Plain-lists.html
+
+   Org knows ordered lists, unordered lists, and description lists.
+   
+   Unordered list items start with ‘-’, ‘+’, or ‘*’ as bullets.
+   Ordered list items start with ‘1.’ or ‘1)’.
+   Description list use ‘ :: ’ to separate the term from the description. 
+
+   An example of description list(That is definition list in html):
+   - Apple :: a sweet frute
+   - Banana :: Yellow
+   - Pear :: oven
+     
+     
