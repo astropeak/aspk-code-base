@@ -1,0 +1,9 @@
+* shadow dom
+  A blog on shadow dom: http://www.cnblogs.com/coco1s/p/5711795.html
+** what
+   A shadow dom is created by browser to implementing some element, such as ~video~ element, to hide details of the implementation. A shadow dom has no corresponding part in html file.
+** how it looks like
+   #shadow-root, whose children is normal dom element.
+** points
+   1. shadow dom provide a way of encapsulation. Currently all web componnents are open to the whole dom tree. Shadow dom maybe a good way for creating more modular web components.
+  
