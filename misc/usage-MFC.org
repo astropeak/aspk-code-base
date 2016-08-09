@@ -38,3 +38,15 @@
 **** GetParentFrame
 **** frame window and its view window
      https://msdn.microsoft.com/en-us/library/5c2fsa5a.aspx
+** message box
+   https://msdn.microsoft.com/en-us/library/as6se7cb.aspx
+   - AfxMessageBox.
+   - make the box modal: ~MB_APPLMODAL~
+   - example
+     #+begin_src c++ :includes <iostream>
+     CString tmpStr;
+     tmpStr.Format("Hello, %s!", "World");
+     AfxMessageBox(tmpStr, MB_OK | MB_ICONINFORMATION | MB_APPLMODAL, 0);
+     #+end_src
+
+
