@@ -121,3 +121,7 @@ class Test {
     #+RESULTS:
     : HHHHH
 
+** export source block to file
+   1. add parameter to source block: ~:tangle FILE_NAME~
+   2. execute ~org-babel-tangle~ (key short ~\C-c \C-v \C-t~), then content of this source block will be write to file ~FILE_NAME~ specified in step one.
+
