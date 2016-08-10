@@ -1,0 +1,11 @@
+* tools
+  
+** nwjs and electron comparison
+   Both are framewrok for developing cross-platform softwares using web technologys, such as html, javascript, and css.
+
+   Here is a comparison page: http://tangiblejs.com/posts/nw-js-and-electron-compared-2016-edition.
+
+   electron is backed by github, and the Atom text editor(also released by github) is built upon electron.
+
+   Nwjs is backed by Intel, it has more features than electron as the article says.
+   
