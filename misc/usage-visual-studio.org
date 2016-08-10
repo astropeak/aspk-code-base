@@ -26,3 +26,11 @@
     
 https://blogs.msdn.microsoft.com/habibh/2009/07/30/debugging-101-how-to-skip-over-code-in-the-visual-studio-debugger/
     
+*** debug more than one projects.
+    Right click Solution => property=>multiple startup projects=>Select the project that should be started.
+
+    http://stackoverflow.com/questions/2155930/fixing-the-breakpoint-will-not-currently-be-hit-no-symbols-have-been-loaded-fo
+
+    If not doing so, the the breakpoint can't be added.
+
+    
