@@ -146,3 +146,19 @@
 
    ref: http://www.win32developer.com/tutorial/windows/windows_tutorial_3.shtm
    https://msdn.microsoft.com/en-us/library/windows/desktop/ms632679(v=vs.85).aspx
+** kill a window given its window name and class name
+   - ref: http://www.codeproject.com/Articles/22257/Find-and-Close-the-Window-using-Win-API
+   - code
+     #+begin_src C :includes <stdio.h>
+     // retrieve the handler of the window  
+     int iHandle = FindWindow("Notepad", "Untitled - Notepad");
+     if (iHandle > 0)
+       {
+         // close the window using API        
+         SendMessage(iHandle, WM_SYSCOMMAND, SC_CLOSE, 0);
+       } 
+     #+end_src
+
+
+
+   
