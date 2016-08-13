@@ -8,4 +8,15 @@
    electron is backed by github, and the Atom text editor(also released by github) is built upon electron.
 
    Nwjs is backed by Intel, it has more features than electron as the article says.
-   
+
+   The two are all based on nodejs.
+** editors
+   https://medium.com/@mkozlows/why-atom-cant-replace-vim-433852f4b4d1#.b9p84em79
+
+   Most important idea of editors.
+   | editor | idea          | description                                           |
+   |--------+---------------+-------------------------------------------------------|
+   | emacs  | extensibility | function can be extended                              |
+   | vi     | composability | command can be composed to build complex command.     |
+   |        |               | minimalist commands that can be composed. consistent. |
+   |        |               | Two type of command: move, other.                     |
