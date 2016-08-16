@@ -34,3 +34,14 @@
    #+begin_src sh
    #!/bin/bash -x
    #+end_src
+** set environment variable
+   - bash
+     #+begin_src sh
+     export PERL5LIB="AAAAA"
+     #+end_src
+   - tcsh
+     #+begin_src sh
+     setenv PERL5LIB "AAAAA"
+     #+end_src
+   - ref: http://stackoverflow.com/questions/496702/can-a-shell-script-set-environment-variables-of-the-calling-shell
+
