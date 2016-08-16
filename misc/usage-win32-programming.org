@@ -162,3 +162,9 @@
 
 
    
+** share serial port between two programs on windows
+   This is impossible. Because it is a feature of Windows. While it can work on Linux.
+
+   This post gives a solution on how to achieve this: a single server act as an entry to serial port. It gives sample APIs to implement.
+   http://www.qtcentre.org/threads/47049-Share-serial-port-between-two-programs-on-Windows
+   
