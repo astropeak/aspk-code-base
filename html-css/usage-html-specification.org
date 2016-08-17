@@ -1,0 +1,3 @@
+* html specification
+  HTML4.01 Specification:
+  https://www.w3.org/TR/html401/cover.html#minitoc
