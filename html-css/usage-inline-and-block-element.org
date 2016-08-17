@@ -1,0 +1,3 @@
+* inline and block element
+** differences
+   - ~width~ property can't be applied to inline element, whose width is always equal to width of its content. To set width of a inline element, set ~display~ to ~inline-block~, then the element is displayed as inline element while can be treated as a block element.
