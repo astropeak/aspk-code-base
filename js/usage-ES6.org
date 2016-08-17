@@ -1,0 +1,51 @@
+* ES6
+** new feature
+*** let
+    - ref: http://stackoverflow.com/questions/762011/let-keyword-vs-var-keyword
+    - create block level variable. The old ~var~ can only create function level variable
+      #+begin_src js
+      function allyIlliterate() {
+          //tuce is *not* visible out here
+      
+          for( let tuce = 0; tuce < 5; tuce++ ) {
+              //tuce is only visible in here (and in the for() parentheses)
+          }
+      
+          //tuce is *not* visible out here
+      }
+      
+      function byE40() {
+          //nish *is* visible out here
+      
+          for( var nish = 0; nish < 5; nish++ ) {
+              //nish is visible to the whole function
+          }
+      
+          //nish *is* visible out here
+      }
+      #+end_src
+
+    - bind fresh value to variable
+      #+begin_src js
+      for(let i = 1; i < 6; i++) {
+          document.getElementById('my-element' + i)
+              .addEventListener('click', function() { alert(i) })
+      }
+      #+end_src
+      If click element i, it will display i. But if change ~let~ to ~var~, then 6 will always be displayed for every element(because i is a reference to the old variable).
+
+      But why let will works? => Because function refers to six different instances of the variable i(ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let).
+
+*** new function declare grammar
+    The new grammar is: FunctionName = ParameterList => FunctionBody. "=>" here means transform.
+
+    Below code declare a function named inc, which take one parameter `num'.
+    #+begin_src js
+    var inc = (num) => {
+        return num+1;
+    }
+    console.log(inc(2));
+    #+end_src
+
+    #+RESULTS:
+
