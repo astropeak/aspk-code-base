@@ -1,0 +1,28 @@
+* Win bat
+** Get command line parameter
+   ~%1~ for first parameter, ~%2~ for second, ~%*~ for all. ~shift~ command to remove first one in ~%*~.
+
+   Example:
+   #+begin_src text
+   echo off
+   echo off
+   set arg1=%1
+   set arg2=%2
+   shift
+   shift
+   fake-command /u %arg1% /p %arg2% %*
+   #+end_src
+
+   When you run: ~test-command admin password foo bar~, the above batch file will run: ~fake-command /u admin /p password foo bar~.
+   
+   ref: http://stackoverflow.com/questions/26551/how-to-pass-command-line-parameters-to-a-batch-file
+** set environment variable
+   use ~set~ or ~setx~.
+   example:
+   #+begin_src text
+   SET PERL5LIB="./Edit"
+   setx PATH "aaa"
+   #+end_src
+
+   ref: http://stackoverflow.com/questions/21606419/set-windows-environment-variables-with-in-batch-file
+
