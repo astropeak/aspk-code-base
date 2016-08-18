@@ -1,0 +1,54 @@
+* visual basic
+** vb vs vbs
+   vbs(visual basic script) is a simple version of vb(visual basic).
+  
+** doc
+   - official code snippet: https://technet.microsoft.com/library/ee332540.aspx. Many examples.
+   - http://www.robvanderwoude.com/vbstech.php#Automation. This website link the first one.
+   
+   At first glance, vbs is good for word automation(the replacement script for word document works).
+** a vb macro that do replace
+   This is macor is created by recording a macro in wordpad.
+   #+begin_src text
+   Sub Macro1()
+   '
+   ' Macro1 Macro
+   '
+   '
+       Selection.Find.ClearFormatting
+       Selection.Find.Replacement.ClearFormatting
+       With Selection.Find
+           .Text = "R65E"
+           .Replacement.Text = "R65F"
+           .Forward = True
+           .Wrap = wdFindContinue
+           .Format = False
+           .MatchCase = False
+           .MatchWholeWord = False
+           .MatchByte = False
+           .MatchWildcards = False
+           .MatchSoundsLike = False
+           .MatchAllWordForms = False
+       End With
+       Selection.Find.Execute Replace:=wdReplaceAll
+       ActiveDocument.Save
+   End Sub
+   #+end_src
+** a vbs that do replace
+   #+begin_src text
+   Set objWord = CreateObject("Word.Application")
+   objWord.Visible = True
+   
+   Set objDoc = objWord.Documents.Open("E:\readme.rtf")
+   Set objSelection = objWord.Selection
+   
+   objSelection.Find.Text = "P66K"
+   objSelection.Find.Replacement.Text = "P66L"
+   objSelection.Find.Forward = TRUE
+   objSelection.Find.MatchWholeWord = TRUE
+   
+   Const wdReplaceAll = 2
+   objSelection.Find.Execute ,,,,,,,,,,wdReplaceAll
+   #+end_src
+   Ref: https://technet.microsoft.com/en-us/library/59b64fd1-5a25-40cc-9b12-31fe4cc6bf82
+
