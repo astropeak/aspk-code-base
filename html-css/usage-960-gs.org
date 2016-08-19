@@ -1,0 +1,21 @@
+* 960 gs
+  official web site: 960.gs
+
+** classes
+   | name         | description                                             |
+   |--------------+---------------------------------------------------------|
+   | container_12 | on root element                                         |
+   | grid_X       | X can be 1-12. Define a box X columns width             |
+   | prefix_X     | X can be 1-11. Leave X columns padding before box       |
+   | suffix_X     | X can be 1-11. Leave X columns padding after box        |
+   | push_X       | X can be 1-12. Move box X columns to right relatively   |
+   | pull_X       | X can be 1-12. Move box X columns to left relatively,   |
+   |              | Thus push_X and pull_X don't affect position of         |
+   |              | following elements cause they're relatively positioned. |
+   | clear        | At every new line, clear is used.                       |
+
+   Note:
+   - prefix and suffix is implemented by padding-left or padding-right property
+   - push and pull are implemented by set the element's position to relative and then set left or right property
+   - grid is implemented by float:left, and given it a width. Also display is set to inline(may be just for browser quirks).
+   - grid can be nested.
