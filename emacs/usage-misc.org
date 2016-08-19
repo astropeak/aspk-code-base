@@ -1,0 +1,7 @@
+* misc
+** convert \r\n to \n
+   Use this function: dos2unix.
+
+   https://www.emacswiki.org/emacs/DosToUnix
+
+   
