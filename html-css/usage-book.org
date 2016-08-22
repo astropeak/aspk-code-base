@@ -1,0 +1,6 @@
+* book
+** recomendation
+   This article recomends five books, I downloaded 1, 2, 4, 5(saved in Dropbox/book/html&css).
+   http://designinstruct.com/web-design/books-learning-web-design/
+
+   The books are old, but it should give you a solid basis.
