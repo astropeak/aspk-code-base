@@ -118,6 +118,9 @@
    #+RESULTS:
    : AAA, BBB, CCC
 
+   Note:
+   - The third parameter is the max split count.
+
 ** interpolation function call in a string
    #+begin_src perl :results output
    sub aaa{my $a=shift; return "In aaa, arg $a\n";};
