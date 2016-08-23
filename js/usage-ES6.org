@@ -38,7 +38,7 @@
 
 *** new function declare grammar
     The new grammar is: FunctionName = ParameterList => FunctionBody. "=>" here means transform.
-
+    
     Below code declare a function named inc, which take one parameter `num'.
     #+begin_src js
     var inc = (num) => {
@@ -51,8 +51,52 @@
       #+begin_src js
       var inc=num=>num+1;
       #+end_src
-
+      
     And a more important changes is that this binding. this will always bind to the value when the function is defined, instead of when the function is run. In a function defined by "=>" operator, 'this' is treated as a regular variable, it will not have dynamic binding. So you can not use call or apply to change this value of this kind of functions.
+    
+    What is this value when defining a function using tranditional syntax? => It doesn't matter what value this is binded to, because its value will be changed when the function is called to a object.
+    
+    A tipical usage, setTimeout.
+    #+begin_src js
+    function foo() {
+      setTimeout(function(){
+        console.log('id:', this.id);
+      }, 100);
+    }
+    
+    var id = 21;
+    
+    foo.call({id:42});//id: 21
+    #+end_src
+    The result is "id:21", because this in setTimeout callback funtion is bind to the global object, so id is 21. To fix this issue, the common method is save this to another variable and use that variale(because this will be re-bind to another function when the function be called).
+    #+begin_src js
+    function foo() {
+        var that=this;
+        setTimeout(function(){
+            console.log('id:', that.id);
+        }, 100);
+    }
+    
+    var id = 21;
+    
+    foo.call({id:42});//id: 42
+    #+end_src
+    The result will be "id:42".
+
+    With "=>" operator, we have another method:
+    #+begin_src js
+    function foo() {
+        setTimeout(()=> {console.log('id:', this.id);}, 100);
+    }
+    
+    var id = 21;
+    
+    foo.call({id:42});//id: 42
+    #+end_src
+    The result is "id:42". Because this here is never re-bind.
+
+    Summary: "=>" operation provide a way of defining function without this bind to a new value. Company with the old syntax, defining a function is complete now.
+
 *** string that can intepret variable and function call
     The syntax much like shell script.
     #+begin_src js
@@ -64,10 +108,10 @@
     }
     sayHello("brand") //"hello,my name is brand I am 18"
     #+end_src
-
+    
 *** module by export and import
     Seems the syntax is copied form nodejs.
-
+    
     export
     #+begin_src js
     // 写法一
@@ -85,10 +129,10 @@
     var n = 1;
     export {n as m}; 
     #+end_src
-
+    
     import.
     #+begin_src js
     import { stat, exists, readFile } from 'fs';
     #+end_src
-
-
+    
+    
