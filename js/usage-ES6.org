@@ -46,6 +46,49 @@
     }
     console.log(inc(2));
     #+end_src
+    Note:
+    - () or {} and return can be deleted if only one parameter or only one return statement.
+      #+begin_src js
+      var inc=num=>num+1;
+      #+end_src
 
-    #+RESULTS:
+    And a more important changes is that this binding. this will always bind to the value when the function is defined, instead of when the function is run. In a function defined by "=>" operator, 'this' is treated as a regular variable, it will not have dynamic binding. So you can not use call or apply to change this value of this kind of functions.
+*** string that can intepret variable and function call
+    The syntax much like shell script.
+    #+begin_src js
+    function sayHello(name){
+        return `hello,my name is ${name} I am ${getAge(18)}`;
+    }
+    function getAge(age){
+        return age;
+    }
+    sayHello("brand") //"hello,my name is brand I am 18"
+    #+end_src
+
+*** module by export and import
+    Seems the syntax is copied form nodejs.
+
+    export
+    #+begin_src js
+    // 写法一
+    export var m = 1;
+    //错误
+    export 1;
+    
+    // 写法二
+    var m = 1;
+    export {m};
+    //错误
+    export m;
+    
+    // 写法三  重命名
+    var n = 1;
+    export {n as m}; 
+    #+end_src
+
+    import.
+    #+begin_src js
+    import { stat, exists, readFile } from 'fs';
+    #+end_src
+
 
