@@ -1,6 +1,6 @@
 package Aspk::CT;
 use Exporter 'import';
-@EXPORT_OK = qw(enterView rmView findView checkoutFile diffFileGui uncheckoutFile);
+@EXPORT_OK = qw(enterView rmView findView checkoutFile checkinFile diffFileGui uncheckoutFile);
 
 my $clearcaseBin = 'cleartool';
 
@@ -24,6 +24,11 @@ sub findView {
 sub checkoutFile {
     my $file = shift;
     my $output = `$clearcaseBin co -nc $file 2>error_msg`;
+}
+
+sub checkinFile {
+    my $file = shift;
+    my $output = `$clearcaseBin ci -nc $file 2>error_msg`;
 }
 
 sub uncheckoutFile {
