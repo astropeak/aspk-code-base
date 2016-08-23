@@ -1,11 +1,12 @@
 * Win bat
+  A good website: http://ss64.com/nt/. Explains every operator.
+
 ** Get command line parameter
    ~%1~ for first parameter, ~%2~ for second, ~%*~ for all. ~shift~ command to remove first one in ~%*~.
 
    Example:
    #+begin_src text
-   echo off
-   echo off
+   @echo off
    set arg1=%1
    set arg2=%2
    shift
@@ -16,6 +17,7 @@
    When you run: ~test-command admin password foo bar~, the above batch file will run: ~fake-command /u admin /p password foo bar~.
    
    ref: http://stackoverflow.com/questions/26551/how-to-pass-command-line-parameters-to-a-batch-file
+
 ** set environment variable
    use ~set~ or ~setx~.
    example:
@@ -25,4 +27,50 @@
    #+end_src
 
    ref: http://stackoverflow.com/questions/21606419/set-windows-environment-variables-with-in-batch-file
+
+** variable
+   - declaring a variable: set varName=Value
+     Note: there should no space between '='. And no '"' around Value. Default varName will be a string.
+   - using a variable: %varName%
+   - ref: http://stackoverflow.com/questions/10552812/declaring-and-using-a-variable-in-windows-batch-file-bat
+** set operator
+   http://ss64.com/nt/set.html
+   set is used to display, set, or remove CMD environment variables.
+   - display. set varName, will display all variabls start with varName.
+   - set. set varName=aaa bbb ccc.
+     - both varName and varValue can contain space.
+     - there is no '"' around the value. If there is, then '"' will become content of the variable.
+     - to include special charcters such as '&', wrap the whold expression to double quote. set "msg=You & Me".
+     - /a option means arithmatic. the value can be an expression such as "1+2".SET /A will treat any character string in the expression as an environment variable name. This allows you to do arithmetic with environment variables without having to type any % signs to get the values. SET /A _result=5 + _MyVar.
+   - remove. set varName=.
+** compare values
+   - compare string: '=='. "aaa"=="bbb"
+   - compare number(can also be used to compare string): 
+     | operator | description |
+     |----------+-------------|
+     | equ      | equal       |
+     | neq      | not equal   |
+     | lss      | <           |
+     | leq      | <=          |
+     | gtr      | >           |
+     | geq      | >=          |
+     3 gtr 2
+     
+** if statement
+   - if str1==str2 COMMAND
+   - if str1==str2 (COMMMAND) else (COMMAND)
+   - ref: http://ss64.com/nt/if.html
+
+
+** check input parameter is empty
+   if "%1"=="" echo "parameter 1 not exist"
+** check if file exist
+   #+begin_src text
+   IF EXIST filename.txt (
+       Echo deleting filename.txt
+       Del filename.txt
+    ) ELSE ( 
+       Echo The file was not found.
+    )
+   #+end_src
 
