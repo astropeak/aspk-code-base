@@ -1,0 +1,17 @@
+* Implementation ProcessFiles
+** what
+   Framework for processing multiple files. Have 5 actions:
+   | action   | description   |
+   |----------+---------------|
+   | pre_all  | for all files |
+   | pre      | for single    |
+   | action   | for single    |
+   | post     | for single    |
+   | post_all | for all files |
+   And the running order is the same as they appear in table.
+
+** two method
+   1. by class inheritance. Sub class redefine method such as 'pre', 'action', to achieve different beheavior.
+   2. by object composition. The class provide a 'register' function to register action functions. This one is more flexiable.
+
+   The basic problem is flow control.
