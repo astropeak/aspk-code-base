@@ -1,4 +1,3 @@
-
 * counter-intuitive
 ** my and last
    1. ~my $a, $b, $c~ 和预想的不一样， 其等价于 ~my $a;$b,$c~
