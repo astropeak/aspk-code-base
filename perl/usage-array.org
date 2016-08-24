@@ -17,3 +17,27 @@
    #+end_src
    
    
+** flatten array
+*** definition
+   (1, 2, (3, 4), 5) is the same as (1, 2, 3, 4, 5).
+   #+begin_src perl :results output
+   use Aspk::Debug;
+   my @a=(1, 2, (3, 4), 5);
+   dbgh \@a;
+   
+   #+end_src
+
+   #+RESULTS:
+   : [dbgh][./-:3, main::noname] \@a=ARRAY(0xa031cec)
+   :      [0]:1
+   :      [1]:2
+   :      [2]:3
+   :      [3]:4
+   :      [4]:5
+   : 
+
+*** benifet
+    1. In function body, function parameter will have the same form whether the actual parameter is an array or an scalar. It will always be an array.
+       If the acutal parameter is ~(1, 2, 3)~, then ~@_~ is ~((1, 2, 3))~, which is the same as ~(1, 2, 3)~; if the acutal parameter is ~1~, then ~@_~ is ~(1)~. They are both an array. 
+       Then program can treat them uniformly.
+    
