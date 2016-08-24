@@ -9,8 +9,8 @@ $pf->register(pre_all, sub {
     0;}, "checking");
 
 $pf->register(pre, sub {
-    my (@file_list) = @_;
-    print "in pre. Files: ".(join " ",@file_list)."\n";
+    my ($file) = @_;
+    print "in pre. Files: ".$file."\n";
     0;});
 
 $pf->process1();
