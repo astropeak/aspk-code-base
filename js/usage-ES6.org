@@ -96,7 +96,7 @@
     The result is "id:42". Because this here is never re-bind.
 
     Summary: "=>" operation provide a way of defining function without this bind to a new value. Company with the old syntax, defining a function is complete now.
-
+    
 *** string that can intepret variable and function call
     The syntax much like shell script.
     #+begin_src js
@@ -136,3 +136,11 @@
     #+end_src
     
     
+*** strict mode
+    Difference:
+    |                                     | strict    | non strict    |
+    |-------------------------------------+-----------+---------------|
+    | value of ~this~ in global context^1 | undefined | window object |
+    |                                     |           |               |
+    Notes:
+    1. function call without an object, then the function body is in global context. 
