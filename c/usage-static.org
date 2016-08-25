@@ -1,0 +1,5 @@
+* static
+** define a function in a header file
+   The function must be static if it is put in a header file, else there will be link error of "redefined function".
+
+   Why it works? By declaring the function as static, the function will not visible to other files, so there will no "redefined function" problem. The drawback maybe that there are many copy of the function.
