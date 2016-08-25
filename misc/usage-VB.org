@@ -35,20 +35,39 @@
    End Sub
    #+end_src
 ** a vbs that do replace
-   #+begin_src text
+   #+begin_src text :tangle a.vbs
    Set objWord = CreateObject("Word.Application")
    objWord.Visible = True
    
    Set objDoc = objWord.Documents.Open("E:\readme.rtf")
    Set objSelection = objWord.Selection
    
-   objSelection.Find.Text = "P66K"
-   objSelection.Find.Replacement.Text = "P66L"
+   objSelection.Find.Text = Wscript.Arguments.Item(0)
+   objSelection.Find.Replacement.Text = Wscript.Arguments.Item(1)
    objSelection.Find.Forward = TRUE
    objSelection.Find.MatchWholeWord = TRUE
    
    Const wdReplaceAll = 2
    objSelection.Find.Execute ,,,,,,,,,,wdReplaceAll
+   
+   objWord.ActiveDocument.Save
+   objWord.ActiveDocument.Close
    #+end_src
    Ref: https://technet.microsoft.com/en-us/library/59b64fd1-5a25-40cc-9b12-31fe4cc6bf82
+
+** for loop
+Set args = Wscript.Arguments
+
+For Each arg In args
+  Wscript.Echo arg
+Next
+
+** get command line parameters
+   WScript.Arguments.Item(0)
+   WScript.Arguments.Item(1)
+** call vbs script from perl
+   Should use the ~cscript.exe~ utility. And also note that relative file path is relative to C:/WINDOWS/system32 directory.
+   #+begin_src perl :results output
+   `cscript.exe replace.vbs $file $current_label $new_label`;
+   #+end_src
 
