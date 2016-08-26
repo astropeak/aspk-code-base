@@ -18,3 +18,14 @@
    - Pear :: oven
      
      
+** link
+*** insert a link to another file
+    command: org-insert-link
+    input: file:, file name
+
+    And also select stored link by press 'UP', 'DOWN' key.
+*** Store a link to current file position
+    command: org-store-link
+
+    Stored link can latter be inserted to another buffer by `org-insert-link'.
+
