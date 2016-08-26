@@ -1,11 +1,14 @@
 package Aspk::ProcessFiles;
 use Aspk::Debug qw(print_obj);
+use Cwd;
 
 sub new {
     my ($class, @file_list)= @_;
     my $self={};
     bless $self, $class;
 
+    @file_list = map {Cwd::abs_path($_)} @file_list;
+    dbgh \@file_list;
     $self->prop(file_list, \@file_list);
     $self->prop(action_table, {});
     return $self;
@@ -63,6 +66,13 @@ sub process1 {
 
     run("post_all", @file_list);
     return $self;
+}
+
+sub iterate {
+    my ($self, $func)=@_;
+    foreach my $file (@{$self->prop(file_list)}) {
+        $func->($file);
+    }
 }
 
 sub register {
