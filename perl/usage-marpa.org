@@ -1,0 +1,210 @@
+* marpa
+  
+  https://metacpan.org/pod/Marpa::R2
+** code snippet
+   #+begin_src perl :results output
+   use Marpa::R2;
+    
+   my $dsl = <<'END_OF_DSL';
+   :default ::= action => [name,values]
+   lexeme default = latm => 1
+    
+   Calculator ::= Expression action => ::first
+    
+   Factor ::= Number action => ::first
+   Term ::=
+       Term '*' Factor action => do_multiply
+       | Factor action => ::first
+   Expression ::=
+       Expression '+' Term action => do_add
+       | Term action => ::first
+   Number ~ digits
+   digits ~ [\d]+
+   :discard ~ whitespace
+   whitespace ~ [\s]+
+   END_OF_DSL
+    
+   my $grammar = Marpa::R2::Scanless::G->new( { source => \$dsl } );
+   my $input = '42 * 1 + 7';
+   my $value_ref = $grammar->parse( \$input, 'My_Actions' );
+    
+   sub My_Actions::do_add {
+       my ( undef, $t1, undef, $t2 ) = @_;
+       return $t1 + $t2;
+   }
+    
+   sub My_Actions::do_multiply {
+       my ( undef, $t1, undef, $t2 ) = @_;
+       return $t1 * $t2;
+   }
+   #+end_src
+
+   #+RESULTS:
+
+   Note:
+   - try to install Marpa::R2 on windows, but failed. Finally install on cygwin by cpanm.
+   - ::= is the BNF operator, which defines an grammer rule(structure rule), G1 rule. ~ is the matching operator, which defines an lexeme rule.
+   - '+' in rull is a inplicit lexeme rule.
+   - action is the function that will be called when parsing. '::first' means it is the same as the first child's action. The function will be passed such argumenst: the tree, and all the value of the child element in sequence.
+   - :discard means remove it in G1 rule.
+
+     
+   This is the modified version, added support for parathesns and plus operation.
+   #+begin_src perl :results output
+   use Marpa::R2;
+   use Aspk::Debug;
+   
+   my $dsl = <<'END_OF_DSL';
+   :default ::= action => [name,values]
+   lexeme default = latm => 1
+   
+   Calculator ::= Expression action => ::first
+   
+   Factor ::= Number action => ::first
+   ParaExpression ::= '(' Expression ')' action => do_para
+   Term ::=
+       Term '*' Factor action => do_multiply
+       | Term '*' ParaExpression action => do_multiply
+       | Factor action => ::first
+       | ParaExpression action => ::first
+   Expression ::=
+       Expression '+' Term action => do_add
+       | Expression '-' Term action => do_plus
+       | Term action => ::first
+   Number ~ digits
+   digits ~ [\d]+
+   :discard ~ whitespace
+   whitespace ~ [\s]+
+   END_OF_DSL
+   
+   my $grammar = Marpa::R2::Scanless::G->new( { source => \$dsl } );
+   my $input = '42 * ((1) - (7+9)*(2-1))';
+   my $value_ref = $grammar->parse( \$input, 'My_Actions' );
+   dbgh $$value_ref;
+   
+   sub do_space {
+       dbgh @_;
+   }
+   sub My_Actions::do_para {
+       my ( $tree, undef, $t1, undef ) = @_;
+       return $t1;
+   }
+   
+   sub My_Actions::do_add {
+       my ( $tree, $t1, $a, $t2 ) = @_;
+       dbgh $tree, $a;
+       foreach my $key (keys %{$tree}) {
+           print $key.":".$tree->{$key}."\n";
+       }
+       return $t1 + $t2;
+   }
+   
+   sub My_Actions::do_plus {
+       my ( undef, $t1, undef, $t2 ) = @_;
+       return $t1 - $t2;
+   }
+   
+   sub My_Actions::do_multiply {
+       my ( undef, $t1, undef, $t2 ) = @_;
+       return $t1 * $t2;
+   }
+   #+end_src
+
+** a simple calculator
+   Can do +, -, *, / operation, and support parathese.
+
+   Note on the BNF grammar:
+   - A whole expression can be considered as a list of P1TermElement that seperated by O1('+' or '-').
+   - A P1TermElement can be a number, a P2Term, a P1Term with parathese.
+   - A P2Term is also a lit that seperated by O2
+
+   The codes:
+   #+begin_src perl :results output
+   use Marpa::R2;
+   use Aspk::Debug;
+   
+   my $dsl = <<'END_OF_DSL';
+   :default ::= action => [name,values]
+   lexeme default = latm => 1
+   
+   Calculator ::= P1Term action => ::first
+   P1Term ::=
+       P1TermElem action => ::first
+       | P1TermElem O1 P1Term action => do_cal
+   
+   P1TermElem ::=
+       Number action=>::first
+       |P2Term action=>::first
+       |ParaP1Term action=>::first
+   
+   P2Term ::= P2TermElem O2 P2TermElem action => do_cal
+       | P2Term O2 P2TermElem action=>do_cal
+   
+   P2TermElem ::=
+       Number action =>::first
+       |ParaP1Term action=>::first
+   
+   ParaP1Term::=
+       '(' P1Term ')' action=>do_para
+   
+   O1 ~ [+-]
+   O2 ~ [*/]
+   Number ~ digits
+   digits ~ [\d]+
+   :discard ~ whitespace
+   whitespace ~ [\s]+
+   END_OF_DSL
+   
+   sub My_Actions::do_para {
+       my ( $tree, undef, $t1, undef ) = @_;
+       return $t1;
+   }
+   
+   sub My_Actions::do_cal {
+       my ( $tree, $t1, $op, $t2 ) = @_;
+       dbgh \@_;
+       return eval($t1.$op.$t2);
+   }
+   
+   my $grammar = Marpa::R2::Scanless::G->new( { source => \$dsl } );
+   my $input = '(42 / 5+3 / (7+9)*((3-1)))';
+   my $value_ref = $grammar->parse( \$input, 'My_Actions' );
+   dbgh $$value_ref;
+   
+   #+end_src
+
+   Problems:
+   - When parathese mismatch, Marpa only reports the input is ambiguous.
+     #+begin_src text
+     $ perl Dropbox/project/aspk-code-base/perl/tmp.pl
+     Parse of the input is ambiguous
+     No parse
+     Marpa::R2 exception at Dropbox/project/aspk-code-base/perl/tmp.pl line 49.
+     #+end_src
+
+** error message is quite friendly
+   When '-' is not implemented, parsing the expression '3-2+1' will given below message.
+   #+begin_src text
+   $ perl Dropbox/project/aspk-code-base/perl/tmp.pl
+   Error in SLIF parse: No lexeme found at line 1, column 2
+   ,* String before error: 3
+   ,* The error was at line 1, column 2, and at character 0x002d '-', ...
+   ,* here: -2+1
+   Marpa::R2 exception at Dropbox/project/aspk-code-base/perl/tmp.pl line 26.
+   #+end_src
+
+   When there are more than one choice, then it will dispaly all possible choices.
+   #+begin_src text
+   $ perl Dropbox/project/aspk-code-base/perl/tmp.pl
+   Parse of the input is ambiguous
+   Ambiguous symch at Glade=23, Symbol=<Expression>:
+     The ambiguity is from line 1, column 7 to line 1, column 9
+     Text is: (1)
+     There are 2 symches
+     Symch 0 is a rule: Expression ::= '(' Expression ')'
+     Symch 1 is a rule: Expression ::= Term
+   Marpa::R2 exception at Dropbox/project/aspk-code-base/perl/tmp.pl line 30.
+   #+end_src
+** docs
+   Marpa guide:
+   http://marpa-guide.github.io/index.html
