@@ -1,6 +1,6 @@
 package Aspk::Cli;
 use Exporter 'import';
-@EXPORT_OK = qw(make_choice prompt_get current_user);
+@EXPORT_OK = qw(make_choice prompt_get current_user yes_or_no);
 
 sub make_choice {
     my $arg = shift;
@@ -66,7 +66,13 @@ sub prompt_get {
 
 
 sub current_user {
-   return $ENV{LOGNAME} || $ENV{USER} || getlogin || getpwuid($<);
+    return $ENV{LOGNAME} || $ENV{USER} || getlogin || getpwuid($<);
 }
 
+sub yes_or_no {
+    my ($prompt) = @_;
+    my $t = prompt_get({"prompt"=>"$prompt [Y/N]",
+                        "check"=>sub () {return ($_[0] eq "Y" || $_[0] eq "N");}});
+    return $t;
+}
 return 1;
