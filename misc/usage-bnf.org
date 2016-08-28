@@ -1,0 +1,31 @@
+* BNF
+** Grammar tutorial
+   http://marvin.cs.uidaho.edu/Teaching/CS445/grammar.html
+
+   Method for writing different structure:
+   Note: '|' is written as '!' since it is column seperator in a table.
+   | name   | code                                             | description     |
+   |--------+--------------------------------------------------+-----------------|
+   |        | <48>                                             | <15>            |
+   | list   | <list> ::= <item> ! <list> ',' <item>            | a list seperated by ',' |
+   |        | <list> ::= <item> ';' ! <list> <item> ';'        | A list with each item ended |
+   |        |                                                  | with a ';'      |
+   |        | <list> ::= <item> ',' <item> ! <list> ',' <item> | A list seperated by ',', |
+   |        |                                                  | but with at least two element |
+
+   Complex grammar is consists form simple ones such as a list. An arithmatic expression can be considered as a list of numbers seperated by operators such as '+', '-'.
+
+   An example, BNF grammar for a calculator that support parathesns and +,-,*,/:  
+   [[file:e:/home/Dropbox/project/aspk-code-base/perl/usage-marpa.org::*a%20simple%20calculator][a simple calculator]]
+   
+   Tips on writing BNF grammar:
+   1. from top to bottom. Only refer to downside non-terminals. If refer to upside non-terminals, the non-terminals must be taged with some terminals.
+   2. There must be at least on of the alternative that is non-recursive.
+   3. build hierachically. Each production can handle a special case.
+
+   Terms:
+   1. terminal
+   2. non-terminal
+   3. production
+   4. alternative
+   5. start symbol
