@@ -1,0 +1,33 @@
+* lexer and parser
+  A good artical on this topic
+  http://www.perl.com/pub/2012/10/an-overview-of-lexing-and-parsing.html
+  Give a example parse the dot program.
+  
+** lexer
+   | output                                  | tools                        |
+   |-----------------------------------------+------------------------------|
+   | an array of tokens, type and value pair | Set::Tiny to save the output |
+   |                                         | Set::FA:Element to lex       |
+   - Also check if a token exist if that token is optional in the grammer, with value yes or no. This can make the parser do less work.
+   - Set::FA::Element, finite state automation. Given a start state, and the transition table, and the ending state, automaticlly run the transition. Each state can have an action(call back function) to call.
+   - First sub-grammer: what a tocken looks like
+   - the author use spreed file to deal with this problem.
+
+** parser
+   - tools: Marpa::R2.
+   - Second sub-grammer: the combination of tockens.
+   - BNF grammer.
+   - Writting parser with Marpa::R2 is just translating the BNF grammer to the transition table. quite like the railroad method I have done before.
+
+** articles
+   A post by Marpa's author: Perl cann't be parsed staticly.
+   http://www.perlmonks.org/?node_id=663393
+   
+   Perl is undecidable, by Marpa's author(there formal pdf files.)
+   http://www.jeffreykegler.com/Home/perl-and-undecidability
+** bnf grammars
+   c++: http://www.nongnu.org/hcb/#fractional-constant
+   c: https://cs.wmich.edu/~gupta/teaching/cs4850/sumII06/The%20syntax%20of%20C%20in%20Backus-Naur%20form.htm
+   java: http://cui.unige.ch/isi/bnf/JAVA/BNFindex.html
+** Marpa::R2
+   [[file:e:/home/Dropbox/project/aspk-code-base/perl/usage-marpa.org][usage marpa]]
