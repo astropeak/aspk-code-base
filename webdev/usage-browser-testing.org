@@ -1,0 +1,25 @@
+* browser testing
+** materials
+  many tools avaliable to run multiple browsers on many platforms:
+  http://mashable.com/2014/02/26/browser-testing-tools/#M2k0uWXWTGq9
+
+  This website claims all browsers run in real machine instead of emulator:
+  https://crossbrowsertesting.com/
+
+  How to get those link? Google `browser test tool', or `browser testing'.
+
+  This artical describe what is browser testing and why it is important, and some tools helping to do the work. 
+https://www.elegantthemes.com/blog/resources/browser-testing-is-no-fun-but-these-tools-will-help-make-your-life-easier
+ 1. firefox: responsive design view
+ 2. chrome: devtools
+ 3. and other tools given in the first page.
+
+   
+  How well your website support html5:
+  https://html5test.com
+
+  browserStack seems a good one:
+  https://www.browserstack.com/
+** idea on how to build a browser testing tool
+   First only 
+   
