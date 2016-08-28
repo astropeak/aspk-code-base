@@ -1,0 +1,48 @@
+* directory and file name
+** Cwd package
+   http://perldoc.perl.org/Cwd.html
+   Portable way of getting current working directory, convert relative path to absolute path.
+   
+*** get current working directory
+    the ~getcwd~ function.
+    #+begin_src perl :results output
+    use Cwd;
+    my $dir=getcwd()."\n";
+    print "$dir";
+    #+end_src
+
+    #+RESULTS:
+    : /e/home/Dropbox/project/aspk-code-base/perl
+
+*** relative path to absolute path
+    Use the ~abs_path~ function.
+    #+begin_src perl :results output
+    use Cwd 'abs_path';
+    my $file = abs_path('Aspk/Cli.pm');
+    print "$file\n";
+    $file= abs_path('e:/readme.rtf');
+    print "$file\n";
+    #+end_src
+
+    #+RESULTS:
+    : /e/home/Dropbox/project/aspk-code-base/perl/Aspk/Cli.pm
+    : /e/readme.rtf
+
+    Note:
+    - realpath is a synonym for abs_path.
+
+    
+** File::Spec
+   http://perldoc.perl.org/File/Spec.html
+   #+begin_src perl :results output
+   use File::Spec;
+   $dir= File::Spec->curdir();
+   print "$dir\n";
+   $dir=File::Spec->rel2abs($dir);
+   print "$dir\n";
+   #+end_src
+   
+   #+RESULTS:
+   : .
+   : /e/home/Dropbox/project/aspk-code-base/perl
+   
