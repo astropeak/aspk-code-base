@@ -1,0 +1,16 @@
+* reference
+  
+** function reference
+   use ~\&func_name~ to get a reference to ~func_name~. Use ~$func_ref->(args,...)~ to call a function given its reference.
+   #+begin_src perl :results output
+   sub foo{
+       my ($int)=@_;
+       print "int: $int\n";
+   }
+   my $func_ref = \&foo;
+   $func_ref->(3);
+   #+end_src
+
+   #+RESULTS:
+   : int: 3
+
