@@ -107,3 +107,22 @@
    Destructor of derived class will not be called, which is wrong.
 
    So if there is at lease one virtual function in a class, then the destructor should also be virtual.
+** copy constructor and assign operation
+   When CC will be called?
+   1. ClassA a; ClassA b=a;
+   2. ClassA a; ClassA b(a);
+   These two cases are indentical. And they are the only case that a copy constructor get called.
+
+   When AO will be called?
+   1. ClassA a; ClassA b; b=a;
+
+** initialization list for a constructor
+   When member variable be inited in initialization list instead of constructor body?
+   => When the variable is const or a reference, because both can only be initialized, can't be assigned.
+   => When base class doesn't have a default constructor(that is with no arguments).
+
+   Two phase of constructing an object
+   1. initialize all member variables.
+   2. constructor body get called.
+
+   So it is more efficient to use initialization list.
