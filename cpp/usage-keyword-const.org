@@ -1,4 +1,3 @@
-
 * keyword const
 ** Items
 *** const 修饰函数体时
@@ -11,6 +10,11 @@
                     DoAction(eSmile);
        
        #+end_src
-
-
+    3. this pointer is as if it was declared as ~const C* const this~;
+*** meaning of const in pointer declaration
+    | declaration      | meaning              |
+    |------------------+----------------------|
+    | const C* p       | content is const     |
+    | C* const p       | the pointer is const |
+    | const C* const p | both are const       |
     
