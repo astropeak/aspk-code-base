@@ -28,5 +28,5 @@ cout<<sizeof(a)<<endl;
     #+end_src
     TODO 原因是什么？
     
-    
-    
+    Because ~static int a~ is just a declaration, not a definiton. If you give a value to it, it will become to a definition. Then there will be multiple definition problem.
+    http://stackoverflow.com/questions/4547660/c-static-member-variable-and-its-initialization
