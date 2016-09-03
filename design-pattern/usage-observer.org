@@ -1,0 +1,5 @@
+* Observer
+  https://en.wikipedia.org/wiki/Observer_pattern
+  An object(subject) maintains an list of its dependents(the observer), and notify them automatically when its state changed, usually by calling their methods.
+
+  Jave has two predefined classes for this: the Observalbe and Observer class.
