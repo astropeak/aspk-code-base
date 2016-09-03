@@ -1,0 +1,8 @@
+* openstack
+** docs
+   A zhihu thread on how to learn openstack, and book recomandation.
+   http://www.zhihu.com/question/20701277
+   Downloaded the book: openstack essentials, and read it over. Quite good book.
+
+   Official docs: installation guide on ubuntu 14.04:
+   http://docs.openstack.org/mitaka/install-guide-ubuntu/
