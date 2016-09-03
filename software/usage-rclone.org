@@ -1,0 +1,6 @@
+* rclone
+  http://rclone.org/
+
+  Sync files to and from cloud storage such as dropbox, google drive. Support many types. Implemented in golang.
+
+  This project is a very good example of making software by assembling. e.g. it is based on dropbox clinet(https://github.com/stacktic/dropbox).
