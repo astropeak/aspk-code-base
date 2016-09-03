@@ -22,6 +22,8 @@
    1. from top to bottom. Only refer to downside non-terminals. If refer to upside non-terminals, the non-terminals must be taged with some terminals.
    2. There must be at least on of the alternative that is non-recursive.
    3. build hierachically. Each production can handle a special case.
+   4. Precedence. High precedence block as a non-terminal, and appear in right hand of a production.
+
 
    Terms:
    1. terminal
