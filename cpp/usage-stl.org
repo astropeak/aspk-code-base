@@ -1,0 +1,63 @@
+* stl
+  http://www.tutorialspoint.com/cplusplus/cpp_stl_tutorial.htm
+** general
+   A set of template classes that implement container, algorithm, iterator.
+
+   Iterator is implemented as pointer.
+
+** a basic vector example
+   #+begin_src c++ :includes <iostream>
+   using namespace std;
+   int main(int argc, char *argv[])
+   {
+     Vector<int> v;
+     cout<<v.size()<<endl;
+   
+     int i;
+     for (i = 0; i < 5; i++) {
+       v.push_back(i);
+     }
+     cout<<v.size()<<endl;
+   
+     Vector<int>::iterator iter = v.begin();
+     while(iter != v.end()) {
+       cout<<*iter<<endl;
+       iter++;
+     }
+   
+     return 0;
+   }
+   
+   
+   #+end_src
+** a map example
+   http://www.cprogramming.com/tutorial/stl/stlmap.html
+
+   Map is associate array.
+   #+begin_src cpp
+   int main(int argc, char *argv[])
+   {
+     Map<String, int> grade;
+     grade["Zhang Min"] = 100;
+     grade["Jun"]=90;
+   
+     grade.erase("Jun");//remove the Jun-90 pair.
+   
+   
+     Map<String, int>::iterator i = grade.begin();
+     while(i!=grade.end()){
+       cout<<"key:"<<i->first<<", value:"<<i->second<<endl;
+       ++i;
+     }
+     
+     Map<String, int>::iterator i = grade.find("Hong");
+     if (i == grade.end()){
+       cout<<"Hong not exist"<<endl;
+     }
+   
+     grade.clear(); //remove all key value pair.
+     return 0;
+   }
+   
+   #+end_src
+
