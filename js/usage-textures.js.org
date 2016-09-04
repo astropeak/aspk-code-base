@@ -1,0 +1,4 @@
+* textures.js
+  http://riccardoscalco.github.io/textures/
+
+  A project that making svg patterns.
