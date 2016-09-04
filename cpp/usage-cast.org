@@ -1,0 +1,28 @@
+* cast
+  http://www.cplusplus.com/doc/tutorial/typecasting/
+** dynamic_cast
+   syntax:
+   #+begin_src C++ :includes <iostream>
+   using namespace std;
+   Base* b=new Drived();
+   Drived* d= dynamic_cast<Drived*>(b);
+   #+end_src
+   Rely on RTTI, will check if ~b~ 's type is Derived, if yes, then return that pointer, in no, return NULL.
+   
+   So ~dynamic_cast~ can be used as runtime type checking.
+** static_cast
+   syntax:
+   #+begin_src C++ :includes <iostream>
+   using namespace std;
+   Base* b=new Drived();
+   Drived* d= static_cast<Drived*>(b);
+   #+end_src
+   Don't check b's real type, convert anyway. So use this only when you know b's real type. The above example is good. But the following is not:
+   #+begin_src C++ :includes <iostream>
+   using namespace std;
+   Base* b=new Base();
+   Drived* d= static_cast<Drived*>(b);
+   #+end_src
+   d will be an imcompleted object(there is no compile error).
+** regular cast
+   the C style cast. Will perform a senquce cast.
