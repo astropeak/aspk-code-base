@@ -1,0 +1,13 @@
+* reference
+** What happened when assign a reference to another reference
+   The two references both refer to the original variable. The only one priciple: when a reference variable used as right value, it it indentical as if the original variable was used.
+
+** Reference value must be initialized when declaration, and can't be changed latter
+   If you try to change a reference variable, compiler will not report error. But it will have no effect.
+
+** return value by reference
+   http://www.tutorialspoint.com/cplusplus/returning_values_by_reference.htm
+
+   Then the function call can be used as a left value. So the assign operator must return a reference.
+   
+** reference is just another name of a variable
