@@ -2,3 +2,7 @@
 ** tools
    A web site that can send sms freely online.
    http://www.afreesms.com/freesms/
+
+   也可以使用百度提供的服务(应该要收费)：
+   http://www.cnblogs.com/xiaohuasan/p/5841698.html
+   提供API。
