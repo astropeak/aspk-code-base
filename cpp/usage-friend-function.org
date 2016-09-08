@@ -1,0 +1,22 @@
+* Friend function
+  http://www.tutorialspoint.com/cplusplus/cpp_friend_functions.htm
+
+  A friend function to a class is a function that defined outside that class, but can access the class's private member variables.
+  Just add a line like below to add a friend functio to a class:
+  #+begin_src C++ :includes <iostream>
+using namespace std;
+class Box {
+public:
+xxxx
+friend void printBox(Box box);
+private:
+int number;
+};
+
+void printBox(Box box) {
+cout<<box.number<<endl;
+}
+  #+end_src
+
+  To add all member functions of class B to class A as friend function, just add a line line ~friend classB~ to declaration of class A.
+  
