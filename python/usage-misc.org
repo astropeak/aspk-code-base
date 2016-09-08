@@ -183,7 +183,7 @@
       : function bar not exists in module support
       : hello: Tom
 
-      *If module name not know*, then first import that module from a string.
+      *If module name not know*, then first import that module from a string(see below section).
     - calling functions in current module
       - ~locals~ returns a dictionary with a current local symbol table.
       - ~globals~ returns a dictionary with global symbol table.
