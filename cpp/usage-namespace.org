@@ -1,0 +1,22 @@
+* Namespace
+  http://www.tutorialspoint.com/cplusplus/cpp_namespaces.htm
+
+  syntax:
+  1. define a namespace
+  #+begin_src C++ :includes <iostream>
+using namespace std;
+namespacs Aaaaa {
+   void fun1() {
+   };
+   int a;
+}
+
+void outter (){
+Aaaaa::fun1();
+}
+  #+end_src
+  2. use namespace
+     - giving the whole name: ~Aaaaa::fun1()~
+     - specify which namespace: ~using namespace Aaaaa; fun1();~
+       or ~using Aaaaa::fun1; fun1()~.
+  

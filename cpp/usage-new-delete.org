@@ -1,0 +1,7 @@
+* new and delete
+  For array;
+  #+begin_src C++ :includes <iostream>
+using namespace std;
+MyClass* p = new MyClass[5];
+delete[] p;
+  #+end_src

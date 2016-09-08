@@ -1,0 +1,13 @@
+* Array
+** array name VS address of first element
+   Array name has two meaning in different cases.
+   1. it is the same as &a[0]. Acturally, the compiler do the convert.
+   2. it represent an array. sizeof(a);
+
+   http://stackoverflow.com/questions/1641957/is-an-array-name-a-pointer-in-c
+   
+   x[y] means: start with the pointer x, step y elements forward after what the pointer points to, and then take whatever is there.
+   
+   int a[7];
+   *(a+1) is the same as a[1];
+   the name a in a[3] must first be converted to a pointer (to the first element in a).
