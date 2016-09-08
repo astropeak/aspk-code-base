@@ -1,14 +1,31 @@
 * Template Method and Strategy Patterns
   Make high level alghorithm/process independent from low level details.
-
+  
   High level common structure. Low level differences.
   Template method: make low level differences as virtual functions, and implements in sub class.
   Strategy: make low level differences a component, use deligation. Then the differences are independent form the high level. More flexiable.
-
+  
   The BubbleSorter example given in book "Agile software development", chapter 14 is quite good.
-
+  
   Inheritance is very strong relationship, the derived class depends on the base class, makes it hard to be reused. Composition is week relationship, each components can be indispensiable, so reuse them will be much easier.
-
+  
   Strategy pattern is just the same method as passing function pointer in C programming.
-
+  
   Template method and factory method: The first one is a regular non visual function, because it is the same for all derived classes, the second one is vitual function, because all derived classes have different behaver. The first one call some vitual functions to achieve different behaver for different derived classes.
+  
+** notes form wiki
+   The template method is used in frameworks, where each implements the invariant parts of a domain's architecture, leaving *placeholders* for customisation options
+   https://en.wikipedia.org/wiki/Template_method_pattern
+
+   Seems the definiton on wiki is different from that in book:
+   https://en.wikipedia.org/wiki/Strategy_pattern
+   The strategy is the differnt part, not the common part.
+   Strategy is composition. THis is the most significent sign.
+** more on strategy pattern
+   https://en.wikipedia.org/wiki/Strategy_pattern
+
+   Strategy is a pattern that enables an algorithm's behavior to be selected at runtime. Strategy强调的是算法，发工资例子中，计算工资就是个算法。
+
+   对于可变的行为，并且预计还会有变化的行为，可以采用组合。
+
+   According to the strategy pattern, the behaviors of a class should not be inherited. Instead they should be encapsulated using interfaces.
