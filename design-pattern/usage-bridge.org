@@ -1,0 +1,4 @@
+* Bridge Pattern
+  当类层次结构有多个自由度时，使用bridge pattern使各个自由度独立变化。《agile software development》中给的路由器的例子相当好（chapter 25）。
+
+  实现方法是：对于不同自由度，分别设计类层次结构，然后通过组合的方式，合并各个自由度，形成多自由度（通常选取一个自由度做为组合体）。
