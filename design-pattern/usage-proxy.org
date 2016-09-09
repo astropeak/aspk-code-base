@@ -1,0 +1,172 @@
+* Proxy Pattern
+  Add an indirect layer between client and subject. 
+
+  有时候负责创建它所代理的类。 例子：
+  1. 被代理的类直接处理数据，但如果新增这些数据要从数据库中获取，则先获取数据，然后根据获取到的数据创建被代理类，处理数据。 代理类的作用仅仅是处理数据库读取及写入的操作。
+
+
+  应用：
+  1. copy on demand. 被代理类的copy操作总是执行相应的copy操作，当需要增加copy on demand功能时，可以通过一个代理类来增加。
+     #+begin_src c++ :includes <iostream> :tangle 1.cpp
+     #include <iostream>
+     using namespace std;
+     class Subject {
+     public:
+       virtual Subject* clone() {
+         cout<<"clone called"<<endl;
+         return new Subject(*this);
+       }
+       Subject(){
+         cout<<"Default constructor of Subject called"<<endl;
+       }
+       Subject(int n):num(n) {
+         data = new int[n];
+         cout<<"Constructor, n:"<<n<<endl;
+         for(int i=0;i<n;i++){
+           data[i] = 10;
+         }
+       }
+       Subject(Subject& s):num(s.num) {
+         data = new int[num];
+         cout<<"Copy construstor called"<<endl;
+         for (int i=0;i<num;i++){
+           data[i] = s.data[i];
+         }
+       }
+       virtual void display(){
+         cout<<"Data: ";
+         for(int i=0;i<num;i++){
+           cout<<i<<":"<<data[i]<<", ";
+         }
+         cout<<endl;
+       }
+       virtual void setData(int value, int idx){
+         data[idx] = value;
+       }
+     private:
+       int num;
+       int* data;
+     };
+     
+     // the copy on demand subject, using proxy pattern.
+     class CODSubject:Subject{
+     public:
+       CODSubject(void){};
+       CODSubject* clone(){
+         CODSubject* a= new CODSubject(origSubj, count);
+         (*count)++;
+         return a;
+       }
+     
+       CODSubject(Subject* subj, int* cnt):origSubj(subj),count(cnt) {
+       }
+     
+       CODSubject(int n){
+         origSubj = new Subject(n);
+         count = new int;
+         ,*count = 1;
+       };
+       // CODSubject(CODSubject& s):Subject(s), count(1){};
+       void display(){
+         origSubj->display();
+         cout<<"clone count: "<<*count<<endl;
+       }
+       void setData(int value, int idx){
+         if (*count > 1){
+           cout<<"clone count: "<<*count<<", new a new one"<<endl;
+           (*count)--; //the original one
+
+           count = new int;
+           ,*count = 1;
+           origSubj = new Subject(*origSubj);
+         }
+          
+         origSubj->setData(value, idx);
+       }
+     private:
+       int* count;
+       Subject* origSubj;
+     };
+          
+     int main(int argc, char *argv[])
+     {
+       Subject s(10);
+       Subject s1(8);
+       s.setData(8, 3);
+       s.display();
+       s1.setData(4,4);
+       s1.display();
+     
+     
+       CODSubject cs(7);
+       cs.setData(3, 5);
+       CODSubject* cs1 = cs.clone();
+       cs.display();
+       cs1->display();
+       cs1->setData(2, 4);
+       cs.display();
+       cs1->display();
+       return 0;
+     }
+               
+     #+end_src
+     Note:
+     - 定义一个抽象subject类（只字义接口函数，没有数据变量）的必要性：然后以上代码中的Subject and CODSubject均继承自这个抽象类。则可以解决CODSubject类中包含了两个无用的成员变量（int* data and int num)的问题。 使用组合时，这种抽象层次尤其重要。
+     - 实现思路说明：
+       1. 代理类保存两个变量： 一个被代理类的指针，一个当前拷贝的数目。创建时， 新那一个Subject类对象，并赋值给指针，同时设置数目为1。 当clone时，只拷贝这两个指针（相当于浅拷贝）。当调用修改性的函数时（如setData），则进行实际的拷贝工作：创建一个新的Subject对象，并将原来的数目减一，并且创建一个新的数目。
+       2. 由于拷贝的数目需要在所有拷贝的对象里共享，所以需要做成一个指针。
+  2. smart ptr.
+     牢记是一个代理类，因此它要代理一个指针。
+     Some usage example.
+     #+begin_src c++ :includes <iostream> :tangle smart_ptr.cpp
+     #include <iostream>
+     #include <string>
+     using namespace std;
+     
+     template <typename T>
+     class SmartPtr{
+     public:
+       SmartPtr(T* t){
+         ptr = t;
+       }
+     
+       T& operator* (){
+         return *ptr;
+       }
+       T* operator-> (){
+         return ptr;
+       }
+     
+       ~SmartPtr(){
+         cout<<"ptr deleted"<<endl;
+         delete ptr;
+       }
+     
+     private:
+       T* ptr;
+     };
+     
+     int main(int argc, char *argv[])
+     {
+       SmartPtr<string> sp(new string("aaaaa"));
+       cout<<sp->size()<<", "<<*sp<<endl;
+       return 0;
+     }
+     
+     
+     #+end_src
+     - note
+       - 实现方式. 在析构函数中调用delete， 释放内存。从而达到自动释放的功能。
+       - 不知道怎样实现函数的调用，并且是通过指针的方式（创建时是非指针的方式）。
+         Use operator overloading. http://www.codeproject.com/Articles/15351/Implementing-a-simple-smart-pointer-in-c
+         #+begin_src text
+         Since the smart pointer should behave like a pointer, it should support the same interface as pointers do; i.e., they should support the following operations.
+         
+             Dereferencing (operator *)
+             Indirection (operator ->)
+         #+end_src
+
+
+      
+
+
