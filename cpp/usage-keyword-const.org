@@ -15,6 +15,7 @@
     | declaration      | meaning              |
     |------------------+----------------------|
     | const C* p       | content is const     |
+    | C const * p      | same as the above    |
     | C* const p       | the pointer is const |
     | const C* const p | both are const       |
     
