@@ -1,5 +1,4 @@
 * tools
-  
 ** nwjs and electron comparison
    Both are framewrok for developing cross-platform softwares using web technologys, such as html, javascript, and css.
 
@@ -20,3 +19,89 @@
    | vi     | composability | command can be composed to build complex command.     |
    |        |               | minimalist commands that can be composed. consistent. |
    |        |               | Two type of command: move, other.                     |
+** bup, a backup tool
+   https://github.com/bup/bup
+
+   Usage:
+    Initialize the default BUP_DIR (~/.bup):
+
+    bup init
+
+    Make a local backup (-v or -vv will increase the verbosity):
+
+    bup index /etc
+    bup save -n local-etc /etc
+
+    Restore a local backup to ./dest:
+
+    bup restore -C ./dest local-etc/latest/etc
+    ls -l dest/etc
+
+    Look at how much disk space your backup took:
+
+    du -s ~/.bup
+
+    Make another backup (which should be mostly identical to the last one; notice that you don't have to specify that this backup is incremental, it just saves space automatically):
+
+    bup index /etc
+    bup save -n local-etc /etc
+
+    Look how little extra space your second backup used (on top of the first):
+
+    du -s ~/.bup
+
+    Get a list of your previous backups:
+
+    bup ls local-etc
+
+    Restore your first backup again:
+
+    bup restore -C ./dest-2 local-etc/2013-11-23-11195/etc
+
+    Make a backup to a remote server which must already have the 'bup' command somewhere in its PATH (see /etc/profile, etc/environment, ~/.profile, or ~/.bashrc), and be accessible via ssh. Make sure to replace SERVERNAME with the actual hostname of your server:
+
+    bup init -r SERVERNAME:path/to/remote-bup-dir
+    bup index /etc
+    bup save -r SERVERNAME:path/to/remote-bup-dir -n local-etc /etc
+
+    Restore a backup from a remote server. (FAIL: unfortunately, unlike "bup join", "bup restore" does not yet support remote restores. See both "bup join" and "Things that are stupid" below.)
+
+    Defend your backups from death rays (OK fine, more likely from the occasional bad disk block). This writes parity information (currently via par2) for all of the existing data so that bup may be able to recover from some amount of repository corruption:
+
+    bup fsck -g
+
+    Use split/join instead of index/save/restore. Try making a local backup using tar:
+
+    tar -cvf - /etc | bup split -n local-etc -vv
+
+    Try restoring the tarball:
+
+    bup join local-etc | tar -tf -
+
+    Look at how much disk space your backup took:
+
+    du -s ~/.bup
+
+    Make another tar backup:
+
+    tar -cvf - /etc | bup split -n local-etc -vv
+
+    Look at how little extra space your second backup used on top of the first:
+
+    du -s ~/.bup
+
+    Restore the first tar backup again (the ~1 is git notation for "one older than the most recent"):
+
+    bup join local-etc~1 | tar -tf -
+
+    Get a list of your previous split-based backups:
+
+    GIT_DIR=~/.bup git log local-etc
+
+    Make a backup on a remote server:
+
+    tar -cvf - /etc | bup split -r SERVERNAME: -n local-etc -vv
+
+    Try restoring the remote backup tarball:
+
+    bup join -r SERVERNAME: local-etc | tar -tf -
