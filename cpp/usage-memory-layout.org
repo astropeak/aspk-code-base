@@ -1,0 +1,85 @@
+* Memory layout of inherited class
+  http://stackoverflow.com/questions/8672218/memory-layout-of-inherited-class
+  
+  
+  Class G's memory layout(definion see below codes):
+  |----------+--------------+---------------|
+  | variable | parent class | start address |
+  |----------+--------------+---------------|
+  | vptr_b   |              |             0 |
+  | a        | B            |             8 |
+  | b        |              |            12 |
+  |----------+--------------+---------------|
+  | vptr_f   |              |            16 |
+  | a        | F            |            24 |
+  | f        |              |            28 |
+  |----------+--------------+---------------|
+  | g        |              |            32 |
+  |----------+--------------+---------------|
+  Note:
+  - size of vptr is 8
+  - There are two copy of A in G. Because A is parent to B and F.
+  - The member variables are put in order of parent object instance
+  - Why there are two vptrs? Because vptr_b is used to access virtual functions defined in A and B, vptr_f is used to access virtual functions defined in A and F.
+  - How virtual inheritance works? then there will only one vptr in G.
+  
+  The code:
+  #+begin_src c++ :includes <iostream> :tangle a.cpp
+  using namespace std;
+  #include <iostream>
+  
+  using namespace std;
+  
+  class A {
+  public:
+    int a;
+    virtual void func() {}
+  };
+  
+  class B : public A {
+  public:
+    int b;
+    virtual void func() {}
+  };
+  
+  class C {
+  public:
+    int c;
+    virtual void func() {}
+  };
+  
+  class D : public A, public C {
+  public:
+    int d;
+    virtual void func() {}
+  };
+  
+  class E : public C, public A {
+  public:
+    int e;
+    virtual void func() {}
+  };
+  
+  class F : public A {
+  public:
+    int f;
+    virtual void func() {}
+  };
+  
+  class G : public B, public F {
+  public:
+    int g;
+    virtual void func() {}
+  };
+  
+  int main() {
+    A a; B b; C c; D d; E e; F f; G g;
+    cout<<"A: "<<(size_t)&a.a-(size_t)&a<<"\n";
+    cout<<"B: "<<(size_t)&b.a-(size_t)&b<<" "<<(size_t)&b.b-(size_t)&b<<"\n";
+    cout<<"C: "<<(size_t)&c.c-(size_t)&c<<"\n";
+    cout<<"D: "<<(size_t)&d.a-(size_t)&d<<" "<<(size_t)&d.c-(size_t)&d<<" "<<(size_t)&d.d-    (size_t)&d<<"\n";
+    cout<<"E: "<<(size_t)&e.a-(size_t)&e<<" "<<(size_t)&e.c-(size_t)&e<<" "<<(size_t)&e.e-    (size_t)&e<<"\n";
+    cout<<"F: "<<(size_t)&f.a-(size_t)&f<<" "<<(size_t)&f.f-(size_t)&f<<"\n";
+    cout<<"G: "<<(size_t)&g.B::a-(size_t)&g<<" "<<(size_t)&g.F::a-(size_t)&g<<" "    <<(size_t)&g.b-(size_t)&g<<" "<<(size_t)&g.f-(size_t)&g<<" "<<(size_t)&g.g-(size_t)&g<<"\n";
+  }
+  #+end_src
