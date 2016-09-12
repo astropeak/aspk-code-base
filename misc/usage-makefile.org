@@ -13,13 +13,18 @@
     CMake does it and it even creates makefiles and Visual Studio projects. http://www.cmake.org/
     All you need to do is creating a CMakeLists.txt file containing the follwing lines:
 
-    file(GLOB sources *.h *.c *.cxx *.cpp *.hxx)
+    file(GLOB sources *.h *.c *.cxx *.cpp *.hxx *.hpp)
     add_executable(Foo ${sources})
 
     Then go into a clean directory and type:
     cmake /path/to/project/
     That will create makefiles on that clean build directory.
     #+end_src
+    Note:
+    - Tried this method and it works. After run, a make file will be generated. Then type `make' to compile.
+    - Many files created, the above command can be run in other directory instead of source code directory.
+    - Foo is the name of the generated binary.
+
 
 
 
