@@ -1,0 +1,26 @@
+* Makefile
+  - An artical on how to create generic makefiles, and provides an sample.
+    http://www.puxan.com/web/blog/HowTo-Write-Generic-Makefiles
+    Note:
+    - Should add a tab in the beginning of each recipy line. Or there be a 'missing seperator' error.
+    - limitation: if header files changed, will not recompile, because header files are not added as dependency.
+    - use wildcard *.cpp to get all cpp files
+  - another thread 
+    http://stackoverflow.com/questions/3576698/simple-makefile-generation-utility
+    
+    One solusion using cmake:
+    #+begin_src text
+    CMake does it and it even creates makefiles and Visual Studio projects. http://www.cmake.org/
+    All you need to do is creating a CMakeLists.txt file containing the follwing lines:
+
+    file(GLOB sources *.h *.c *.cxx *.cpp *.hxx)
+    add_executable(Foo ${sources})
+
+    Then go into a clean directory and type:
+    cmake /path/to/project/
+    That will create makefiles on that clean build directory.
+    #+end_src
+
+
+
+
