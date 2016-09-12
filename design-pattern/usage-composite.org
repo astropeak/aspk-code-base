@@ -1,0 +1,29 @@
+* Composite Pattern
+  https://github.com/iluwatar/java-design-patterns/tree/master/composite
+
+  Used when:
+  1. you want represent part-whole objects hierarchies
+  2. you want clients can treat a single object and composite of objects uniformly.
+
+  Implementation:
+  - use inheritance
+    
+  Example:
+  #+begin_src c++ :includes <iostream>
+  using namespace std;
+  class LetterComposite {
+    virtual void print();
+  };
+  class Letter:public LetterComposite {
+    Letter(char);
+    void print();
+  };
+  class Word:public LetterComposite{
+    Word(List<Letter>);
+    void print();
+  };
+  class Sentence:public LetterComposite{
+    Sentence(List<Word>);
+    void print();
+  };
+  #+end_src
