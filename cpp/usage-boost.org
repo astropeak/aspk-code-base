@@ -1,0 +1,105 @@
+* Boost
+** install
+*** cygwin
+    Using setup.exe, install libboost*, many, both the library and the source.
+
+*** debian
+     sudo apt-get install libboost1.55-all-dev
+
+     Then all will be installed.
+** compile
+   using cmake to generate a makefile that links boost to main. A working sample CMakeLists.txt(links two boost's module: system and filesystem):
+   #+begin_src text
+   cmake_minimum_required(VERSION 2.8)
+   # set(Boost_INCLUDE_DIR /usr/local/src/boost_1_46_1)
+   # set(Boost_LIBRARY_DIR /usr/local/src/boost_1_46_1/stage/lib)
+   find_package(Boost COMPONENTS system filesystem REQUIRED)
+   include_directories(${Boost_INCLUDE_DIR})
+   link_directories(${Boost_LIBRARY_DIR})
+   
+   file(GLOB sources *.h *.c *.cxx *.cpp *.hpp *.hxx)
+   add_executable(aaa ${sources})
+   
+   target_link_libraries(aaa ${Boost_LIBRARIES} )
+   #+end_src
+   Note:
+   - cmake can detect directory of boost itself.
+** filesystem
+   Official tutorial:
+   http://www.boost.org/doc/libs/1_61_0/libs/filesystem/doc/tutorial.html
+
+   Full reference
+   http://www.boost.org/doc/libs/1_61_0/libs/filesystem/doc/reference.html
+   
+   #+begin_src C++ :includes <iostream>
+   #include <boost/filesystem.hpp>
+   using namespace boost::filesystem;
+   #+end_src
+
+   | function                            | description                                |
+   |-------------------------------------+--------------------------------------------|
+   | uintmax_t file_size(const path& p); | path has a constructor taking const char * |
+   | exists(const path&p)                | check if file or directory exists          |
+   | is_regular_file(p)                  |                                            |
+   | is_directory(p)                     |                                            |
+   |                                     |                                            |
+
+   list files in a directory:
+   #+begin_src C++ :includes <iostream>
+      else if (is_directory(p))
+      {
+        cout << p << " is a directory containing:\n";
+
+        for (directory_entry& x : directory_iterator(p))
+          cout << "    " << x.path() << '\n'; 
+      }
+   #+end_src
+
+   Path decomposition:
+   #+begin_src #+TEXT: text
+
+   $ ./path_info /foo bar baa.txt
+   
+   composed path:
+     operator<<()---------: "/foo/bar/baa.txt"
+     make_preferred()-----: "/foo/bar/baa.txt"
+   
+   elements:
+     "/"
+     "foo"
+     "bar"
+     "baa.txt"
+   
+   observers, native format:
+     native()-------------: /foo/bar/baa.txt
+     c_str()--------------: /foo/bar/baa.txt
+     string()-------------: /foo/bar/baa.txt
+     wstring()------------: /foo/bar/baa.txt
+   
+   observers, generic format:
+     generic_string()-----: /foo/bar/baa.txt
+     generic_wstring()----: /foo/bar/baa.txt
+   
+   decomposition:
+     root_name()----------: ""
+     root_directory()-----: "/"
+     root_path()----------: "/"
+     relative_path()------: "foo/bar/baa.txt"
+     parent_path()--------: "/foo/bar"
+     filename()-----------: "baa.txt"
+     stem()---------------: "baa"
+     extension()----------: ".txt"
+   
+   query:
+     empty()--------------: false
+     is_absolute()--------: true
+     has_root_name()------: false
+     has_root_directory()-: true
+     has_root_path()------: true
+     has_relative_path()--: true
+     has_parent_path()----: true
+     has_filename()-------: true
+     has_stem()-----------: true
+     has_extension()------: true
+   #+end_src
+
