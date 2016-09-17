@@ -19,3 +19,7 @@
     | C* const p       | the pointer is const |
     | const C* const p | both are const       |
     
+*** Class A的const对象作为Class B的const 成员
+    则在class B中， 只能通过class A的这个对象调用其const的成员函数。这是一个很大的限制，因此最好声明为非const的，这进一步要求class B的构造函数的输入参数（用于初始化这个成员变量）不能是const, 因为如果它是const，则这个成员变量需要声明为const.
+    
+    
