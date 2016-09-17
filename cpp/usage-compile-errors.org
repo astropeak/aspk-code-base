@@ -1,0 +1,31 @@
+* Compile Errors
+** invalid initialization of non const reference with a rvalue
+  struct Person {
+  int age;
+  Person(int _age): age(_age) {}
+};
+
+void printAge(Person &person) {
+   cout << "Age: " << person.age << endl;
+}
+
+int main () {
+  Person p(50);
+  printAge(Person(50));  // fails!
+  printAge(p);
+  return 0;
+}
+
+The error I get is:
+
+error: invalid initialization of non-const reference of type ‘Person&’ from an rvalue of type ‘Person’
+
+http://stackoverflow.com/questions/27172033/invalid-initialization-of-non-const-reference-of-type
+
+   Root cause: The actual problem is the other way around. You are passing a temporary(rvalue) to a function which expects an lvalue.
+** passing 'const Checker' as 'this' argument discards qualifiers
+   Reason: if an object is const, then it can only call const member function. Because if it call a non const function, then 'this' may be modified in the function body, which is confilict with the const qualifier of that object.
+
+   Error message given by gcc:
+/cygdrive/e/home/Dropbox/project/syncbox/SyncTrans.hpp:8:51: error: passing ‘const Checker’ as ‘this’ argument discards qualifiers [-fpermissive]
+         int status = itsChk.execute(client, server);
