@@ -5,6 +5,35 @@
     - Should add a tab in the beginning of each recipy line. Or there be a 'missing seperator' error.
     - limitation: if header files changed, will not recompile, because header files are not added as dependency.
     - use wildcard *.cpp to get all cpp files
+
+    The sample
+    #+BEGIN_SRC makefile
+    # Declaration of variables
+    CC = g++
+    CC_FLAGS = -w
+
+    # File names
+    EXEC = aaa
+    SOURCES = $(wildcard *.cpp)
+    OBJECTS = $(SOURCES:.cpp=.o)
+
+    # compile and then run. Main target
+    run: $(EXEC)
+        ./$(EXEC)
+
+    # link
+    $(EXEC): $(OBJECTS)
+        $(CC) $(OBJECTS) -o $(EXEC)
+
+    # compile To obtain object files
+    %.o: %.cpp
+        $(CC) -c $(CC_FLAGS) $< -o $@
+
+    # To remove generated files
+    clean:
+        rm -f $(EXEC) $(OBJECTS)
+    #+END_SRC
+
   - another thread 
     http://stackoverflow.com/questions/3576698/simple-makefile-generation-utility
     
@@ -24,6 +53,23 @@
     - Tried this method and it works. After run, a make file will be generated. Then type `make' to compile.
     - Many files created, the above command can be run in other directory instead of source code directory.
     - Foo is the name of the generated binary.
+
+   Make cmake support boost:
+   http://stackoverflow.com/questions/3897839/how-to-link-c-program-with-boost-using-cmake
+   A working script:
+   #+begin_src text
+   cmake_minimum_required(VERSION 2.8)
+   # set(Boost_INCLUDE_DIR /usr/local/src/boost_1_46_1)
+   # set(Boost_LIBRARY_DIR /usr/local/src/boost_1_46_1/stage/lib)
+   find_package(Boost COMPONENTS system filesystem REQUIRED)
+   include_directories(${Boost_INCLUDE_DIR})
+   link_directories(${Boost_LIBRARY_DIR})
+   
+   file(GLOB sources *.h *.c *.cxx *.cpp *.hpp *.hxx)
+   add_executable(aaa ${sources})
+   
+   target_link_libraries(aaa ${Boost_LIBRARIES} )
+   #+end_src
 
 
 
