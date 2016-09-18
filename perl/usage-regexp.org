@@ -32,12 +32,19 @@
 
    
 ** modifiers
-   | modifier | function                                                   |
-   |----------+------------------------------------------------------------|
-   | /s       | let '.' match newline                                      |
-   | /x       | ignore whitespace in the pattern, so you can add blanks to |
-   |          | let the pattern more readable                              |
-   | /i       | ignore case                                                |
+   | modifier | function                                                      |
+   |----------+---------------------------------------------------------------|
+   | /s       | let '.' match newline. Treat the string as a single long line |
+   |          | '^' match beginning of the string, '$' only string end        |
+   | /m       | '.': not match newline. Treat string as multi lines           |
+   |          | '^': match beginning of every line in the string              |
+   |          | '$': match ending of every line in the string                 |
+   | /sm      | '.': match newline                                             |
+   |          | '^': match beginning of every line in the string              |
+   |          | '$': match ending of every line in the string                 |
+   | /x       | ignore whitespace in the pattern, so you can add blanks to    |
+   |          | let the pattern more readable                                 |
+   | /i       | ignore case                                                   |
    
 ** anchors
    | anchor | function                            |
