@@ -111,7 +111,7 @@
     完美主义者：什么时候都完不成。是一件坏事情。
 
     提倡快速实现， 即使有缺陷。
-
+*** [[../../../Dropbox/project/syncbox/README.org::*%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%88%86%E6%80%BB%E5%88%86%E7%BB%93%E6%9E%84][软件的分总分结构]]
 ** 软件工程
 *** 改变软件开发方法
     改变方法论， programming by poking, instead of by creating everything.
