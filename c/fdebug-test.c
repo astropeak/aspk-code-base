@@ -18,5 +18,6 @@ int main(void)
     dd("ENTER, %d\n", d);
     dd("ENTER");
 
+    printf("Log printed to file: %s", ASPK_DEBUG_FILE_NAME);
     return 0;
 }
