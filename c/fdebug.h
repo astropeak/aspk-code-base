@@ -1,11 +1,12 @@
 #ifndef DEBUG_H
 #define DEBUG_H
+#include <time.h>
 
-#define ASPK_DEBUG_FILE_NAME "/sdcard/aspk_debug_log.txt"
+#define ASPK_DEBUG_FILE_NAME "C:/aspk_debug_log.txt"
 static FILE *aspk_debug_file = NULL;
 
+
 // Store the formatted string of time in the output
-/* http://stackoverflow.com/questions/5141960/get-the-current-time-in-c */
 static char* format_time(){
 	static char myTime[50];
     time_t rawtime;
@@ -18,12 +19,15 @@ static char* format_time(){
 	return myTime;
 }
 
+
+#define dd_header() fprintf(aspk_debug_file, "[%s:%s:%d][%s] ", __FILE__, __FUNCTION__, __LINE__, format_time())
+
 #define dd1(var)                                                        \
     do{                                                                 \
         if (!aspk_debug_file) {                                         \
             aspk_debug_file = fopen(ASPK_DEBUG_FILE_NAME, "a+");        \
         }                                                               \
-        fprintf(aspk_debug_file, "[%s:%d] ", __FUNCTION__, __LINE__);   \
+        dd_header();   \
         fprintf(aspk_debug_file, #var "=0x%x\n", var);                  \
         fflush(aspk_debug_file);                                        \
     } while(0)
@@ -33,7 +37,7 @@ static char* format_time(){
         if (!aspk_debug_file) {                                         \
             aspk_debug_file = fopen(ASPK_DEBUG_FILE_NAME, "a+");        \
         }                                                               \
-        fprintf(aspk_debug_file, "[%s:%d] ", __FUNCTION__, __LINE__);   \
+        dd_header();   \
         fprintf(aspk_debug_file, #var1 "=0x%x, ", var1);                \
         fprintf(aspk_debug_file, #var2 "=0x%x\n", var2);                \
         fflush(aspk_debug_file);                                        \
@@ -44,7 +48,7 @@ static char* format_time(){
         if (!aspk_debug_file) {                                         \
             aspk_debug_file = fopen(ASPK_DEBUG_FILE_NAME, "a+");        \
         }                                                               \
-        fprintf(aspk_debug_file, "[%s:%d] ", __FUNCTION__, __LINE__);   \
+        dd_header();\
         fprintf(aspk_debug_file, #var1 "=0x%x, ", var1);                \
         fprintf(aspk_debug_file, #var2 "=0x%x, ", var2);                \
         fprintf(aspk_debug_file, #var3 "=0x%x\n", var3);                \
@@ -56,7 +60,7 @@ static char* format_time(){
         if (!aspk_debug_file) {                                         \
             aspk_debug_file = fopen(ASPK_DEBUG_FILE_NAME, "a+");        \
         }                                                               \
-        fprintf(aspk_debug_file, "[%s:%d] ", __FUNCTION__, __LINE__);   \
+        dd_header();\
         fprintf(aspk_debug_file, #var1 "=0x%x, ", var1);                \
         fprintf(aspk_debug_file, #var2 "=0x%x, ", var2);                \
         fprintf(aspk_debug_file, #var3 "=0x%x, ", var3);                \
@@ -64,22 +68,37 @@ static char* format_time(){
         fflush(aspk_debug_file);                                        \
     } while(0)
 
-#define dds(str)                                                        \
+#define dd5(var1, var2, var3, var4, var5)                                     \
     do{                                                                 \
         if (!aspk_debug_file) {                                         \
             aspk_debug_file = fopen(ASPK_DEBUG_FILE_NAME, "a+");        \
         }                                                               \
-        fprintf(aspk_debug_file, "[%s:%d] ", __FUNCTION__, __LINE__);   \
-        fprintf(aspk_debug_file, #str "=%s\n", str);                    \
+        dd_header();\
+        fprintf(aspk_debug_file, #var1 "=0x%x, ", var1);                \
+        fprintf(aspk_debug_file, #var2 "=0x%x, ", var2);                \
+        fprintf(aspk_debug_file, #var3 "=0x%x, ", var3);                \
+        fprintf(aspk_debug_file, #var4 "=0x%x, ", var4);                \
+        fprintf(aspk_debug_file, #var5 "=0x%x\n", var5);                \
         fflush(aspk_debug_file);                                        \
     } while(0)
 
+#define dds(str)                                                        \
+    do{                                                                 \
+       if (!aspk_debug_file) {                                          \
+           aspk_debug_file = fopen(ASPK_DEBUG_FILE_NAME, "a+");         \
+       }                                                                \
+       dd_header();\
+       fprintf(aspk_debug_file, "%s\n", str);                     \
+        fflush(aspk_debug_file);                                        \
+    } while(0)
+
+//for vs, arg list should be (fmt, arg, ...)
 #define dd(fmt, arg...)                                                 \
     do{                                                                 \
         if (!aspk_debug_file) {                                         \
             aspk_debug_file = fopen(ASPK_DEBUG_FILE_NAME, "a+");        \
         }                                                               \
-        fprintf(aspk_debug_file, "[%s:%d] ", __FUNCTION__, __LINE__);   \
+        dd_header();\
         fprintf(aspk_debug_file, fmt "\n", ##arg);                      \
         fflush(aspk_debug_file);                                        \
     }while(0);
