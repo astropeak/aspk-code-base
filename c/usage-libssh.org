@@ -1,0 +1,18 @@
+* libssh
+  Two main class: Session and Channel.
+  Session is used to connect and authenticate, Channel is used to send or receive data.
+  
+  an example for implementing scp:
+  https://www.libssh2.org/examples/scp.html
+  connect, handshake, authenticate, get file info(such as file size), read file content.
+  
+  The read & write API:
+  #include <libssh2.h>
+  ssize_t libssh2_channel_read(LIBSSH2_CHANNEL *channel, char *buf, size_t buflen); 
+  ssize_t libssh2_channel_write(LIBSSH2_CHANNEL *channel, const char *buf, size_t buflen);
+  https://www.libssh2.org/libssh2_channel_write.html
+  
+  The c++ wrapper:
+  http://api.libssh.org/master/libsshpp_8hpp_source.html
+  Have a read and write fucntion.
+ 

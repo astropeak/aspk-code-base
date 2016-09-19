@@ -1,0 +1,115 @@
+* socket
+  Socket is an abstraction of TCP communication endpoint.
+  
+  A tutorial of socket programming in linux c/c++.
+  http://www.linuxhowtos.org/C_C++/socket.htm
+  In unix api, read from or write to a socket is the same as to or from a file. They use a single function: 'int read(int fd, char* buf, int nbyte) '(http://www.linuxhowtos.org/data/6/read.txt).
+  
+  A socket is a way to talk to other computer using standard unix file descriptor.
+  https://www.tutorialspoint.com/unix_sockets/what_is_socket.htm     
+  A file descriptor can be a file, a network connection, a terminal, and something else.
+  
+** java socket api
+   http://www.tutorialspoint.com/java/java_networking.htm
+   Points:
+   - socket class has a method 'getOutputStream'. This is exactly the same as I think before.
+     
+   A client:
+   #+begin_src java :classname Test
+   // File Name GreetingClient.java
+   import java.net.*;
+   import java.io.*;
+   
+   public class GreetingClient {
+      public static void main(String [] args) {
+         String serverName = args[0];
+         int port = Integer.parseInt(args[1]);
+         try {
+            System.out.println("Connecting to " + serverName + " on port " + port);
+            Socket client = new Socket(serverName, port);
+            
+            System.out.println("Just connected to " + client.getRemoteSocketAddress());
+            OutputStream outToServer = client.getOutputStream();
+            DataOutputStream out = new DataOutputStream(outToServer);
+            
+            out.writeUTF("Hello from " + client.getLocalSocketAddress());
+            InputStream inFromServer = client.getInputStream();
+            DataInputStream in = new DataInputStream(inFromServer);
+            
+            System.out.println("Server says " + in.readUTF());
+            client.close();
+         }catch(IOException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+   #+end_src
+   
+   A server:
+   #+begin_src java :classname Test
+   // File Name GreetingServer.java
+   import java.net.*;
+   import java.io.*;
+   
+   public class GreetingServer extends Thread {
+      private ServerSocket serverSocket;
+      
+      public GreetingServer(int port) throws IOException {
+         serverSocket = new ServerSocket(port);
+         serverSocket.setSoTimeout(10000);
+      }
+   
+      public void run() {
+         while(true) {
+            try {
+               System.out.println("Waiting for client on port " + 
+                  serverSocket.getLocalPort() + "...");
+               Socket server = serverSocket.accept();
+               
+               System.out.println("Just connected to " + server.getRemoteSocketAddress());
+               DataInputStream in = new DataInputStream(server.getInputStream());
+               
+               System.out.println(in.readUTF());
+               DataOutputStream out = new DataOutputStream(server.getOutputStream());
+               out.writeUTF("Thank you for connecting to " + server.getLocalSocketAddress()
+                  + "\nGoodbye!");
+               server.close();
+               
+            }catch(SocketTimeoutException s) {
+               System.out.println("Socket timed out!");
+               break;
+            }catch(IOException e) {
+               e.printStackTrace();
+               break;
+            }
+         }
+      }
+      
+      public static void main(String [] args) {
+         int port = Integer.parseInt(args[0]);
+         try {
+            Thread t = new GreetingServer(port);
+            t.start();
+         }catch(IOException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+   #+end_src
+** c++ boost socket stream
+   http://www.boost.org/doc/libs/1_57_0/doc/html/boost_asio/overview/networking/iostreams.html
+   using the '<<' to write to a input stream.
+
+   #+begin_src C++ :includes <iostream>
+using namespace std;
+ip::tcp::iostream stream;
+stream.expires_from_now(boost::posix_time::seconds(60));
+stream.connect("www.boost.org", "http");
+stream << "GET /LICENSE_1_0.txt HTTP/1.0\r\n";
+stream << "Host: www.boost.org\r\n";
+stream << "Accept: */*\r\n";
+stream << "Connection: close\r\n\r\n";
+stream.flush();
+std::cout << stream.rdbuf();
+   #+end_src
+

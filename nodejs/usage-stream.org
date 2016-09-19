@@ -1,0 +1,32 @@
+* Stream
+  introduction to implement custom stream in c++:
+  http://www.mr-edd.co.uk/blog/beginners_guide_streambuf
+
+  Some stackoverflow on implement streams in c++:
+  http://stackoverflow.com/questions/14086417/how-to-write-custom-input-stream-in-c
+  http://stackoverflow.com/questions/2986383/c-implementing-my-own-stream
+  If you're looking at actually creating your own stream, I'd look at the Boost.Iostreams library. It makes it easy to create your own stream objects.
+  
+
+  An introduction with examples.
+  https://www.sitepoint.com/basics-node-js-streams/
+  
+  Stream like unix pipe. Readable stream(such as req in nodejs), writable stream(such as res in nodejs), and duplex stream.
+  Stream is just a EventEmitter. Readable stream will emit 'data' and 'end' event. To read data, just add a listener to the 'data' event, the real data will be passed in as parameter. But you can read data explicitly by calling 'read' method.
+  Writable stream: 'write' method to write data, 'end' method to end the write.
+  
+  'pipe' method of a readable stream, the parameter is a writable stream. Write the content of the readable stream to the writable stream.
+  
+  Seems with more detailes.
+  http://maxogden.com/node-streams.html
+  Notes:
+  - Many listeners can be added to a readable stream's 'data' event. Then they all receive the data.
+  - Different types of streams will have different ways of chunking up their data. For example, a library that reads CSVs might emit data every time it reads a new line whereas an HTTP request might emit data every few kilobytes during the download.
+  - gives a simple impelementation of writable stream and Stream.pipe() method.
+    
+    
+  Nodejs official docs for stream:
+  https://nodejs.org/api/stream.html
+  Two part: for stream comsumer, and for stream developer.
+  - details how to implement a stream. A stream has a internal buffer to saved data.
+  

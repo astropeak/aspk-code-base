@@ -1,0 +1,63 @@
+* Dropbox API
+  links:
+  API explorer: https://dropbox.github.io/dropbox-api-v2-explorer
+
+  Sync techniques are not show in the API. Using that API, dropbox just acts like a storage service, you can upload files, download files, and so on.
+  Provide SDK in many language, and a general API in form of HTTP post endpoint. All SDK are built upon the HTTP general API.
+  Documentation for HTTP API.
+  https://www.dropbox.com/developers/documentation/http/documentation
+  
+  API explorer is a tool to inspect the HTTP API for a method.
+  
+  An example of http api:
+  #+begin_src text
+  POST /2/files/upload
+  Host: https://content.dropboxapi.com
+  User-Agent: api-explorer-client
+  Authorization: Bearer ccccccccccc
+  Content-Type: application/octet-stream
+  Dropbox-API-Arg: {"path":"aaa","mode":{".tag":"add"},"autorename":false,"client_modified":"aaa","mute":true}
+  Content-Length: 1163
+  
+  --- (content of env.txt goes here) ---
+  
+  POST /2/files/upload
+  Host: https://content.dropboxapi.com
+  User-Agent: api-explorer-client
+  Authorization: Bearer ccccccccccc
+  Content-Type: application/octet-stream
+  Dropbox-API-Arg: {"path":"aaa","mode":{".tag":"add"},"autorename":false,"client_modified":"aaa","mute":true}
+  #+end_src
+  upload file env.txt as name "aaa" to dropbox server. ' ccccccccccc' is the token.
+  
+  Problmes:
+      1. only the token is needed. If the token is got by anybody else, then it is dangerous.
+         
+  Some API functions:
+  | name          | description                                               |
+  |---------------+-----------------------------------------------------------|
+  | upload        |                                                           |
+  | download      |                                                           |
+  | copy          | copy a file from one dir to another dir. no upload needed |
+  | delete        | delete a file                                             |
+  | move          | move a file form one place to another on server.          |
+  | create_folder |                                                           |
+  | list_folder   | get content of a folder                                   |
+  | property/add  | add a property                                            |
+  
+  
+  response test for command upload env.txt to /tmp/aaabbb.txt
+  #+begin_src text
+  {
+    "name": "aaabbb.txt",
+    "path_lower": "/tmp/aaabbb.txt",
+    "path_display": "/tmp/aaabbb.txt",
+    "id": "id:sKKfdktyozoAAAAAAAFv6g",
+    "client_modified": "2016-09-19T08:32:06Z",
+    "server_modified": "2016-09-19T08:32:06Z",
+    "rev": "3d0b609972103",
+    "size": 1163
+  }
+  #+end_src
+  So you can upload a file and use another name on the server.
+  
