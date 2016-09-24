@@ -1,0 +1,4 @@
+* extern "C"
+  http://stackoverflow.com/questions/67894/why-do-we-need-extern-c-include-foo-h-in-c
+  Reason: C++ compiler will compile a function 'foo' to 'abfoo_123'. extern "C" is used to make C++ compiler compile a function as C compiler.
+  Or else there will be a link error: a function can't be found, because the functions reference is compiled using another name.

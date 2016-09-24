@@ -1,0 +1,5 @@
+* misc
+** MIT technology review
+   Review the top ten technology in a year.
+   This is for 2010.
+   http://www2.technologyreview.com/tr10/?year=2010
