@@ -103,3 +103,27 @@
      has_extension()------: true
    #+end_src
 
+** iostreams
+*** implement new stream
+    The official doc on how, quite detailed.
+    http://www.boost.org/doc/libs/1_61_0/libs/iostreams/doc/index.html
+
+    The ofstream doc:
+    http://www.cplusplus.com/reference/ostream/ostream/write/
+
+    Create a device class, then pass it as typename to the stream class template.
+    The device may be a source or a sink. Syncbox/v2/LocalFileDevice.hpp is a good example, which is inspired by the official tutorial.
+    
+    typedef is used to give different behaver of a class. Such as to implement a source class, you should define its type by
+    #+begin_src C++ :includes <iostream>
+    typedef source_tag                      category;
+    #+end_src
+    And for a sink class, you should use
+    #+begin_src C++ :includes <iostream>
+    typedef sink_tag                      category;
+    #+end_src
+    
+    Seems in the under implementation of boost, it will check if type category's real type, if it is 'source_tag', then the target is a souce class.
+    
+    
+    

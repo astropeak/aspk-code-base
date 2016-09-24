@@ -29,3 +29,10 @@ http://stackoverflow.com/questions/27172033/invalid-initialization-of-non-const-
    Error message given by gcc:
 /cygdrive/e/home/Dropbox/project/syncbox/SyncTrans.hpp:8:51: error: passing ‘const Checker’ as ‘this’ argument discards qualifiers [-fpermissive]
          int status = itsChk.execute(client, server);
+** ifstream and ofstream don't have copy constructor
+‘std::ios_base::ios_base(const std::ios_base&)’ is private
+   So you can't return they from a function.
+   http://stackoverflow.com/questions/2399375/returning-ifstream-in-a-function
+** cmake: link error: can't find a c function.
+   The reason is that c functions should be exclosed in 'extern "C"' brace pair.
+   ref: [[file:usage-extern-c.org::*extern%20"C"][extern "C"]] 
