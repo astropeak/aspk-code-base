@@ -1,0 +1,38 @@
+* Iterator
+** make a class iterable
+   Just implements the Iterable interface. Only one method of Iterable should be implemented: public Iterator<T> iterator() function. 
+   To return a Iterator object, you should create a class that implements the Iterator<T> interface, method ~boolean hasNext()~ and ~T next()~ should be implemented. The class can be a inner class or a annoymous class(this is better).
+
+   Example:
+/**
+ * Created by astropeak on 16/10/10.
+ */
+import java.util.Iterator;
+
+class Aaa {
+    int a;
+    Aaa(int i){a=i;
+    }
+    public String toString(){
+        return "Aaa:"+a;
+    }
+}
+
+
+public class IterableTest implements Iterable<Aaa> {
+    int idx = 0;
+
+    private class MyIterator implements Iterator<Aaa> {
+            public boolean hasNext(){
+                return idx<5;
+            }
+            public Aaa next(){
+                ++idx;
+                return new Aaa(idx);
+            }
+    }
+    public Iterator<Aaa> iterator(){
+        return new MyIterator();
+    }
+}
+
