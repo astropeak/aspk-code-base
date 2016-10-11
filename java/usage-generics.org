@@ -1,0 +1,35 @@
+* Generics
+  When define a generics, a concorete type should always be used.
+** docs
+   A thread describe the meaning of <T extends Comparable<? supper T>>:
+   http://stackoverflow.com/questions/2827585/what-is-super-t-syntax
+   <Integer extends Comparable<Number>> is a valid example. Usful in sort method.
+
+   THe official doc on wildcards.
+   https://docs.oracle.com/javase/tutorial/extra/generics/wildcards.html
+** wildcards 
+   Wildcards is used when you don't know the real type when using a generic class.
+
+   When use wildcards, then the real type is unknow, then you can't add element to.
+   一个通用类型list, 作为函数参数。在函数体内，只能知道它是一种类型，但不知道到底是哪种类型。因此无法向list中添加元素。但可以获取元素。
+   在使用时， 总是一个具体的类型或wildcard 类型。
+   ? extends 的作用: 可以用基类访问元素。
+   ? super的作用：sort函数的定义。要求是元素必须实现Comparable接口，但对于一个子类型(TS)元素列表，通常是由它的父类实现Comparable接口的，因此它并没有Comparable<TS>, 但它的父类实现了Comparable<TB>, 因此需要一种语法，表示TS 是一个Comparable<TB>, 这种语法就是 ~TS extends~ 表示子类型， ~Comparable<? super TS>~ 表示 ~Comparable<TB>~ 是一个合法项。
+   sort函数的原型(通用函数的定义)：
+   public static <T extends Comparable<? super T>> void sort(List<T> list)
+
+   以上定义是否和下面这个一样？
+   public static <T> void sort(List<? extends Comparable<? super T>> list)
+   => 不一样。 第一个更为严格。它不仅要求T 是一个 Comparable, 并且要求这个Comparable的类型必须是T的一个基类。 而第二个只要求了List的元素是一个Comparable,但无从知道（根据输入参数）T的实际类型，因此也就无法进一步判断T的类型。 总之，第一种，根据输入参数就能知道T是什么（通过对比实参与形参），第二种则无法知道。
+   而下面这个原型由于可以通过第二个参数就可以准确知道T是什么，因此关于T的规则可以写在第一个参数里。此时即使将该规则写在最前面，仍然需要在第一个参数中写，因此只能写在第一个参数里。
+   private static <T> int indexedBinarySearch(List<? extends Comparable<? super T>> var0, T var1) {
+
+   注：对于通用类型函数，<T>写在返回值前即可。
+   静态类型语言做了这么多的努力，来使得错误在编译期间发现。动态语言完全没有，虽然用起来灵活了，但出问题调试时就麻烦了。
+
+   Stack<?> means the type is unknow, '?' here is a wildcard. So you can't push any type of element to the stack. But you can get element as type Object.
+*** The upper bound and lower bound
+    The upper bound:
+    Stack<? extends Integer>: the type should be subtype of Integer.
+    Stack<? super Integer>: the type shuold be Integer or its base type.
+    
