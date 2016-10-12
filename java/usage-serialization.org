@@ -1,0 +1,50 @@
+* Serialization
+  A tutorial
+  http://www.tutorialspoint.com/java/java_serialization.htm
+
+  The transient keywords:
+  mark that a field should not be serialized. And why it is not a anotation like @DoNotSerialize? Maybe because anotation is not available then?
+
+  一个程序：
+  #+begin_src java
+  class SerialDemo {
+      public static void serilizeObj(Collection<?> obj){
+          FileOutputStream fo=null;
+          ObjectOutputStream oo=null;
+          try {
+              fo = new FileOutputStream("./obj.ser");
+              oo = new ObjectOutputStream(fo);
+              for(Object o:obj){
+                  oo.writeObject(o);
+              }
+              oo.close();
+              fo.close();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
+  
+      public static Collection<Object> deSerilizeObj(){
+          Collection<Object> rst = new ArrayList<Object>();
+          try {
+              FileInputStream fi = new FileInputStream("./obj.ser");
+              ObjectInputStream oi= new ObjectInputStream(fi);
+  
+              //when no object avaliable, a EOFException will be throwed.
+              rst.add(oi.readObject());
+              rst.add(oi.readObject());
+              rst.add(oi.readObject());
+              rst.add(oi.readObject());
+              rst.add(oi.readObject());
+              oi.close();
+              fi.close();
+          } catch (IOException e){
+              System.out.println("ssssss");
+              //e.printStackTrace();
+          } catch (ClassNotFoundException e){
+              e.printStackTrace();
+          }
+          return rst;
+      }
+  }
+  #+end_src
