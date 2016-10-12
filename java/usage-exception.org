@@ -1,0 +1,5 @@
+* Exception
+  Exception is used to ease error handle.
+  一个区别是：可以不用返回错误代码了，而是抛出一Exception. 这个Excetption 可以自定义，并且会要求调用都必须处理。 例子： ObjectInputStream.readObject会抛出一个EOFException，当输入文件没有更多内容时。而对于C语言，这个信息只能通过返回值返回。
+
+  Checked Exception: 所有继承自Exception 但不是RuntimeException的Exception。编译器会检查这些Exception被显式处理，因此它叫Checked Exception.
