@@ -1,0 +1,41 @@
+* Reflection
+  creating instances, calling a method, getting or setting fields of a object at runtime without knowing a class's definition(only know that there is a class named 'XXX', the class has a method 'YYY', a field 'ZZZ').
+
+  A good thread on reflection: http://stackoverflow.com/questions/37628/what-is-reflection-and-why-is-it-useful
+** related classes
+*** Class
+    The class 'Class' represent runtime infomation of a class or interface.
+    
+    Class.forName(className) will return a Class object of the class whose name is 'className'.
+    Note: 1. className should be full name, including package name. 2. for inner class, '$' instead of '.' should be used.
+    
+    Object.getClass() method will return this object's desclaring Class object.
+    
+    Field Class.getField(String name), Field[] Class.getFields() will get fields of the current Class object.
+    
+    Method Class.getMethod(String name, Class<?>... parameterTypes), Method[] Class.getMethods() will get methods of the current Class object.
+    
+    Constructor<T> getConstructor(Class<?>... parameterTypes), Constructor<?>[] getConstructor() will get constructor of the curretn Class object.
+    
+    Field, Method, Constructor are all defined in java.lang.Reflect package.
+    
+    
+    有了Class object后，就能够知道这个class的所有信息了。reflect 包里的一些类是辅助。
+    如何得到一个class的Class object？
+    1. 通过class的名字: Class.forName(className).
+    2. 通过这个class的一个instance: obj.getClass().
+    3. 通过class定义名称： String.class, Employer.class. 这种是编译期间的， 上面两种是运行期的。
+
+*** Reflect.Field, Reflect.Constructor, Reflect.Method
+    Reflect.Constructor: T newInstance(Object... args), create a new instance of the declaring class of this constructor. 
+
+    Reflect.Method: Object invoke(Object obj, Object... args), invokes the underlining method represented by this object.
+
+    Reflect.Field: Object get(Object), get the value of the field represendted by this Field object, on the specifiyed object.
+    Reflect.Field: void set(Object obj, Object value), set the value of the field represendted by this Field object to second arg, on the specifiyed object.
+    Addtional, there are many getBoolean, getChar, setBoolean, SetChar... similar methods for the Field class.
+
+*** create an instance given class name
+    http://stackoverflow.com/questions/6094575/creating-an-instance-using-the-class-name-and-calling-constructor
+
+    return Class.forName(className).getConstructor(String.class).newInstance(arg);
