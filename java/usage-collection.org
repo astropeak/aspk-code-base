@@ -1,0 +1,9 @@
+* Collection
+  
+** Collection interface
+   boolean add(E e);
+   boolean remove(Object o);
+   boolean contains(Object o);
+   Object[] toArray();
+
+   Why argument type to 'add' is 'E', while all others are 'Object'? 
