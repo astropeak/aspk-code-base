@@ -1,0 +1,116 @@
+* Concurrent
+** some classes
+*** CountDownLatch
+    property:
+    current count: the counter.
+    
+    method:
+    CountDownLatch(int count): constructor. Init current count to 'count'
+    void countDown(): descrease current count at every call.
+    void await(): if current count is 0, then return right now; else blocking until current count equal to 0.
+    
+    Typical usage:
+    1. The main thread wait for all other child threads to complete. 
+       1. Create a CountDownLatch with current count set to N(child threads count)
+       2. In all child threads, call latch.countDown() before the thread exits
+       3. in main thread, first create all child threads, then call latch.await() to wait for all threads complete.
+    2. start a child thread on demand.
+       1. Create a CountDownLatch with current count set to 1.
+       2. in child threads, call latch.await() at the begining of its run function.
+       3. in main thread, call latch.countDown() if the child threads should be started.
+    3. N threads wait for each other to reach to a common point P.
+       1. create a CountDownLatch with current count set to N.
+       2. At common point P of each threads, first call latch.countDonw(), then latch.await().
+       3. COMMENTS: CylicBarrier is a better tool to do this task.
+
+          
+          
+    Examples:
+    1. "main end " is always the last trace, so it means main thread is the last thread ended.
+    #+begin_src java :classname Test
+    import java.util.concurrent.*;
+
+    class Test {
+        public static void main(String[] args){
+            final int N = 5;
+            CountDownLatch latch = new CountDownLatch(N);
+
+            for (int i=0;i<N;i++){
+                final int j = i;
+                new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("thread "+j+" run");
+                            latch.countDown();
+                        }
+                    }).start();
+            }
+
+            System.out.println("main start");
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                System.out.println("error");
+            }
+            System.out.println("main end");
+        }
+
+    }
+    #+end_src
+
+    #+RESULTS:
+    | thread |     0 | run |
+    | thread |     2 | run |
+    | main   | start |     |
+    | thread |     4 | run |
+    | thread |     3 | run |
+    | thread |     1 | run |
+    | main   |   end |     |
+
+    3. All threads reach to a common point. In the result, all first part traces appear before second part traces. If remove the latch.await(), then the order is random.
+
+    #+begin_src java :classname Test
+    import java.util.concurrent.*;
+
+    class Test {
+        public static void main(String[] args){
+            final int N = 5;
+            CountDownLatch latch = new CountDownLatch(N);
+
+            for (int i=0;i<N;i++){
+                final int j = i;
+                new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("thread "+j+" first part");
+                            latch.countDown();
+                            try {
+                                latch.await();
+                            } catch (InterruptedException e) {
+                                System.out.println("error");
+                            }
+                            System.out.println("thread "+j+" second part");
+                        }
+                    }).start();
+            }
+        }
+
+    }
+    #+end_src
+
+    #+RESULTS:
+    | thread | 3 | first  | part |
+    | thread | 2 | first  | part |
+    | thread | 0 | first  | part |
+    | thread | 1 | first  | part |
+    | thread | 4 | first  | part |
+    | thread | 4 | second | part |
+    | thread | 3 | second | part |
+    | thread | 0 | second | part |
+    | thread | 1 | second | part |
+    | thread | 2 | second | part |
+
+    
+*** FutureTask
+*** CylicBarrier
+*** 
