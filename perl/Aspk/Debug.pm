@@ -1,4 +1,4 @@
-package Aspk::Debug;
+package MyDebug;
 use Filter::Simple;
 use File::Basename;
 use Exporter;

@@ -1,4 +1,6 @@
 * date time
+  - Note taken on [2016-12-30 Fri 21:20] \\
+    done for pcs
   
 ** format data and time
    A good tutorial: http://www.tutorialspoint.com/perl/perl_date_time.htm

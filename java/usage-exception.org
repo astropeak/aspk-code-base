@@ -1,5 +1,133 @@
 * Exception
-  Exception is used to ease error handle.
-  一个区别是：可以不用返回错误代码了，而是抛出一Exception. 这个Excetption 可以自定义，并且会要求调用都必须处理。 例子： ObjectInputStream.readObject会抛出一个EOFException，当输入文件没有更多内容时。而对于C语言，这个信息只能通过返回值返回。
+  - Note taken on [2016-12-31 Sat 17:21] \\
+    done for pcs
+** basic
+   Exception is used to ease error handle.
+   一个区别是：可以不用返回错误代码了，而是抛出一Exception. 这个Excetption 可以自定义，并且会要求调用都必须处理。 例子： ObjectInputStream.readObject会抛出一个EOFException，当输入文件没有更多内容时。而对于C语言，这个信息只能通过返回值返回。
+   
+   Checked Exception: 所有继承自Exception 但不是RuntimeException的Exception。编译器会检查这些Exception被显式处理，因此它叫Checked Exception.
+   
+   一个用法：
+   在函数体内调用 checkAccess
+   #+begin_src java
+     @CallerSensitive
+     public char getChar(Object obj)
+         throws IllegalArgumentException, IllegalAccessException
+     {
+         if (!override) {
+             if (!Reflection.quickCheckMemberAccess(clazz, modifiers)) {
+                 Class<?> caller = Reflection.getCallerClass();
+                 checkAccess(caller, clazz, obj, modifiers);
+             }
+         }
+         return getFieldAccessor(obj).getChar(obj);
+     }
+   #+end_src
+   并没有检查返回值。 在checkAccess 里会抛出异常，如果检查有问题，则当前函数会直接退出。相当于实现了C语言中的GOTO语句。这样写程序会简洁。
+   
+   
+   另一个用法：
+   基类中对于不支持的操作，实现为直接抛出一个UnsupportedOperationException.
+** class hiarachy
+   Throwable: Only instances of this type can be thrown by the JVM or the 'throw' statement. 
+   Exception, Error: the only two subtype of Throwable. Exception should be handled by programmer(this type of problem is expected to happen), Error should not be(because it should not happen in right software). 
+   Then Exception has two subtype: RuntimeException and all other Exception.
+   #+begin_src java :classname Test
+   class Test {
+       public static void main(String[] args) {
+           // System.setErr(System.out);
+           // int a = 1/0;
+           int a[] = new int[10];
+           int i = 5, j = 8;
+           try{
+           int k = a[i+j];
+           } catch (ArrayIndexOutOfBoundsException e) {
+               e.printStackTrace(System.out);
+           }
+       }
+   }
+   #+end_src
+   
+   #+RESULTS:
+   : java.lang.ArrayIndexOutOfBoundsException: 13
+   : 	at Test.main(Test.java:8)
+   
+** write a new exception
+   Just extends Exception or RuntimeException class. The first for checked(means this exception should either be caught or thrown to a caller), the second for unchecked.
+   
+   - How to tranfer data out? 
+     The data is provided when creating the exception object. Latter it can be got by a public getter(the getData method).
+   - Can I don't provide the msg parameter. 
+     Yes, you can. It is used as a description to the Exception. the toString method will display it.
+   - Seems the only requirement is extends the Exception class. Anything else you can do as other ordinary classes.
+   - 有很多的exception 实现没有任何参数，函数体也没有任何代码，它的类名的名称就足以说明问题了
+     例如： LastOwnerException
+   - 如果有参数，与其重新实现toString,更好的方法是直接将super的msg设置为需要的值。
+     例如 ArrayIndexOutOfBoundsException 的实现。
+     
+   An example:
+   #+begin_src java :classname Test
+   class MyException extends Exception {
+       MyException(String msg){
+           super(msg);
+       }
+   }
+      
+   class Test {
+       static void foo (int a) throws MyException {
+           if (a == 0) {
+               throw new MyException("A is "+ 998);
+           }
+           // System.out.println("foo called, a="+a);
+       }
+       public static void main(String[] args) throws MyException{
+           try {
+           foo(1);
+           foo(0);
+           foo(2);
+           } catch (MyException e){
+               System.out.println(e);
+               // System.out.println(e.getData());
+           }
+       }
+   }
+   #+end_src
 
-  Checked Exception: 所有继承自Exception 但不是RuntimeException的Exception。编译器会检查这些Exception被显式处理，因此它叫Checked Exception.
+   #+RESULTS:
+   : MyException: A is 998
+
+   
+** 错误用法
+   使用异常机制遍历数组：
+   #+begin_src java :classname Test
+   class Test {
+       public static void main(String[] args) {
+           int[] a = new int[10];
+           a[1] = 1;
+           a[2] = 2;
+           int i = 0;
+           try {
+               while(true)
+                   System.out.println(i+":"+a[i++]);
+           } catch (ArrayIndexOutOfBoundsException e) {
+               // System.out.println(e);
+           }
+       }
+   }
+   #+end_src
+
+   #+RESULTS:
+   #+begin_example
+   0:0
+   1:1
+   2:2
+   3:0
+   4:0
+   5:0
+   6:0
+   7:0
+   8:0
+   9:0
+#+end_example
+
+   

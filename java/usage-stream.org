@@ -1,0 +1,71 @@
+* Stream
+** abstract class OutputStream
+   the base class for all output stream of bytes. An output stream accepts output bytes and send them to some sinks.
+
+   method:
+   void write(int): write a byte to the output stream. Only the lower 8 bits of parameter will be used. The upper 24 bits are ignored.
+   TODO: then why the parameter is int instead of byte? => many answers in stackoverflow. Some points
+   - write(0) will not work for write(byte), because 0 is an int and will not convert to byte implicitly. You should use write((byte)0).
+   - byte is signed. So you can't write 0xFF for write(byte).(but this seems wrong).
+   - use int, then byte, short, int are all acceptable.
+
+   void write(byte[]): write the byte array to the output stream.
+   void write(byte[], int offset, int length): write the part of the byte array.
+   void flush(): write buffered bytes to its intented sink.
+   void close(): close this buffer.
+*** subclasses FilterOuputStream
+    Hold an OutputStream object, and use the object as its real sink. But do some transformation before send the data to the underline object. The write(int) method is implemented as this:
+    void write(int b){
+        out.write(b); //out is the underline object that is passed to constructor.
+    }
+    Constructor:
+    FilterOutputStream(OutputStream out){
+        this.out = out;
+    }
+    protected OutputStream out; //notice this is protected.
+
+
+    The DeflaterOutputStream is a subclass of FilterOutputStream, and ZipOutputStream is a subclass of DeflaterOutputStream. JarOutputStream is a subclass of ZipOutputStream.
+*** subclass ByteArrayOutputStream
+    An output stream in which the data is write to a byte array. Increase the buffer if needed.
+
+    method:
+    byte[] toByteArray(): return the content as a byte array.
+    String toString(): return the content as a string.
+*** subclass DataOutputStream
+    Write java primitive type data to an output stream in a portable way. This is a subcalss of FilterOutputStream(which takes another OutputStream)
+
+    method such as:
+    void writeInt(int):
+    void wirteBoolean(boolean):
+
+*** subclass ObjectOutputStream
+    Write java object to and output stream.
+
+    method added:
+    void writeObject(int):
+
+*** BufferedOutputStream
+    An output stream that with a buffer. The data is first written to the internal buffer, if the buffer full, then it is written to the underline output stream.
+
+    No new method added.
+
+** interface DataOutput
+   Convert any java primitive types to a series of bytes and writing these bytes to a binary stream.
+
+   The interface definition has nothing todo with stream, but the implementating classes should all introduce stream.
+
+** interface ObjectOutput
+   the extended interface of DataOutput, add a method: writeObject(Object) to convert an object to a series of bytes.
+
+** class ObjectOutputStream
+   The definition:
+   public class ObjectOutputStream extends OutputStream implements ObjectOutput, ObjectStreamConstants {...}
+
+   The ObjectStreamConstants interface:
+   provide constants that are used by ObjectOutputStream and ObjectInputStream. Use as interface is good idea.
+   No method, all final static variables in this interface, such as the header bytes, the token type bytes.
+   In hadoop, constants are defined in a class and the static variables are imported to another package to use that constant. The interface way makes use the variable without import, but you will get all variables.
+
+   
+   

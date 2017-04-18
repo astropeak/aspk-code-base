@@ -1,4 +1,6 @@
-* auto load
+* auto load                                                                     :perl:
+  - Note taken on [2016-12-30 Fri 15:54] \\
+    done for pcs
   AUTOLOAD is used to handle undefined sub. If a sub is not defined, then the AUTOLOAD sub will be called. The parameter is the same, and the sub name can be accessed from $AUTOLOAD.
 
   But now I don't see the real usage of this feature.

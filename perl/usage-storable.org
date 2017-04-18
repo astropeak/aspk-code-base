@@ -1,0 +1,31 @@
+* Storable
+  http://www.perlmonks.org/?node_id=510202
+  
+  use Storable;
+  store \%table, 'file';
+  $hashref = retrieve('file');
+  
+  save a hash to file
+ #+begin_src perl :results output
+use Storable;
+my $h = {a=>1, b=>[1, 2,3], c=>"aaaa"};
+store $h, 'hash_save.txt'
+ #+end_src
+  
+  #+RESULTS:
+  
+  retrive the hash.
+ #+begin_src perl :results output
+use Storable;
+use Aspk::Debug (print_obj);
+my $h = retrieve('hash_save.txt');
+# print "$h";
+print $h->{b}->[2];
+# print_obj $h;
+
+ #+end_src
+  
+  #+RESULTS:
+ : 3
+  
+  

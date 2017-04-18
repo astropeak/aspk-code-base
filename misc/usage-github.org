@@ -1,6 +1,10 @@
 * github
 ** search a repository
-   Search a repository that has at least 20 starts, language is elisp, and extension is el.
+   The official doc for searching repositories:
+   
+   https://help.github.com/articles/searching-repositories/
+
+   An example: search a repository that has at least 20 starts, language is elisp, and extension is el.
    #+begin_src org
    stars:>20 extension:el language:elisp
    #+end_src

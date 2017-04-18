@@ -1,0 +1,6 @@
+* Inbox
+  
+** apache commons project
+   https://en.wikipedia.org/wiki/Apache_Commons
+   Provide reusable, open-source java packages. The packages are divided into 3 types: active(Proper), developing(Sandbox), inactive(Dormant).
+   This should be a place to find reusable packages.

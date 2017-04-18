@@ -1,4 +1,4 @@
-* string
+* string                                                                        :perl:
 ** create string that spreads on several lines
    A quite good explanation: http://perlmaven.com/here-documents
 *** method 1: here doc
@@ -148,3 +148,13 @@
 
 
    But when number contained in the string, then the string will be treated as a number.
+
+** create string given length, and init to same char.
+   #+begin_src perl :results output
+$s = '*'x8;
+print $s
+   #+end_src
+
+   #+RESULTS:
+   : ********
+

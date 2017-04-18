@@ -13,7 +13,7 @@
    |        | <list> ::= <item> ',' <item> ! <list> ',' <item> | A list seperated by ',', |
    |        |                                                  | but with at least two element |
 
-   Complex grammar is consists form simple ones such as a list. An arithmatic expression can be considered as a list of numbers seperated by operators such as '+', '-'.
+   Complex grammar is consists from simple ones such as a list. An arithmatic expression can be considered as a list of numbers seperated by operators such as '+', '-'.
 
    An example, BNF grammar for a calculator that support parathesns and +,-,*,/:  
    [[file:e:/home/Dropbox/project/aspk-code-base/perl/usage-marpa.org::*a%20simple%20calculator][a simple calculator]]
@@ -31,3 +31,52 @@
    3. production
    4. alternative
    5. start symbol
+** examples
+*** express A is a list of B and C, in any order
+    A::= B A|C A|C|B
+
+    to express a infinite list, recursive must be used.
+*** express operator precedence
+    Operator: OA, OB. OA has high precedence
+    Operand: C, which is digits senquence.
+    Expression: Expr. e.g Expr = C OB C OA C
+
+    Create a non-terminal(D) for the higher precedence operator
+    Expr ::= D OB C|C OB D
+    D ::= C OA C
+    Works for above expression. But don't work for longer expressions because recursive is not included.
+
+    Introduce recursive: because a Operand can also be an Expr, so wrap C as E
+    Expr ::= D OB E|E OB D|C
+    D ::= E OA E
+    E ::= C|Expr
+    Is this one works for infinite lists?
+    
+    Now add parathensi support:
+*** express A is a list of B seperated by C
+    examples: B C B, B, B C B C B
+    The recursive part is C两侧的都又可以是A。因此引入一个新的D来表示这个部分。
+    A ::= D C D
+    D::= B | A
+    注：下面写法更好
+
+    但这种写法也可以：
+    A ::= B | A C B
+    更简单一些，但原理是什么呢？为什么不再需要B C A这个alternative? 可以肯定的是这是一个重复。能否用现有的两个规则推出这个规则？
+    一个好的原则是每个alternative的第一个元素不要相同，这样就没有岐意了。
+    
+*** express A is a list of B seperated by C or D
+    This just the same case as 'a list of B seperated by E', and here E is C or D. So:
+    A ::=B|A E B
+    E ::=C|D
+
+*** express A is still A if embraced by a paran
+    A ::= ( A )
+    这条规则看似和其它规则是相互独立的，因此可以和其它规则并列使用。
+    为什么不加A::=A？因为这完全没有意义，一般情况下，A还会有其它的production.
+    
+    
+*** issue: how to express all other char sequence than the recognized char sequence
+    e.g. pns snippet: @if, @for, name are recognized char sequence, while all other contents following a command is other char sequence. 并且在遇到下一个@if时得结束。
+    如何表达这种呢？
+    

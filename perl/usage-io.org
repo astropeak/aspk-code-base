@@ -1,4 +1,6 @@
 * IO 操作
+  - Note taken on [2016-12-30 Fri 22:31] \\
+    done for pcs
   1. 打开文件。指定MODE，读或写。
   2. 读入数据或写出数据
   3. 关闭文件
@@ -22,6 +24,14 @@
    # append
    open my $fh, ">>", "file.txt" or die "Can't open file";
    #+end_src
+
+   open a file whose dir not exist
+   #+begin_src perl :results output
+   open my $fh, ">", "aaa/bbb/ccc.txt" or die "Can't open file";
+   #+end_src
+
+   #+RESULTS:
+
 ** 读入、写出数据
 *** 读取
     #+begin_src perl
@@ -72,3 +82,18 @@
    close filehandler
    #+end_src
    
+** flush immediately
+   http://perl.plover.com/FAQs/Buffering.html
+
+   select((select(LOG), $|=1)[0]);
+
+In Perl, you can't turn the buffering off, but you can get the same benefits by making the filehandle hot. Whenever you print to a hot filehandle, Perl flushes the buffer immediately. In our log file example, it will flush the buffer every time you write another line to the log file, so the log file will always be up-to-date.
+
+Here's how to make the filehandle hot:
+
+	{ my $ofh = select LOG;
+	  $| = 1;
+	  select $ofh;
+	}
+
+The key item here is the $| variable. If you set it to a true value, it makes the current filehandle hot. What's the current filehandle? It's the one last selected with the select operator. So to make LOG hot, we `select' it, set $| to a true value, and then we re-`select' whatever filehandle was selected before we selected LOG. 

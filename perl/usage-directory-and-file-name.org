@@ -1,4 +1,6 @@
 * directory and file name
+  - Note taken on [2016-12-30 Fri 21:52] \\
+    done for pcs
 ** Cwd package
    http://perldoc.perl.org/Cwd.html
    Portable way of getting current working directory, convert relative path to absolute path.
@@ -7,13 +9,15 @@
     the ~getcwd~ function.
     #+begin_src perl :results output
     use Cwd;
-    my $dir=getcwd()."\n";
-    print "$dir";
+    my $dir=getcwd();
+    print "cwd: $dir\n";
+
     #+end_src
 
     #+RESULTS:
-    : /e/home/Dropbox/project/aspk-code-base/perl
+    : cwd: /Users/astropeak/Dropbox/project/aspk-code-base/perl
 
+    
 *** relative path to absolute path
     Use the ~abs_path~ function.
     #+begin_src perl :results output
@@ -23,15 +27,15 @@
     $file= abs_path('e:/readme.rtf');
     print "$file\n";
     #+end_src
-
+    
     #+RESULTS:
     : /e/home/Dropbox/project/aspk-code-base/perl/Aspk/Cli.pm
     : /e/readme.rtf
-
+    
     Note:
     - realpath is a synonym for abs_path.
-
-    
+      
+      
 ** File::Spec
    http://perldoc.perl.org/File/Spec.html
    #+begin_src perl :results output
@@ -46,3 +50,137 @@
    : .
    : /e/home/Dropbox/project/aspk-code-base/perl
    
+** misc
+   
+   
+*** list files in a directory
+    #+begin_src perl :results output
+    foreach my $file (glob("."."/*")) {
+        print $file."\n";
+    }
+    #+end_src
+
+    #+RESULTS:
+    #+begin_example
+    ./aaa
+    ./app_process_each_line.pl
+    ./app_set_system_time.pl
+    ./Aspk
+    ./hash_save.txt
+    ./implementation-ProcessFiles.org
+    ./tmp.pl
+    ./usage-array.org
+    ./usage-auto-load.org
+    ./usage-caller.org
+    ./usage-counter-intuitive.org
+    ./usage-date-time.org
+    ./usage-directory-and-file-name.org
+    ./usage-exception.org
+    ./usage-flow-control.org
+    ./usage-grep.org
+    ./usage-hash.org
+    ./usage-io-pipe.org
+    ./usage-io.org
+    ./usage-marpa.org
+    ./usage-misc.org
+    ./usage-object.org
+    ./usage-oop.org
+    ./usage-package-module.org
+    ./usage-perlstyle.org
+    ./usage-reference.org
+    ./usage-regexp.org
+    ./usage-rtf-writer-converter
+    ./usage-rtf-writer-converter.org
+    ./usage-Set-FA-Element.org
+    ./usage-special-literal.org
+    ./usage-storable.org
+    ./usage-string.org
+    ./usage-text-template
+    ./usage-text-template.org
+    ./usage-variable.org
+#+end_example
+
+*** make dir
+    #+begin_src perl :results output
+    use File::Basename;
+    use File::Path;
+    
+    sub ensurePath {
+        my $file = shift;
+        # myprint("ensurePath file", $file);
+        my $dir = dirname($file);
+        # File::Path::make_path($dir);
+        File::Path::mkpath($dir);
+    }
+    
+    ensurePath("aaa/bbb/c.pl");
+    
+    #+end_src
+
+    #+RESULTS:
+
+    #+begin_src perl :results output
+use File::Path;
+unless (-e "/tmp/aaa/bbb/ccc" && -d "/tmp/aaa/bbb/ccc") {
+    File::Path::mkpath("/tmp/aaa/bbb/ccc");
+    print "created\n";
+}
+
+
+    #+end_src
+
+    #+RESULTS:
+
+    
+*** judge if a path
+    http://blog.sina.com.cn/s/blog_5e425dd601019317.html
+    if(-e "File-Name")
+    {
+    print "TRUE\n";
+    }
+    else
+    {
+    print "FALSE\n";
+    }
+    
+    检测选项                 含义
+    -r              文件或目录对此（有效的）用户（effective user）或组是可读的
+    -w             文件或目录对此（有效的）用户或组是可写的
+    -x             文件或目录对此（有效的）用户或组是可执行的
+    -o             文件或目录由本（有效的）用户所有
+    -R             文件或目录对此用户(real user)或组是可读的
+    -W            文件或目录对此用户或组是可写的
+    -X             文件或目录对此用户或组是可执行的
+    -O             文件或目录由本用户所有
+    -e              文件或目录名存在
+    -z              文件存在，大小为0（目录恒为false）
+    -s              文件或目录存在，大小大于0（值为文件的大小，单位：字节）
+    -f               为普通文本
+    -d              为目录
+    -l               为符号链接
+    -S              为socket
+    -p              为管道(Entry is a named pipe(a“fifo”))
+    -b              为block-special 文件（如挂载磁盘）
+    -c              为character-special 文件（如I/O 设备）
+    -u              setuid 的文件或目录
+    -g              setgid 的文件或目录
+    -k              File or directory has the sticky bit set
+    -t              文件句柄为TTY(系统函数isatty()的返回结果；不能对文件名使用这个测试)
+    -T             文件有些像“文本”文件
+    -B             文件有些像“二进制”文件
+    -M             修改的时间（单位：天）
+    -A             访问的时间（单位：天）
+    -C             索引节点修改时间（单位：天）
+
+*** get directory part and base part
+    #+begin_src perl :results output
+    use File::Basename;
+    $file = 'aaa/bbb/cc';
+    my $dir = dirname($file);
+    my $base = basename($file);
+    print "dir: $dir, base: $base\n";
+    #+end_src
+
+    #+RESULTS:
+    : dir: aaa/bbb, base: cc
+

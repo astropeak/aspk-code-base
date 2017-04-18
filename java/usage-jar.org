@@ -1,0 +1,8 @@
+* Jar
+ https://en.wikipedia.org/wiki/JAR_(file_format)
+ A jar file consists of several class files and its resource files.
+ It is created by the jar command. Here is an tutorial. http://www.jb51.net/article/53601.htm
+
+ A jar file may contains an manifest file, which specify the main class. Then the jar file is executable. 'java -jar xxxxx.jar', then the main class's main method will be invoked.
+
+ A jar file can be used as a class path. So the classes in it can be used by other codes.

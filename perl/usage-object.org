@@ -1,0 +1,4 @@
+* Object
+  check if a method exists in an object:
+  $obj->can(method_name);
+  http://stackoverflow.com/questions/2647273/how-can-i-check-if-an-object-has-a-specific-method

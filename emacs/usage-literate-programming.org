@@ -1,0 +1,109 @@
+# #+PROPERTY:    tangle test.el
+* literate programming
+  http://www.howardism.org/Technical/Emacs/literate-programming-tutorial.html
+** export org source block to file
+   use the ':tangle' parameter.
+** export org text to the tangled file as comment
+   use the ':comments' parameter. value 'org' will export 
+   All values:
+   http://orgmode.org/org.html#comments
+** reference other code block
+   the syntax is '<<BLOCK_NAME>>', it is called noweb, which is a tool for LP. http://www.cs.tufts.edu/~nr/noweb/
+   
+   To exapnd the noweb reference, use the ':noweb' parameter and value of 'yes'.
+   All values are here: http://orgmode.org/org.html#noweb
+   
+   code block can be passed as vaule to parameters.
+
+   A good feature: if there are more than one BLOCK_NAME source blocks, then all the blocks will be imported. This is quite useful for put all global definitions in the global-definiton name while put these blocks everywhere in the org file.
+
+   GOOD PRACTICE: there should be a uniform set of BLOCK_NAME. such as: 'vars', 'methods', 'init', 'test', 'misc'. And only one block will be tangled, which includes all BLOCK_NAMEs. 
+   'vars': variables definition
+   'methods': methods or function definition
+   'misc': other codes.
+   'init': the init code, which will be evaluated directly.
+   'test': test related codes
+
+   The bock used to tangle source codes:
+   #+name: sources
+   #+begin_src elisp :noweb yes :tangle xxxxx-src.el
+   <<vars>>
+   <<methods>>
+   <<misc>>
+   <<init>>
+   #+end_src
+
+   The bock used to tangle test codes:
+   #+begin_src elisp :noweb yes :tangle xxxxx-test.el
+   <<sources>>
+   <<test>>
+   #+end_src
+
+   QUESTION: can pattern/regexp be used in refrenced BLOCK_NAME? Then we can define name like 'test-xxx-function' and refrence it with <<test*>>. or 'methods-xxxx'.
+   
+   this is a good examle:
+   #+NAME: skip_first
+   #+BEGIN_SRC elisp :var data="" :exports none
+  (cdr data)
+   #+END_SRC
+   
+   #+BEGIN_SRC sh :post skip_first(data=*this*)
+  ls -lhG --time-style long-iso
+   #+END_SRC
+   
+   Problem: when tangle, the referenced block's comment will not be included.
+** define variable in the source code block
+   use the ':var' paramter. the value is such as 'vara=1 varb="123"'
+   
+   Problem: after tangle, the vars will not be expanded.
+** create graphviz picture by source block, and export the generated picture instead of the source block
+   should get graphviz installed.
+   use the ':exports results'.  Impressive. I should make full use of org mode!!
+   #+BEGIN_SRC dot :file some-illustration.png :exports results
+  digraph {
+    a -> b;
+    b -> c:
+    c -> a;
+  }
+
+For these, I often set :exports results so that the code to generate the image isn’t exported.
+#+END_SRC
+** create uml picture
+   much the same as above, but use plantuml.
+   #+BEGIN_SRC plantuml :file sequence.png :exports results
+  @startuml sequence-diagram.png
+
+    Alice -> Bob: synchronous call
+    Alice ->> Bob: asynchronous call
+
+  @enduml
+#+END_SRC
+** write the result to a file
+   use the ':file' parameter. 
+** communicate between different language
+   通过一些parameter，能够实现多种语言协作。 这个功能非常强大。
+   具体可以查看文章。 
+
+   但export后就没这个效果了。。
+** an example: use LP writing emacs config
+   https://github.com/pierre-lecocq/literal-emacs
+
+* test
+** this is the head
+   Decreate the value
+   Hahah
+   #+NAME:  block_a
+   #+BEGIN_SRC elisp  :comments org
+(setq a "123")
+  (message "aaa")
+   #+END_SRC
+   
+   Print the result
+   #+BEGIN_SRC elisp :noweb yes :tangle test.el :comments org :var vara=1 varb="XXX"
+  <<block_a>> 
+  (message "bbb, a:%S, %S, %S" a vara varb)
+   #+END_SRC
+   
+   #+RESULTS:
+  : bbb, a:"123", 1, "XXX"
+   

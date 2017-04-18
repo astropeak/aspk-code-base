@@ -15,3 +15,93 @@
     public static final short   DFS_REPLICATION_DEFAULT = 3;
     public static final String  DFS_STREAM_BUFFER_SIZE_KEY = "dfs.stream-buffer-size";
     public static final int     DFS_STREAM_BUFFER_SIZE_DEFAULT = 4096;
+*** inner class usage
+    can be public, the outer class works as a 'namespace'.
+*** class initializer and instance initializer
+    http://stackoverflow.com/questions/335311/static-initializer-in-java
+    a code block in a class definition is called an initializer. if the block is wraped in static, then it is a class initializer, and it will be called when the class is loaded(just like a simple varibale initializer).
+    If the block is not marked as static, then it is a instance initializer, it will be called before the construcotr, and after the invocation of super construcotr.
+
+*** NameNode related
+    | class             | description                                                                        |
+    |-------------------+------------------------------------------------------------------------------------|
+    | NameNode          | the main file. Create a rpc server, parse cmd arguments                            |
+    | NameNodeRpcServer | the rpc server, implement the NameNodeProtocols                                    |
+    | NameNodeProtocols | interface that wrap all other interfaces, such as ClientPrototol, DataNodeProtocol |
+    | FSNameSystem      | Seems to do the real works                                                        |
+** doc
+   Official hdfs design(very good):
+   https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html
+   Summary:
+   - Stream access, so the speed is high.
+   - Write only once, read many times. This can also increase speed, and it can fullfill the need of a mapreduce or web spidder.
+   - NameNode: manage file system namespace(open, close, rename, replication, etc). One NameNode per cluster.
+   - DataNode: save file block(tipically a block is 64 MB) to local file systems. And send BlockReport to NameNode periodically via a prototal built on top of TCP/IP.
+   - The Replica placement method is a key algorithm in distributed file system. It decides which block should be put to which node/rack/maching. The current method is: if the replication factor is 3, put one on one node in the local rack, another on a different node in local rack, and the last on a differenet node in a different rack.
+     Note: network speed between nodes in the same rack are very high; but low between different racks.
+   - Comunication protocal: 
+     Client => NameNode: ClientProtocol
+     DataNode => NameNode: DataNodeProtocol
+     The RPC(remote procedure call) abstraction wraps both protocol.
+
+   A thread on ChecksumFileSystem:
+   https://community.hortonworks.com/questions/19449/hadoop-localfilesystem-checksum-calculation.html
+
+** book
+*** Hadoop: the definitive guide, 4th edition(2015)
+**** Chapter 3, the hadoop distribute file system
+     Explain the apis and data flow for reading and writing files.
+
+     write to a file:
+     - open, FileSystem class, a RPC to namenode. Return a FSOutputStream
+     - write, call the write function of FSOutputStream. The concerte calss is DFSOutputStream, whose parent class is FSOutputSummer, which is used for calculate checksum.
+     
+     Read a file:
+     - open, FileSystem class, a RPC to namenode. Return a FSInputStream. DFSInputStream. In constructor of DFSInputStream, the datanode list is fetched. 
+       The DFSInputStream hold a instance of DFSClient, and use this instance to get block locations.
+       A DFSClient just hold a ClientProtocol instance(here it is a NameNodeRpcServer instance), and call its method to make calls. The GetBlockLocations function of ClientProtocol is involved here.
+
+       There are many levels in the class hirachy.
+
+** map reduce       
+   <2016-12-13 Tue>
+   divide the processing to two phases: map phase, reduce phase.
+   Each phases has key-value pairs as input and output.
+   The output of the map function is processed by the framework before be sent to the reduce function. This processing sorts and groups the key-value pairs by key. So the input to the reduce function is acturally a key-valueList pair(and for each different key, the reduce funtion will be called for one time, so the reduce function should set the result to some global variable(class variable is a good choice)). 
+   
+   The book is a quite good one. It describe the meaning of some APIs.
+   
+   
+   The default inputFormat class is TextInputFormat, it works this way: key是文件中的位置， value是每行的内容（类型为Text）。
+   @InterfaceAudience.Public
+   @InterfaceStability.Stable
+   public class TextInputFormat
+   extends FileInputFormat<LongWritable,Text>
+   An InputFormat for plain text files. Files are broken into lines. Either linefeed or carriage-return are used to signal end of line. Keys are the position in the file, and values are the line of text..
+
+   pi use job.setInputFormatClass(SequenceFileInputFormat.class); as inputFormat. They are all InputFormat. Here is description of InputFormat: 
+   http://hadoop.apache.org/docs/r2.7.1/api/org/apache/hadoop/mapreduce/InputFormat.html
+   It is used to split the input file into loginal InputSplit, each of which is then assigned to an individual Mapper.
+   An InputFormat only split the input file as InputSplit based on total file size, but don't know how to split the recored. It is the RecordReader that will get the key and value. RecordReader will be created by an InputFormat's createRecordReader method.
+
+   InputSplit的作用是把大文件（输入文件）分割为小的，达到并行处理。
+
+   SequenceFileInputFormat is an InputFormat for SequenceFile. SequenceFiles are flat files consisting of binary key/value pairs. 由此看出SequenceFile知道它的key, value的类型，相当于是一种flat的数据库。因此无需指定input的类型，只要是SequenceFileInputFormat，它通过SequenceFile.Reader就能得到一具key/value pair. 
+   SequenceFile.Reader: https://hadoop.apache.org/docs/r1.0.4/api/org/apache/hadoop/io/SequenceFile.Reader.html
+   有函数获取 key的class 类型，value的class类型， key及value的值，可以一直读取，直到EOF。
+   
+
+   需要设置OutputKey，OutputValue的类型，这指定reducer的output的类型。如果没有单独设置mapper的output的类型，则默认与reducer的相同。
+
+
+   job.setJarByClass(xxxx.class)的作用： 在集群上运行程序时， 需要将job所在的jar包传输给其它node， 因此需要设置job 的class.
+   job.setMapperClass: mapper class需要在上面的那个jar包吗？应该需要吧。
+      =》 在pi的计算程序中， mapper class是一个static class, under job class.
+
+
+   example的启动过程。
+   RunJar class, 输入jar文件路径，及参数。 查找jar的main class(通过manifest). 然后运行main class的main函数，并将参数传递进去。
+   ExampleDriver： 为Example.jar的main class. 它的main函数调用 ProgramDriver，添加配置，然后调用 其run函数。
+   ProgramDriver: 根据输入参数，获取具体class（如计算PI的类）， 然后运行这个类的main函数。
+   感觉这块可以做成通用的东西。
+   

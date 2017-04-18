@@ -29,3 +29,11 @@
 
     Stored link can latter be inserted to another buffer by `org-insert-link'.
 
+** paragraphs
+   http://orgmode.org/manual/Paragraphs.html
+
+   Paragraphs are separated by at least one empty line. If you need to enforce a line break within a paragraph, use ‘\\’ at the end of a line.
+   一个段至少由一个空行隔开，如果要强制换行，则在行尾加上'\\'.
+
+   This variable defines the seperator of a paragraph： org-element-paragraph-separate 。 it is a regexp, hard to read.
+   

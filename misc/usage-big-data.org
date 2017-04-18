@@ -1,0 +1,7 @@
+* Big data
+  A 2011 McKinsey Global Institute report characterizes the main components and ecosystem of big data as follows:[46]
+  - Techniques for analyzing data, such as A/B testing, machine learning and natural language processing
+  - Big Data technologies, like business intelligence, cloud computing and databases
+  - Visualization, such as charts, graphs and other displays of the data
+
+  A/B testing: two method will be compared to find the better one.

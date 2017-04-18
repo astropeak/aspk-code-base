@@ -1,0 +1,24 @@
+* DONE Exception handling
+  CLOSED: [2016-12-30 Fri 14:07]
+  - State "DONE"       from ""           [2016-12-30 Fri 14:07]
+    collected to pcs.
+  die will raise an exception, its parameter string is the exception info, and it will be saved to $@ when catching this exception.
+  ~eval {statements};~ is the try statement. If one statements call die function, then after the block excuted, ~$@~ will be asign to the parameter string to ~die~. And you can use this parameter to see if error occured.
+
+  Example:
+  #+begin_src perl :results output
+  sub foo{
+      die "Error: aaa bbb.";
+  }
+  eval {
+      foo();
+  };
+  if ($@) {
+      print "Exception happended. Error string: $@\n";
+  }
+  #+end_src
+
+  #+RESULTS:
+  : Exception happended. Error string: Error: aaa bbb. at - line 2.
+  : 
+

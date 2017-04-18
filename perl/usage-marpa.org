@@ -208,3 +208,20 @@
 ** docs
    Marpa guide:
    http://marpa-guide.github.io/index.html
+** the SLIF DSL
+   scanless interface
+   L0 rule: 
+   G1 rule:
+   lexeme rule:
+
+   top_level L0 rule 对应于输入中的字符。嵌入到G1 rule中的字符串将被作为一个默认的top_level L0的rule.
+
+   L0就是用正则表达式匹配输入。
+
+   SLIF提供了一些shortcut：
+   - quantified rule: used for express repetition
+   - prioritized rule: used for ease writing expression with priority.
+     
+  Not understood content:
+  what is event used for?
+   

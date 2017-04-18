@@ -1,0 +1,57 @@
+* Squish
+**  Get dialog data:
+    displayedData = findObject(':Detected HW Edit').text
+    
+**  All GUI element id:
+    {container={Parent ID} type='Dialog' text='Climate System' occurrence='4'}
+    
+    There is a tool to display ID for an element(when there is error, this tool will run).
+    
+**  Windows API:
+    https://doc.froglogic.com/squish/5.1/rgs-windowsobjectapi.html
+    
+**  wait for several seconds:
+    snooze(5); will wait for 5 seconds.
+    http://stackoverflow.com/questions/33804925/while-recording-in-squish-using-python-how-to-set-the-application-to-sleep-for 
+    
+**  take screenshot for an object:
+    https://kb.froglogic.com/display/KB/Example+-+Saving+screenshot+of+an+object+on+the+local+computer
+    
+**  Get all items for a combobox:
+    https://doc.froglogic.com/squish/5.0/rgs-squish.html#object.children-function
+    Use object::children() method to get.
+    
+**  handle exception:
+    https://doc.froglogic.com/squish/4.2/ug-how-to-handle-exceptions-raised-in-test-scripts.html
+    Example:
+    #+begin_src perl :results output
+  eval {
+      my $checkBox = waitForObject(":Make Payment.Check Signed_QCheckBox");
+      test::pass("Found the checkbox as expected");
+  };
+  test::fail("Unexpectedly failed to find the checkbox", "$@") if $@;
+    #+end_src
+    
+**  attatch to application
+    http://stackoverflow.com/questions/23292346/squish-close-my-application-after-every-test-case
+    Then application will not be closed for every test case.
+    
+**  pick object interactily:
+    https://doc.froglogic.com/squish/5.1/tgsgdc-vp.html
+    set a breakpoint and press the pen icon.
+    
+**  verification functions:
+    https://doc.froglogic.com/squish/5.1/rgs-squish.html#rgss-teststatements
+    and there is a concept verification point.
+    
+**  pause and display a message box, by interaction function
+    https://doc.froglogic.com/squish/latest/rgs-squish.html#rgs-testinteraction
+    #+begin_src perl :results output
+    sub messageBox {
+        my ($msg) = @_;
+        testInteraction::information("This is the 'informaton' function.\n$msg\n\nPress 'OK' to continue.");
+    }
+    #+end_src
+
+    #+RESULTS:
+

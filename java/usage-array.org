@@ -1,0 +1,39 @@
+* java array
+** array is a container object
+   So it is also an object.
+   The size of an array is fixed when creating.
+
+   Just use Type + [](Type[]) to specify an array object type.
+** multidimensional array is an array whose components are themselfes arrays
+   So the row are allowed to vary in length.
+   #+begin_src java :classname Test
+class Test {
+    public static void main(String[] args) {
+        String[][] = {{"A","B"}, {"AA","BB","CC"}};
+
+    }
+}
+   #+end_src
+** get the size of an array, the length property
+   By the built-in length property.
+   #+begin_src java :classname Test
+   class Test {
+       public static void main(String[] args) {
+           byte[] b= {1, 2, 3};
+           System.out.println(b.length);
+       }
+   }
+   #+end_src
+
+   #+RESULTS:
+   : 3
+** the java.util.Arrays class contains many methods for manipulatating arrays(such as sorting and searching)
+   System.arraycopy is a native methods to do all array copy related works.
+** java.lang.reflect.Array: create and access array dynamically
+   Create an array given component type and length:
+   Object newInstance(Class<?>componentType, int length);
+
+   Create an multiple dimension array given component type and dimensions.
+   Object newInstance(Class<?>componentType, int... dimensions);
+   
+   

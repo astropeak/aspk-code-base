@@ -1,0 +1,50 @@
+* Annotation
+** docs
+*** A tutorial of creating a customized annotation that mimic Junit:
+    https://www.mkyong.com/java/java-custom-annotations-example/
+    How annotation works?
+    1. define annotation.
+       每个属性对应一个同名的函数。
+       #+begin_src java :classname Test
+       package com.mkyong.test.core;
+       
+       import java.lang.annotation.ElementType;
+       import java.lang.annotation.Retention;
+       import java.lang.annotation.RetentionPolicy;
+       import java.lang.annotation.Target;
+       
+       @Retention(RetentionPolicy.RUNTIME)
+       @Target(ElementType.METHOD) //can use in method only.
+       public @interface Arg {
+           public int arg() default 7;
+       
+       }
+       
+       class Test {
+           public static void main(String[] args) {
+               
+           }
+       
+           @Arg(arg=100)
+           public static foo(int arg) {
+               System.out.println("in foo, arg: "+arg);
+           }
+       }
+       #+end_src
+
+    2. second, use it to mark some method or class or anything else
+    3. you write a program to check or run the annotations added in step 2.
+       use Class.isAnnotationPresent to check if a annotation present in a class declaration or method declaration. then use Class.getAnnotation to get that annotation and convert to target type. Then the annotation is just like a noraml object, so you can use method to get properties.
+       use Class.getDeclaredMethods to get a list of Method list.
+
+    this tutorial is quite good!!
+    
+    
+    
+*** wiki page
+    annotation can be processed by 1. annotation processor, 2. program by using reflect.
+    If an annotation's rentention policy is RUNTIME, then the annotation will be saved in a class's bytecode by the compiler.
+    
+    Annotation itself will do nothing, just like a comment. It the compiler that do some modifiction.
+
+    

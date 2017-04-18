@@ -29,12 +29,12 @@
     1. "main end " is always the last trace, so it means main thread is the last thread ended.
     #+begin_src java :classname Test
     import java.util.concurrent.*;
-
+    
     class Test {
         public static void main(String[] args){
             final int N = 5;
             CountDownLatch latch = new CountDownLatch(N);
-
+    
             for (int i=0;i<N;i++){
                 final int j = i;
                 new Thread(new Runnable() {
@@ -45,7 +45,7 @@
                         }
                     }).start();
             }
-
+    
             System.out.println("main start");
             try {
                 latch.await();
@@ -54,18 +54,18 @@
             }
             System.out.println("main end");
         }
-
+    
     }
     #+end_src
 
     #+RESULTS:
-    | thread |     0 | run |
-    | thread |     2 | run |
-    | main   | start |     |
-    | thread |     4 | run |
-    | thread |     3 | run |
-    | thread |     1 | run |
-    | main   |   end |     |
+    : thread 0 run
+    : main start
+    : thread 2 run
+    : thread 1 run
+    : thread 4 run
+    : thread 3 run
+    : main end
 
     3. All threads reach to a common point. In the result, all first part traces appear before second part traces. If remove the latch.await(), then the order is random.
 
@@ -110,7 +110,107 @@
     | thread | 1 | second | part |
     | thread | 2 | second | part |
 
-    
 *** FutureTask
-*** CylicBarrier
-*** 
+    A base implementation of RunnableFuture.
+    Accept a Callable or Runnable. The Callable's result will be the Future's result. If a Runnable is provided, then you should given return value at construct.
+    Because it is a Runnable, so you can start the compute by Executor.execute().
+
+    Example to be.
+
+*** CyclicBarrier
+    meaning of words in the class description:
+    barrier: a fence
+    trip: go through the barrier
+    barrier is triped: means break the barrier.
+
+    ponit:
+    - This barrier can be used cyclicly, as show in code example 1. The first parts, second parts, and last parts of all threads happened sequcially.
+    - The barrier action is optional, and it is called only once, and be preformed by the last thread that entering the barrier, before the barrier is released.
+    - a very good tool.
+
+    1. 
+    #+begin_src java :classname Test
+    import java.util.concurrent.*;
+            
+    class Test {
+        public static void main(String[] args){
+            final int N = 5;
+            CyclicBarrier barrier = new CyclicBarrier(N, new Runnable(){
+                    @Override
+                    public void run(){
+                        System.out.println("The barrier action");
+                    }
+                });
+            
+            for (int i=0;i<N;i++){
+                final int j = i;
+                new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("thread "+j+" first part");
+                            try {
+                                barrier.await();
+                            } catch (InterruptedException e) {
+                                System.out.println("InterruptedException");
+                            } catch (BrokenBarrierException e) {
+                                System.out.println("BrokerBarrierException");
+                            }
+    
+                            System.out.println("thread "+j+" second part");
+                            try {
+                                barrier.await();
+                            } catch (InterruptedException e) {
+                                System.out.println("InterruptedException");
+                            } catch (BrokenBarrierException e) {
+                                System.out.println("BrokerBarrierException");
+                            }
+     
+                            System.out.println("thread "+j+" last part");
+                        }
+                    }).start();
+            }
+        }
+    }
+    #+end_src
+
+    #+RESULTS:
+    #+begin_example
+    thread 0 first part
+    thread 1 first part
+    thread 2 first part
+    thread 3 first part
+    thread 4 first part
+    The barrier action
+    thread 4 second part
+    thread 0 second part
+    thread 1 second part
+    thread 2 second part
+    thread 3 second part
+    The barrier action
+    thread 3 last part
+    thread 0 last part
+    thread 4 last part
+    thread 1 last part
+    thread 2 last part
+#+end_example
+
+*** Future
+    An interface.
+    It represents the result of a asynchronous compute. (This description is quite precise).
+    
+    Method:
+    V get(void): get the result of the compute, if the compute completed, return right now, else blocking until completed.
+    bool cancle(bool): cancle the compute.
+    boolean isDone(): if the task is completed. cancled also is done.
+    boolean isCancelled(): if the task is cancelled.
+
+    Thinkings:
+    Why compute is not defined in the interface? => this part is different, it is defined in sub interfaces, one example is *RunnableFuture* which extends Future and Runnable.
+    
+*** Callable
+    Callable calss is similar to Runnable, but the method has a return value.
+** thinkings
+   接口的组合非常多。也是一种很好的方式。
+   Executors 类下有很多工具函数, 如 RunnableAdapter, 将Runnable转换为Callable.
+   
+   

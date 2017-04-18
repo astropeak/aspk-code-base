@@ -358,3 +358,11 @@
       java Test
       #+end_src
 
+** add log to method at class load time with java instrumentation.
+   https://community.oracle.com/docs/DOC-983723
+
+   Using the ClassFileTransformaer.
+
+** project lombok
+   http://www.devx.com/Java/Article/42946/0/page/3
+   generate getter by annotation.

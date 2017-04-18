@@ -3,7 +3,7 @@
    | A | filled diamond | solid line | B |
    B is a part of A.
    If A not exists, B also not exists any more.
-
+   
    Example:
    A: building, B: rooms.
    
@@ -33,3 +33,9 @@
    B inherites form  A.
 
    A is an base class, B is a derived class
+** package has a sub class
+   |Package|plus within a circle|solid line|class or sub package|
+   Note: Package can also be a class, then the right side is a inner class.
+   http://www.uml-diagrams.org/package-diagrams.html
+
+   例子： 图27.7, P316, book robert martin, agile software development. TemperatureSensor create a annoymous class of AlarmLister.

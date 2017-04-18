@@ -1,12 +1,15 @@
-* array
+* DONE array
+  CLOSED: [2016-12-30 Fri 15:30]
+  - State "DONE"       from ""           [2016-12-30 Fri 15:30] \\
+    pcs
 ** splice
    add or remove element anywhere in an array.
    doc: http://www.perlmonks.org/?node=splice
-   
+
    syntax:
    splice ARRAY, OFFSET, LENGTH, LIST
    replace (offset length) with list. If offset is negtive, then it count form end.
-   
+
    Below lines are all have same effect:
    #+begin_src perl :results output
        push(@a,$x,$y)      splice(@a,@a,0,$x,$y)
@@ -15,8 +18,6 @@
        unshift(@a,$x,$y)   splice(@a,0,0,$x,$y)
        $a[$x] = $y         splice(@a,$x,1,$y)
    #+end_src
-   
-   
 ** flatten array
 *** definition
    (1, 2, (3, 4), 5) is the same as (1, 2, 3, 4, 5).
@@ -41,3 +42,478 @@
        If the acutal parameter is ~(1, 2, 3)~, then ~@_~ is ~((1, 2, 3))~, which is the same as ~(1, 2, 3)~; if the acutal parameter is ~1~, then ~@_~ is ~(1)~. They are both an array. 
        Then program can treat them uniformly.
     
+** join
+   #+begin_src perl :results output
+   @a = (1, "aa", 'bbb', 3);
+   # print join ", ", @a;
+   print         join "aaaa| ", @a;
+   #+end_src
+
+   #+RESULTS:
+   : 1aaaa| aaaaaa| bbbaaaa| 3
+** temp
+   #+begin_src perl :results output
+   $a = ['abd',  'DS'];
+   if ("@$a" =~ /DS/) {
+      print("aaa")
+   } else {
+      print("bbb")
+   }
+   #+end_src
+
+   #+RESULTS:
+   : aaa
+
+   #+begin_src perl :results output
+   @a = ();
+   push @a, 1;
+   push @a, 2;
+   print(@a);
+   #+end_src
+
+   #+RESULTS:
+   : 12
+
+   #+begin_src perl :results output
+   sub getEnabledTrxNoInMctr {
+       my @rst = ((1, 0, 0, 0), (1, 1, 0, 0), (1, 1, 1, 1), (0, 0, 1, 1), (0, 1, 0, 0));
+       my @oneTx = ('RUS 01', 'RUS 02', 'RUS 03', 'AIR 21');
+       my @twoTx = ('RUS 12', 'RUS 13', 'RUS 14', 'Radio 2212', 'Radio 2219', 'Radio 2488', 'Radio 2468');
+       my @fourTx = ('RUS 32', 'AIR 32', 'Radio 4415');
+
+       my ($retype) = @_;
+
+       my $t = join '|', @oneTx;
+       my $oneTxRegexp = qr/$t/;
+       $t = join '|', @twoTx;
+       my $twoTxRegexp= qr/$t/;
+       $t = join '|', @fourTx;
+       my $fourTxRegexp= qr/$t/;
+
+       if ($retype =~ /DS$/) {
+           if ($retype =~ $oneTxRegexp) {
+               return (0, 0, 0, 0);
+           } elsif ($retype =~ $twoTxRegexp){
+               return (1, 0, 0, 0);
+           } elsif ($retype =~ $fourTxRegexp){
+               return (1, 1, 0, 0);
+           } else {
+               die "Can't clasify retype $retype"
+           }
+       } elsif ($retype =~ /DS RE/) {
+           if ($retype =~ $oneTxRegexp) {
+               return (0, 0, 0, 0);
+           } elsif ($retype =~ $twoTxRegexp){
+               return (0, 1, 0, 0);
+           } elsif ($retype =~ $fourTxRegexp){
+               return (0, 0, 1, 1);
+           } else {
+               die "Can't clasify retype $retype"
+           }
+       } else {
+           if ($retype =~ $oneTxRegexp) {
+               return (1, 0, 0, 0);
+           } elsif ($retype =~ $twoTxRegexp){
+               return (1, 1, 0, 0);
+           } elsif ($retype =~ $fourTxRegexp){
+               return (1, 1, 1, 1);
+           } else {
+               die "Can't clasify retype $retype"
+           }
+       }
+   }
+
+   print getEnabledTrxNoInMctr('RRUS 12 DS RE0');
+   print "\n";
+   print getEnabledTrxNoInMctr('Radio 2468 DS');
+   print "\n";
+   print getEnabledTrxNoInMctr('Radio 2468 DS RE0');
+
+   #+end_src
+
+   #+RESULTS:
+   : 0100
+   : 1000
+   : 0100
+
+
+   #+begin_src perl :results output
+   @a = (1, 1, 0, 0);
+   sub sum {
+       my $rst = 0;
+       foreach(@_) {
+           $rst += $_;
+       }
+       return $rst;
+   }
+   print sum(@a);
+   #+end_src
+
+   #+RESULTS:
+   : 2
+
+
+
+   #+begin_src perl :results output
+   sub min {
+       my ($a,  $b) = @_;
+       if ($a<$b) {
+           return $a;
+       } else {
+           return $b;
+       }
+   }
+
+   sub combine {
+       my ($list, $n) = @_;
+       die "Insufficient list members" if $n > @$list;
+
+       return map [$_], @$list if $n <= 1;
+
+       my @comb;
+
+       for (my $i = 0; $i+$n <= @$list; ++$i) {
+           my $val  = $list->[$i];
+           my @rest = @$list[$i+1..$#$list];
+           push @comb, [$val, @$_] for combine(\@rest, $n-1);
+       }
+
+       return @comb;
+   }
+
+   #given retype list, result length, return a list of all combinations
+   sub getRetypeCombinations {
+       # my ($retypes, $num) = @_;
+       return combine(@_);
+   }
+
+   # getRetypeCombinations(['a', 'b', 'c'], 2);
+
+   # given result length, generate a list of trx combinations. then this function is indispendent from retype.
+   sub getTrxNoInMctrCombinations {
+       my ($num) =  @_;
+       my $n1 = $num;
+       my $n2 = int(($num + 12) / 2);
+       my $n3 = 12;
+       if ($n1 <1 || $n1 >12) {
+           die "number wrong: $n1";
+       }
+
+       my @rst = ();
+       push @rst, listWithLimit($num, $n1);
+       push @rst, listWithLimit($num, $n2);
+       push @rst, listWithLimit($num, $n3);
+       return @rst;
+   }
+
+   sub listWithLimit {
+       my  ($num, $total) = @_;
+       my @rst = ();
+       my $sum = $num;
+       for(my $i =  0;$i<$num;$i++){
+           if ($sum == $total) {
+               push @rst, 1;
+           } else {
+               my $j = int(rand($total - $sum + 1) + 1);
+               $j = min($j, 4);
+               push @rst, $j;
+               $sum += $j -1;
+           }
+       }
+
+       use List::Util qw/shuffle/;
+       @rst = shuffle @rst;
+       return \@rst;
+   }
+   # given retype list, check if current Trx no in mctr setting are valid.
+   sub checkTrxNoInMctr {
+       my ($relist) = @_;
+       for(my  $i = 0;$i<@$relist; $i++) {
+           my  @enabledList = getEnabledTrxNoInMctr($relist->[$i]);
+           for(my  $j = 0;$j<@enabledList; $j++) {
+               my $enabledInCobox = 1; # TODO: Get the status from UI
+               if ($enabledInCobox != $enabledList[$j]) {
+                   print "Error: enabled status is wrong! for re $i, combox $j\n";
+               }
+           }
+       }
+
+       my $totalTrxNo = 0;
+       for(my  $i = 0;$i<@$relist; $i++) {
+           for(my  $j = 0;$j<4; $j++) {
+               $totalTrxNo += 1; #TODO: get the trxno in this combox;
+           }
+       }
+
+       my $remainTrxNo = 12 - $totalTrxNo;
+       # check if the list value is right
+       for(my  $i = 0;$i<@$relist; $i++) {
+           for(my  $j = 0;$j<4; $j++) {
+               my $trxNo = 1; #TODO: get the trxno in this combox;
+               my $maxPossiableValue = min($remainTrxNo + $trxNo, 4);
+               my $children = [1]; # TODO: get the combox values as a list;
+               if (@$children != $maxPossiableValue) {
+                   print "Error: possiable value are  wrong for $i, $j\n";
+               }
+           }
+       }
+   }
+
+   # given a retype, return a list of length 4, each element has value 0, 1. 0 means disabled, 1 means enabled.
+   sub getEnabledTrxNoInMctr {
+       my @rst = ((1, 0, 0, 0), (1, 1, 0, 0), (1, 1, 1, 1), (0, 0, 1, 1), (0, 1, 0, 0));
+       my @oneTx = ('RUS 01', 'RUS 02', 'RUS 03', 'AIR 21');
+       my @twoTx = ('RUS 12', 'RUS 13', 'RUS 14', 'Radio 2212', 'Radio 2219', 'Radio 2488', 'Radio 2468');
+       my @fourTx = ('RUS 32', 'AIR 32', 'Radio 4415');
+
+       my ($retype) = @_;
+
+       my $t = join '|', @oneTx;
+       my $oneTxRegexp = qr/$t/;
+       $t = join '|', @twoTx;
+       my $twoTxRegexp= qr/$t/;
+       $t = join '|', @fourTx;
+       my $fourTxRegexp= qr/$t/;
+
+       if ($retype =~ /DS$/) {
+           if ($retype =~ $oneTxRegexp) {
+               return (0, 0, 0, 0);
+           } elsif ($retype =~ $twoTxRegexp){
+               return (1, 0, 0, 0);
+           } elsif ($retype =~ $fourTxRegexp){
+               return (1, 1, 0, 0);
+           } else {
+               die "Can't clasify retype $retype"
+           }
+       } elsif ($retype =~ /DS RE/) {
+           if ($retype =~ $oneTxRegexp) {
+               return (0, 0, 0, 0);
+           } elsif ($retype =~ $twoTxRegexp){
+               return (0, 1, 0, 0);
+           } elsif ($retype =~ $fourTxRegexp){
+               return (0, 0, 1, 1);
+           } else {
+               die "Can't clasify retype $retype"
+           }
+       } else {
+           if ($retype =~ $oneTxRegexp) {
+               return (1, 0, 0, 0);
+           } elsif ($retype =~ $twoTxRegexp){
+               return (1, 1, 0, 0);
+           } elsif ($retype =~ $fourTxRegexp){
+               return (1, 1, 1, 1);
+           } else {
+               die "Can't clasify retype $retype"
+           }
+       }
+   }
+   sub sum {
+       my $rst = 0;
+       foreach(@_) {
+           $rst += $_;
+       }
+       return $rst;
+   }
+
+   # Then we dont need to conside this in combination
+   # precondition: the radio setup dialog is opened
+   sub verifyTrxInMctrFunc {
+       # First: set all enabled comboxes to 1
+
+       # Second: check avaliable items is right
+
+       # Third: check if enablity is right
+       # For  2468 DS, then A, B should be enabled, C, D should  be disabled
+       # For  2468 DS REx, then C, D should be enabled, A, B should  be disabled
+       # Maybe there  can be a general rule, given each radio's TRX number
+
+       my @oneTx = ('RUS 01', 'RUS 02', 'RUS 03', 'AIR 21');
+       my @twoTx = ('RUS 12', 'RUS 13', 'RUS 14', 'Radio 2212', 'Radio 2219', 'Radio 2488', 'Radio 2468');
+       my @fourTx = ('RUS 32', 'AIR 32', 'Radio 4415');
+
+       my @allReList= ('RRUS 01', 'Radio 2468', 'RRUS 32');
+       my @relistCombinations = getRetypeCombinations(\@allReList, 2);
+       
+       foreach $relist (@relistCombinations) {
+           print "relist: @$relist\n";
+           my $totalEnabledTrx = 0;
+           # calculate total number of enabled Trx for all retypes
+           foreach (@$relist) {
+               $totalEnabledTrx += sum(getEnabledTrxNoInMctr($_));
+           }
+           print "totalEnabledTrx: $totalEnabledTrx\n";
+
+           # fill in the relist to combox
+
+           checkTrxNoInMctr($relist);
+
+           my @trxNoCombinations = getTrxNoInMctrCombinations($totalEnabledTrx);
+           foreach $trxList (@trxNoCombinations) {
+               print "trxList: @$trxList\n";
+               # fill in the value of trxList on coombox. We can only fill enabled ones.
+
+               checkTrxNoInMctr($relist);
+           }
+       }
+   }
+
+
+   verifyTrxInMctrFunc();
+   #+end_src
+
+   #+RESULTS:
+   #+begin_example
+   relist: RRUS 01 Radio 2468
+   totalEnabledTrx: 3
+   Error: enabled status is wrong! for re 0, combox 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: enabled status is wrong! for re 1, combox 2
+   Error: enabled status is wrong! for re 1, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 1 1 1
+   Error: enabled status is wrong! for re 0, combox 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: enabled status is wrong! for re 1, combox 2
+   Error: enabled status is wrong! for re 1, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 1 1 4
+   Error: enabled status is wrong! for re 0, combox 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: enabled status is wrong! for re 1, combox 2
+   Error: enabled status is wrong! for re 1, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 4 2 4
+   Error: enabled status is wrong! for re 0, combox 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: enabled status is wrong! for re 1, combox 2
+   Error: enabled status is wrong! for re 1, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   relist: RRUS 01 RRUS 32
+   totalEnabledTrx: 5
+   Error: enabled status is wrong! for re 0, combox 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 1 1 1 1 1
+   Error: enabled status is wrong! for re 0, combox 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 1 4 1 1 1
+   Error: enabled status is wrong! for re 0, combox 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 1 1 4 4 2
+   Error: enabled status is wrong! for re 0, combox 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   relist: Radio 2468 RRUS 32
+   totalEnabledTrx: 6
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 1 1 1 1 1 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 3 1 1 2 1 1
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+   trxList: 2 1 1 4 1 3
+   Error: enabled status is wrong! for re 0, combox 2
+   Error: enabled status is wrong! for re 0, combox 3
+   Error: possiable value are  wrong for 0, 0
+   Error: possiable value are  wrong for 0, 1
+   Error: possiable value are  wrong for 0, 2
+   Error: possiable value are  wrong for 0, 3
+   Error: possiable value are  wrong for 1, 0
+   Error: possiable value are  wrong for 1, 1
+   Error: possiable value are  wrong for 1, 2
+   Error: possiable value are  wrong for 1, 3
+#+end_example
+
+

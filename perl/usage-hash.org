@@ -1,4 +1,6 @@
 * hash
+  - Note taken on [2016-12-30 Fri 22:12] \\
+    done for pcs
 ** basic functions
 *** keys
     get all key as an array:

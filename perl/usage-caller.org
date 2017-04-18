@@ -1,4 +1,6 @@
 * caller
+  - Note taken on [2016-12-30 Fri 21:31] \\
+    done for pcs
   get caller infomations, such as line, filename, sub names.
   #+begin_src perl :results output
   use Aspk::Debug qw(print_obj);
@@ -26,7 +28,7 @@
 
       print "aaa: ",$package, $filename, $line, $subroutine, $hasargs, "\n";
       print "line: ".get_current_line().", sub: ".get_parent_sub()."\n";
-      print_obj($hinthash);
+      # print_obj($hinthash);
 
   }
   aaa();
@@ -34,69 +36,7 @@
   #+end_src
 
   #+RESULTS:
-  #+begin_example
-  ####### Enter FILTER: sub aaa{
-      sub get_current_line {
-          my ($package, $filename, $line, $subroutine, $hasargs,
-              $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller(0);
-          return $line;
-      }
-      sub get_parent_sub {
-          my ($package, $filename, $line, $subroutine, $hasargs,
-              $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller(1);
-          return $subroutine;
-      }
+  : aaa: main-21main::bbb1
+  : line: 25, sub: main::aaa
 
-      sub bbb {
-          my ($package, $filename, $line, $subroutine, $hasargs,
-              $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller(0);
-          return ($package, $filename, $line, $subroutine, $hasargs,
-                  $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash)
-      }
-
-      my ($package, $filename, $line, $subroutine, $hasargs,
-          $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = bbb();
-
-      print "aaa: ",$package, $filename, $line, $subroutine, $hasargs, "\n";
-      print "line: ".get_current_line().", sub: ".get_parent_sub()."\n";
-      print_obj($hinthash);
-
-  }
-  aaa();
-
-  ####### Enter FILTER
-
-  ####### Exit FILTER: 
-  use feature 'current_sub';
-  sub aaa{
-      sub get_current_line {
-          my ($package, $filename, $line, $subroutine, $hasargs,
-              $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller(0);
-          return $line;
-      }
-      sub get_parent_sub {
-          my ($package, $filename, $line, $subroutine, $hasargs,
-              $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller(1);
-          return $subroutine;
-      }
-      sub bbb {
-          my ($package, $filename, $line, $subroutine, $hasargs,
-              $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = caller(0);
-          return ($package, $filename, $line, $subroutine, $hasargs,
-                  $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash)
-      }
-      my ($package, $filename, $line, $subroutine, $hasargs,
-          $wantarray, $evaltext, $is_require, $hints, $bitmask, $hinthash) = bbb();
-      print "aaa: ",$package, $filename, $line, $subroutine, $hasargs, "\n";
-      print "line: ".get_current_line().", sub: ".get_parent_sub()."\n";
-      print_obj($hinthash);
-  }
-  aaa();
-  ####### Exit FILTER
-  aaa: main-21main::bbb1
-  line: 24, sub: main::aaa
-  Root: HASH(0x8be3c0c)
-       feature_arybase: 1
-       feature___SUB__: 1
-#+end_example
 

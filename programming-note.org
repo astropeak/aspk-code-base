@@ -1,4 +1,10 @@
 * Programming note
+** use existing codes much faster than inverstigating the details and write by oneself
+   Copy the existing codes should be the best way of programming. This is the most important lesson a programmer should learn.
+
+   BY use pcs(astropeak's code snippets), copy is easy!!
+   When I want to writting codes that detect the src blocks's mode in an org file, I found related codes in 'evil-nerd-commenter', so I search 'org-mode' there, and found the codes. Then I create a snippet for that codes, and use in my project. very #GOOD PRACTICE#.
+   
 ** basic object interface
    Ideas comes when implementing perl module ~Aspk::Tree~.
    1. new. create an object

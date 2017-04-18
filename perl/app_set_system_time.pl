@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# DONE: collect to pcs
 # Set system time. Can only run under linux. Depended linux command: sudo, w3m, date.
 
 open my $fh, "w3m http://www.timeanddate.com/worldclock/china/chengdu -dump|" || die "Can't w3m";

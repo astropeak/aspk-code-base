@@ -114,7 +114,7 @@
 
   (and tree
        (progn
-         (insert (format "%s%s"
+         (message (format "%s%s"
                          (funcall fn-header depth)
                          (funcall fn (car tree))))
 
@@ -122,6 +122,16 @@
            (while child-list
              (aspk/tree-print (car child-list) fn fn-header (+ depth 1))
              (setq child-list (cdr child-list)))))))
+
+(defun aspk/tree-iterate (tree fn &optional -------parent-subtree depth)
+  "Iterate all element in the TREE, with function FN. The element's containing substree, its parent subtree, and the element's depteh will be passed to the FN. PARENT is the parent sub tree of (car tree)"
+  (or depth (setq depth 0))
+  (when tree
+    (funcall fn tree -------parent-subtree depth)
+    ;; -------elem can be seen by fn, so be becauful. This is a problem of dynamic scoping.
+    (mapc (lambda (-------subtree)
+            (aspk/tree-iterate -------subtree fn tree (+ depth 1)))
+          (cdr tree))))
 
 
 (provide 'aspk-tree)

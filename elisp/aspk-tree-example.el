@@ -3,13 +3,19 @@
 (setq tree (aspk/tree-create))
 
 (aspk/tree-add-element tree aspk/tree-head-element "A")
+
 (aspk/tree-add-element tree aspk/tree-head-element "B")
+
 (aspk/tree-add-element tree aspk/tree-head-element "C")
+
 (aspk/tree-add-element tree "A" "AA")
+
+;; (setq a (car (aspk/tree-get-element-and-parent tree "A" 'equal)))
+
 (aspk/tree-add-element tree "A" "AB")
+
 (aspk/tree-add-element tree "AB" "AAA")
 (aspk/tree-print tree)
-
 ;; currently tree will be:
 ;;(">ROOT_OF_TREE<" ("A" ("AA") ("AB" ("AAA"))) ("B") ("C"))
 

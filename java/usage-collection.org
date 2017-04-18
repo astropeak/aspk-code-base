@@ -7,3 +7,59 @@
    Object[] toArray();
 
    Why argument type to 'add' is 'E', while all others are 'Object'? 
+
+** class Collections
+   THis class consists of many static method that maniputate collection or return collections.
+   Such as:
+
+   static void reverse(List<?> lst);
+   static void shuffle(List<?> list);
+   static void rotate(List<?> list, int distance);
+   static <T extends Comparable<? super T>> void sort(List<T> list);
+   static void swap(List<?>, int i, int j);
+
+   //Note: Why the type is '? extends T'? Because then you can accept the return value to a parent type of the element type. Good!! 
+   static <T extends Comparable<? super T>> T min(Collection<? extends T> coll);
+   //Is this one more general? Can return type be <?>. => Wrong. return type can only be T. <? super T> as return type causes a compile error.
+   static <T extends Comparable<? super T>> <? super T> min(Collection<T> coll);
+
+   //Note: why the paremeter is List instead of collection. Because only List has iterator that can set element
+   //on the type: why dest is '? super T', while src is '? extends T'? Because this makes the function more flexiable. You can copy a list of Integer to a list of Number, or a list of Integer. The general rule is: you can copy a list of objects to a list of its super class objects.
+   static <T> void copy(List<? super T> dest, List<? extends T> src);
+
+** set
+   I Collection
+   I Set
+   AC AbstractSet
+   SortedSet, NavigableSet
+   EnumSet, HashSet, LinkedHashSet, RegularEnumSet, JumboEnumSet, TreeSet
+
+   Set 接口与Collection接口定义完全相同。
+   ？ 那为什么还要把那些函数写出来？
+
+   - HashSet: 通过HashTable（其实是HashMap）实现的Set.
+   - LinkedHashSet: HashSet's subclass, keep the order. The order is the insertion order. the cost is less than TreeSet. Typical usage:
+     * <p>This implementation spares its clients from the unspecified, generally
+     * chaotic ordering provided by {@link HashSet}, without incurring the
+     * increased cost associated with {@link TreeSet}.  It can be used to
+     * produce a copy of a set that has the same order as the original, regardless
+     * of the original set's implementation:
+   - EnumSet, abstract class: A set only save a enum type.
+   - RegularEnumSet: for regular enum types: with less than 64 enum constants
+   - JumboEnumSet： for jumbo enum types: with more than 64 enum constants.
+   - SortedSet: provide first, last, headSet, subSet, tailSet, 
+   - NavigableSet: provide lower, higher, floor, ceiling, pollFirst, pollLast, desendingSet. 
+     ? I don't see the difference of methods provide by this interface with SortedSet's
+   - TreeSet: backed by TreeMap. The order can be defined by provide a Comparator.
+   
+** Map
+   HashTable is legancy class, and it is synchronized, in jdk 1.2, it is put to implemnt the Map interface to put it in the COllection framework.
+   While HashMap is a new class, provide the same function. The comments of HashTabel recomend use HashMap in no thread-safe condition, and ConcurrentHashMap in thread-safe condition. *So never use HashTable, it just a legency class*.
+   
+    * Java Collections Framework</a>.  Unlike the new collection
+ * implementations, {@code Hashtable} is synchronized.  If a
+ * thread-safe implementation is not needed, it is recommended to use
+ * {@link HashMap} in place of {@code Hashtable}.  If a thread-safe
+ * highly-concurrent implementation is desired, then it is recommended
+ * to use {@link java.util.concurrent.ConcurrentHashMap} in place of
+ * {@code Hashtable}.

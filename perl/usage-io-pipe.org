@@ -1,4 +1,6 @@
 * pipe data to a command
+  - Note taken on [2016-12-30 Fri 22:47] \\
+    done for pcs
   #+BEGIN_SRC perl :results output
   open my $fh, "|-", "sort" || die "can't open";
   # the same thing
@@ -35,3 +37,14 @@
   : -rw-r--r--    1 luooofuq Administ       63 Apr 25 15:42 aspk-usage-misc.pl
   : -rw-r--r--    1 luooofuq Administ       20 Apr 25 14:24 myfile
   
+    #+begin_src perl :results output
+    open my $fh, "-|", "ls -l" || die "Can't open command: \"ls -l\"";
+while (<$fh>){
+    print;
+}
+close $fh;
+
+
+    #+end_src
+
+

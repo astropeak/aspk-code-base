@@ -1,4 +1,6 @@
 * Misc
+  - Note taken on [2016-12-30 Fri 23:06] \\
+    done for pcs
 ** get current process number
    $$ stores current process number
    #+begin_src perl :results output
@@ -104,7 +106,7 @@ $a="AAA";
    #+end_src
 
    #+RESULTS:
-   : luooofuq
+   : astropeak
 
    Note: getpwuid not implemented on windows.
 

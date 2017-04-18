@@ -6,3 +6,6 @@
 
    Official docs: installation guide on ubuntu 14.04:
    http://docs.openstack.org/mitaka/install-guide-ubuntu/
+** misc
+   This artical says installing openstack and make it run is very hard even for smart guys. Openstack is made of lots of small pieces.
+  http://searchservervirtualization.techtarget.com/feature/Six-years-in-whats-the-future-of-OpenStack

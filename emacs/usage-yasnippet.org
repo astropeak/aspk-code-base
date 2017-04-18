@@ -1,5 +1,5 @@
 * yasnippet
-** How to creat a new snippet
+** How to create a new snippet
    1. run ~yas-new-snippet~. shortkey is: ~C-c & C-n~.
    2. enter the snippet content in the popup buffer 
       
@@ -17,9 +17,11 @@
       
       Given the mode and name. 
       
-      The snippet will be saved to *first directory* in ~yas-snippet-dirs~, which is ~Dropbox/project/emacs.d/local-snippet~ now. Great!!
 *** naming convention for a new snippet file
     - for org mode source block, the name is 's' concat file suffix of that programming language. eg: 'spl' is for generating a src block with language set to perl; 'spy' for python; 'ssh' for shell.
+ 
+*** where new snippet will be saved
+      New snippet will be saved to *first directory* in ~yas-snippet-dirs~, which is ~Dropbox/project/aspk-code-snippets/snippets~ now.
 ** auto-yasnippet
    https://github.com/abo-abo/auto-yasnippet
    - function
@@ -34,6 +36,13 @@
 
      ;;(aya-expand)
      #+end_src
+** some techniques
+*** minor transformation:
+   put the transformation elisp codes in '$()', and variable 'yas-text' will be bind to the text inputed.
+   ${2:$(capitalize yas-text)}
 
-
+*** filed transformation:
+   similar with minor transformation, but use two '$$()', or 'sometext$()'.
    
+*** embed elisp codes:
+    just put the codes in ``. The codes will be executed in current buffer.

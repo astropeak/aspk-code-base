@@ -1,0 +1,34 @@
+* Class Loader
+  - a class is loaded on demand.
+  - The java.lang.ClassLoader class is responsible to load a class. Which is a abstract class.
+  - a class loader hide the JVM from file path related things.
+** The ClassLoader class
+   Class<?> loadClass(String name): load a class named 'name'.
+
+   Extends this class to make a customized ClassLoader, for example load a class from network. Below is an exampel(copy from the jdk ClassLoader.java)
+   #+begin_src text
+      ,* <p> The network class loader subclass must define the methods {@link
+      ,* #findClass <tt>findClass</tt>} and <tt>loadClassData</tt> to load a class
+      ,* from the network.  Once it has downloaded the bytes that make up the class,
+      ,* it should use the method {@link #defineClass <tt>defineClass</tt>} to
+      ,* create a class instance.  A sample implementation is:
+      ,*
+      ,* <blockquote><pre>
+      ,*     class NetworkClassLoader extends ClassLoader {
+      ,*         String host;
+      ,*         int port;
+      ,*
+      ,*         public Class findClass(String name) {
+      ,*             byte[] b = loadClassData(name);
+      ,*             return defineClass(name, b, 0, b.length);
+      ,*         }
+      ,*
+      ,*         private byte[] loadClassData(String name) {
+      ,*             // load the class data from the connection
+      ,*             &nbsp;.&nbsp;.&nbsp;.
+      ,*         }
+      ,*     }
+      * </pre></blockquote>
+   #+end_src
+
+   

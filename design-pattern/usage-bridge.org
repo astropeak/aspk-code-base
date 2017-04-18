@@ -2,3 +2,24 @@
   当类层次结构有多个自由度时，使用bridge pattern使各个自由度独立变化。《agile software development》中给的路由器的例子相当好（chapter 25）。
 
   实现方法是：对于不同自由度，分别设计类层次结构，然后通过组合的方式，合并各个自由度，形成多自由度（通常选取一个自由度做为组合体）。
+
+  
+   例子： 图27.9, P318, book robert martin, agile software development. TemperatureSensor create a annoymous class of AlarmLister.
+   但这个例子感觉只有一个维度，即硬件那边的变化。更像是一个简单的组合。分离出来的好处是底层有了单独的API，就此更容易复用这部分。如果使用继承（图27.8），则要用这个read接口，必须提供很多东西。
+   书中还有另一个例子，modem. 
+
+   <<Design Pattern>> 中的定义： decoupling abstraction and implementation so they can vary independently. 问题是：哪个方面是abstraction, 哪个方面是implementation. 书中的例子，abstraction的实现层次中， 也是implementation. 这个和定义中的implementatino 有什么区别呢？
+   目前看到的是：可能会被重用的部分放在implementaino。因为这部分更加独立（完全独立，abstraction部分依赖于这部分）。
+
+   其实 bridge pattern 在C语言中就是传入一组函数指针。
+   如果分开看， abstraction 和 implementation 完全是独立的两个方面（两个类），它们的关联在于abstraction是更加上层的类，它使用implementation类。所以说这种模式基本上没什么意思。 
+   与策略模式的区别：
+   如果abstraction部分没有变化，则退化为策略模式。
+
+   例子：
+   1. 硬件单板上的传感器控制
+      有多种传感器芯片，如温度、电压、振动。
+      有多种控制方式，如定期检测，如通过中断。
+
+   2. 
+      

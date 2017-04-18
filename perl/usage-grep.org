@@ -1,4 +1,6 @@
 * grep
+  - Note taken on [2016-12-30 Fri 22:01] \\
+    done for pcs
   grep works on an array and return a new array. It works like a filter, you decide which elements in the given array should be kept in the result array.
   
   syntax:

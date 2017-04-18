@@ -11,6 +11,10 @@
       #+end_src
       Otherwise other people may can't push to this repos.
 ** config
+   use ~--global~ option to set for global.
+
+$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
 *** ignore file mode
     #+begin_src sh
     git config core.fileMode false
@@ -25,4 +29,21 @@
     git config core.autocrlf true
 
     http://stackoverflow.com/questions/20496084/git-status-ignore-line-endings-identical-files-windows-linux-environment
-    
+
+** reset, 回退
+   git reset --mixed COMMIT_HASH： 回退到COMMIT_HASH, 不删除文件。
+   git reset --hard COMMIT_HASH： 回退到COMMIT_HASH, 删除文件改动。
+   
+  
+** amend last commit
+   just add '--amend' to git commit command.
+** diff
+*** ignore whitespace
+    git diff -w
+
+*** show/highlight words difference in different color/format
+    git diff --word-diff=color 
+    red: deleted words
+    green: added words
+
+    A word is a sequence seperated by whitespace.

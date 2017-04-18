@@ -1,0 +1,8 @@
+* Misc
+** seminal papers
+   https://www.quora.com/What-are-the-seminal-papers-in-distributed-systems-Why
+** Why distributed system
+   Increaded user, demands, 
+** distributed computing
+   https://en.wikipedia.org/wiki/Distributed_computing
+   concurrency of components, lack of a global clock, and independent failure of components.

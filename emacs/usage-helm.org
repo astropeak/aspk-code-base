@@ -1,0 +1,265 @@
+* Usage helm
+  An good tutorial on how to create helm source
+  http://kitchingroup.cheme.cmu.edu/blog/2015/01/24/Anatomy-of-a-helm-source/
+
+** examples
+*** A basic example:
+   #+BEGIN_SRC elisp
+   (setq some-helm-source
+         '((name . "HELM at the Emacs")
+           (candidates . (1 2 3 4))
+           (action . (lambda (candidate)
+                       (message-box "%s" candidate)))))
+
+   (helm :sources '(some-helm-source))
+   #+END_SRC
+
+   #+RESULTS:
+
+*** define many actions.
+    just put many actions is a list and each item is an cons of description and function. the candidate will be passed to the action function.
+   #+BEGIN_SRC elisp
+   (setq some-helm-source
+         '((name . "HELM at the Emacs")
+           (candidates . (1 2 3 4))
+           (action .
+                   (("Display" .  (lambda (candidate)
+                                     (message-box "%s" candidate)))
+                     ("None" . identify)
+                     ))
+           ))
+   (helm :sources '(some-helm-source))
+   #+END_SRC
+
+   #+RESULTS:
+
+*** Display different string for selection.
+    Just replace the candidate value with a cons (KEY . VALUE). the key will be used for selection, the VALUE will be passed to the action function.
+   #+BEGIN_SRC elisp
+   (setq some-helm-source
+         '((name . "HELM at the Emacs")
+           (candidates . (("one" . 1) 2 ("three" . 3) 4))
+           (action .
+                   (("Display" .  (lambda (candidate)
+                                     (message-box "%s" candidate)))
+                     ("None" . identify)
+                     ))
+           ))
+   (helm :sources '(some-helm-source))
+   #+END_SRC
+
+   #+RESULTS:
+
+*** Dynamic candidate.
+    Just define a function to calculate the candidates.
+   #+BEGIN_SRC elisp
+   (defun random-candidates ()
+     "Return a list of 4 random numbers from 0 to 10"
+     (loop for i below 4 collect (random 10)))
+
+   (setq some-helm-source
+         '((name . "HELM at the Emacs")
+           (candidates . random-candidates)
+           (action . (lambda (candidate)
+                       (message "%s" candidate)))))
+
+   (helm :sources '(some-helm-source))
+   #+END_SRC
+
+
+***   The helm-org-headlines defintion:
+   #+BEGIN_SRC elisp
+   (setq helm-source-org-headline
+     `((name . "Org Headline")
+       (headline
+        ,@(mapcar
+           (lambda (num)
+             (format "^\\*\\{%d\\} \\(.+?\\)\\([ \t]*:[a-zA-Z0-9_@:]+:\\)?[ \t]*$"
+                     num))
+           (number-sequence 1 8)))
+       (condition . (eq major-mode 'org-mode))
+       (migemo)
+       (subexp . 1)
+       (persistent-action . (lambda (elm)
+                              (helm-action-line-goto elm)
+                              (org-cycle)))
+       (action-transformer
+        . (lambda (actions candidate)
+            '(("Go to line" . helm-action-line-goto)
+              ("Refile to this headline" . helm-org-headline-refile)
+              ("Insert link to this headline"
+               . helm-org-headline-insert-link-to-headline))))))
+
+   (defun helm-org-headlines ()
+     "Preconfigured helm to show org headlines."
+     (interactive)
+     (helm-other-buffer 'helm-source-org-headline "*org headlines*"))
+   #+END_SRC
+
+   #+RESULTS:
+   : helm-org-headlines
+
+
+***   TEST> The helm-org-headlines defintion
+   #+BEGIN_SRC elisp
+   (setq helm-source-org-headline
+         `((name . "Org Headline")
+           (headline
+            ,@(mapcar
+               (lambda (num)
+                 (format "^\\*\\{%d\\} \\(.+?\\)\\([ \t]*:[a-zA-Z0-9_@:]+:\\)?[ \t]*$"
+                         num))
+               (number-sequence 1 8)))
+           (condition . (eq major-mode 'org-mode))
+           (subexp . 1)
+           (action .
+                   (("Display" .  (lambda (candidate)
+                                    (message-box "%s" candidate)))
+                    ("None" . helm-action-line-goto)))))
+
+
+   (defun helm-org-headlines ()
+     "Preconfigured helm to show org headlines."
+     (interactive)
+     (helm-other-buffer 'helm-source-org-headline "*org headlines*"))
+   #+END_SRC
+
+   #+RESULTS:
+   : helm-org-headlines
+
+** some action functions
+   goto a line of a file
+    (cl-defun helm-goto-file-line (lineno &optional content file (find-file-function #'find-file))
+    #+BEGIN_SRC elisp
+    (helm-goto-file-line 2 "" "usage-misc.org")
+    #+END_SRC
+
+    #+RESULTS:
+  
+
+** helm grep
+   #+BEGIN_SRC elisp
+
+   (defun helm-grep-action (candidate &optional where mark)
+     (message "helm-grep-action: %S, %S, %S" candidate where mark)
+     )
+
+   (defun helm-grep-action (candidate &optional where mark)
+     "Define a default action for `helm-do-grep' on CANDIDATE.
+   WHERE can be one of other-window, elscreen, other-frame."
+     (let* ((split        (helm-grep-split-line candidate))
+            (lineno       (string-to-number (nth 1 split)))
+            (loc-fname    (or (with-current-buffer
+                                  (if (eq major-mode 'helm-grep-mode)
+                                      (current-buffer)
+                                    helm-buffer)
+                                (get-text-property (point-at-bol) 'help-echo))
+                              (car split)))
+            (tramp-method (file-remote-p (or helm-ff-default-directory
+                                             default-directory) 'method))
+            (tramp-host   (file-remote-p (or helm-ff-default-directory
+                                             default-directory) 'host))
+            (tramp-prefix (concat "/" tramp-method ":" tramp-host ":"))
+            (fname        (if tramp-host
+                              (concat tramp-prefix loc-fname) loc-fname)))
+(message "lineno: %S, loc-fname: %S, fname: %S" lineno loc-fname fname)
+       (cl-case where
+         (other-window (find-file-other-window fname))
+         (elscreen     (helm-elscreen-find-file fname))
+         (other-frame  (find-file-other-frame fname))
+         (grep         (helm-grep-save-results-1))
+         (pdf          (if helm-pdfgrep-default-read-command
+                           (helm-pdfgrep-action-1 split lineno (car split))
+                         (find-file (car split)) (doc-view-goto-page lineno)))
+         (t            (find-file fname)))
+       (unless (or (eq where 'grep) (eq where 'pdf))
+         (helm-goto-line lineno))
+       (when mark
+         (set-marker (mark-marker) (point))
+         (push-mark (point) 'nomsg))
+       ;; Save history
+       (unless (or helm-in-persistent-action
+                   (eq major-mode 'helm-grep-mode)
+                   (string= helm-pattern ""))
+         (setq helm-grep-history
+               (cons helm-pattern
+                     (delete helm-pattern helm-grep-history)))
+         (when (> (length helm-grep-history)
+                  helm-grep-max-length-history)
+           (setq helm-grep-history
+                 (delete (car (last helm-grep-history))
+                         helm-grep-history))))))
+
+
+   #+END_SRC
+
+   #+RESULTS:
+   : helm-grep-action
+
+** enable debug
+   #+BEGIN_SRC elisp
+(setq helm-debug t)
+   #+END_SRC
+
+   #+RESULTS:
+   : t
+
+   #+BEGIN_SRC elisp
+
+(defun helm-current-position (save-or-restore)
+(message "current position called")
+)
+   #+END_SRC
+
+   #+RESULTS:
+   : helm-current-position
+
+
+   #+BEGIN_SRC elisp
+   (defun helm-log-run-hook (hook)
+     "Run HOOK like `run-hooks' but write these actions to helm log buffer."
+     (helm-log "executing %s" hook)
+     (helm-log-eval (symbol-value hook))
+     (helm-log-eval (default-value hook))
+     ;; (run-hooks hook)
+     (helm-log "modified executed %s" hook))
+
+
+   #+END_SRC
+
+   #+RESULTS:
+   : helm-log-run-hook
+
+
+
+
+
+** helm cleanup
+   #+BEGIN_SRC elisp
+   (defun helm-cleanup ()
+     "Clean up the mess when helm exit or quit."
+     (helm-log "start cleanup")
+     (with-current-buffer helm-buffer
+       ;; bury-buffer from this window.
+       (bury-buffer) ;[1]
+       ;; Be sure we call this from helm-buffer.
+       (helm-funcall-foreach 'cleanup))
+     (helm-kill-async-processes)
+     (helm-log-run-hook 'helm-cleanup-hook)
+     (helm-frame-or-window-configuration 'restore)
+     ;; [1] now bury-buffer from underlying windows otherwise,
+     ;; if this window is killed the underlying buffer will
+     ;; be a helm buffer.
+     (replace-buffer-in-windows helm-buffer)
+     (setq helm-alive-p nil)
+     (setq helm-in-file-completion-p nil)
+     ;; This is needed in some cases where last input
+     ;; is yielded infinitely in minibuffer after helm session.
+     (helm-clean-up-minibuffer))
+
+
+   #+END_SRC
+
+   #+RESULTS:
+   : helm-cleanup
+

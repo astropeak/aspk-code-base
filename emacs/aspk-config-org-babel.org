@@ -16,3 +16,15 @@
     
 *** c and c++
     (C . t)
+    
+** supress query before execute code block
+
+   Set this variable to nil.
+   #+BEGIN_SRC elisp
+   (setq org-confirm-babel-evaluate nil)
+   #+END_SRC
+
+   #+RESULTS:
+
+   This function is called to do the query.
+   (defsubst org-babel-confirm-evaluate (info)

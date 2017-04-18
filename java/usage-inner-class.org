@@ -1,0 +1,38 @@
+* Inner Class
+** Inner class is a method to achieve multiply inheritance.
+   Rectangle is both Shape and Drawable.
+   #+begin_src java :classname Test
+   abstract class Shape {
+       abstract int area();
+   }
+   
+   abstract class Drawable {
+       abstract void draw();
+   }
+   
+   class Rectangle extends Shape {
+       // anonymous inner class
+       Drawable drawable = new Drawable() {
+               void draw(){
+                   System.out.println("Draw rectangle");
+               }
+           };
+       int area(){
+           return 3;
+       }
+   }
+   
+   class Test {
+       public static void main(String[] args) {
+           Rectangle r = new Rectangle();
+           // Drawable d = r.drawable;
+           r.drawable.draw();
+           System.out.println("2. Area: " + r.area());
+       }
+   }
+   #+end_src
+
+   #+RESULTS:
+   : Draw rectangle
+   : 2. Area: 3
+

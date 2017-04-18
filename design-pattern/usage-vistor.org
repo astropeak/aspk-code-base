@@ -2,6 +2,25 @@
   Add new functions without modify a class's codes.
   
   wiki上的定义： 为已有类增加虚函数（这个是通用的概念，见下面），而不改变已有类的代码。
+  增加虚函数的具体意思：以文件系统的例子，当要增加一个cat操作时，实现cat的vistor，效果相当于直接给类层次加了一个名为cat的虚函数。只不过调用方法有点差异：
+  直接添加一个cat虚函数：
+  #+begin_src C++ :includes <iostream>
+using namespace std;
+Node* n = new File(...);
+n->cat(); //cat operation on file
+n = new Dir(...);
+n->cat(); //cat operation on dir
+  #+end_src
+  通过vistor:
+  #+begin_src C++ :includes <iostream>
+using namespace std;
+Vistor* cat = new CatVistor(...);
+Node* n = new File(...);
+n->accept(*cat); //cat operation on file
+n = new Dir(...);
+n->accept(*cat); //cat operation on dir
+  #+end_src
+  由此看出，只是在调用上有一点点区别。 ~n->accept(Vistor)~ 相当于是一个参数化的虚函数。
   
   优点：
   - 更好的代码划分，类更小
@@ -102,6 +121,10 @@
       - both function ~accept~ of class ~Element~ and function ~visit~ of class ~Vistor~ should be virtual function.
         virtual function is the only way that providing message dispatch at runtime in C++.
       - call sequence
+      - A1, A2 实现中的accept 定义是必须的，不能直接在基类中定义。这样才能使不同的A的子类调用相应的visit函数。
+      - 在V的visit函数中， A1， A2的所有方法都能够访问到，相当于通过组合的方式添加了一个功能。
+
+
 
     #+begin_src C++ :includes <iostream> 
     using namespace std;
@@ -182,3 +205,35 @@
     - Sun Sep  4 14:06:18 2016. 必须做笔记，不然完全会全忘掉。则当时的思考完全没有效果。
 
       
+
+    
+** 一篇好文章
+   http://www.cnblogs.com/zuoxiaolong/p/pattern23.html
+   文中提到的一个新的观点：
+   vistor 可以visit不同类层次上的类。好处是这样对于所有同层次子类操作相同的vistor便可以只提供一个访问上一层次类的方法即可，而不用写两个相同的vistor函数（写下这些文字时，我想到通过增加一个公共的函数不就解决了）。为了实现这个，两个重要方面：
+   1. AbstractBill 类为什么是需要的？
+      这个类供vistor类使用，vistor类通过visit这个类的对象实现通用操作。
+   2. AbstractViewer类为什么是需要的？
+      这个类供Bill类使用， accept类通过判断是不是这个类，判断vistor是需要通用的还是专用的。
+   
+   
+   文中的一个例子的疑问：
+   对于类层次 A， A1， A2， 及一个函数： void func(A), 能否传入A1类型的参数？
+   => 可以，完全没问题。 相当于是将子类的对象赋值给基类。 之前C++的问题不同，是交基类的对象赋值给子类，这种肯定不行
+   #+begin_src java :classname Test
+   class A {
+   }
+   class A1 extends A {}
+   class A2 extends A {}
+   
+   class Test {
+       static void foo(A a) {
+       }
+       public static void main(String[] args) {
+           foo(new A1());
+       }
+   }
+   #+end_src
+
+   #+RESULTS:
+

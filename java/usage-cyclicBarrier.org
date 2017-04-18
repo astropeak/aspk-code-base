@@ -1,0 +1,8 @@
+* CyclicBarrier
+  
+** implmentation
+   初始化一个数目N，然后提供一个await的函数。当await的调用次数小于N时，进入无限循环等待。当await的调用次数等于N时，调用barrier action, 然后通知所有等待的线程。
+
+   怎么通知的？ 通过nextGeneration()=>trip.signalAll().
+   怎么等待的？ 通过trip.await().
+   trip是一个Condition类, 位于java.util.concurent.locks 包。

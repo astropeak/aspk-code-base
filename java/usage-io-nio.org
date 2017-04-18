@@ -1,0 +1,24 @@
+* io & nio
+** io package
+   主要是InputStream， OutputStream, Reader, Writer.
+   还有一些关于文件的操作：如FilePermition, FileSystem, File.
+   还有一些杂项： StreamTokenizer(Gosoling写的，用于将一个InputStream解析为Tokens），Console（访问命令行的一些接口）， DeleteOnExitHook（在JVM shutdown时delete所有的文件），这三个都为应用。
+
+** nio package
+   buffer: 是一个数组，保存一种类型的数据。有三个属性： position, limit, capacity. 是向channel写入或读取的中间类型。 Buffer类提供了一些基类数组下标操作，详见类实现。
+   channel: 对文件、设备、网络连接等的抽象，双向的。 Channel类还未看。
+
+   nio与io已经集成，如FileInputStream有一个getChannel的函数，获取一个FileChannel对象。
+
+   向一个channel写入数据： 先将这些数据保存在Buffer中，然后将这个Buffer作为参数传递给Channel对象的write函数。
+   从一个channel读取数据： 先创建一个空Buffer，然后将这个Buffer作为参数传递给Channel对象的read函数，则数据被读取到这个buffer中。
+
+   与io的区别：
+   io是基于stream的（单向、一次只能读取、写入一个字节），nio是基于channel的（双向，是以block的形式（也即buffer)读取、写入数据的）。 channel更接近于底层操作系统的抽象，stream更简单。
+   io是阻塞的，即当没有数据时，会一直等待。nio为非阻塞，只会返回当前有的数据。
+   nio由于是基于块的操作，读写效率较高。
+   
+   非常好的一篇入门：
+   http://www.ibm.com/developerworks/java/tutorials/j-nio/j-nio.html
+
+   疑问： ByteBuffer是在哪个包中定义的？

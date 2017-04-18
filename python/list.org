@@ -1,0 +1,12 @@
+* List
+** multiply a list with a number N means repeat its elements N times
+   并且由于stirng也是一个list，所以也适用于string.
+   #+begin_src python :results output
+   a = [1, '2']
+   b = a*3
+   print(b)
+   #+end_src
+
+   #+RESULTS:
+   : [1, '2', 1, '2', 1, '2']
+

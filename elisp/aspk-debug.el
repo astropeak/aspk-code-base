@@ -12,6 +12,7 @@
 
 (defun dbg-set-level (lvl)
   "Set the current debug level to `lvl'"
+  (interactive "nLevel: ")
   (if (not (numberp lvl))
       (error "Parameter(%s) not a number" lvl))
   (setq *dbg-current-level* lvl))
@@ -50,7 +51,7 @@
         (dolist (s (quote ,args-syms))
           ;;(dbg TRIV s)
           ;;(message "s=%s" s)
-          (setq ,temp-var (concat ,temp-var (format "%s=%s, " s (symbol-value s)))))
+          (setq ,temp-var (concat ,temp-var (format "%s=%S, " s (symbol-value s)))))
         (message "%s" (substring ,temp-var 0 (- (length ,temp-var) 2)))))))
 
 ;; (setq str "AAA")

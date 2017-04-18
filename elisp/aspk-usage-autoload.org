@@ -13,3 +13,6 @@
 
     an autoload expression will be created and put to 'loaddefs.el'.
     
+** why
+   
+*** what's the benefit of autoload?

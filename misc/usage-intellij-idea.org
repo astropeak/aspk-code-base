@@ -1,0 +1,7 @@
+* IntelliJ Idea
+  
+** key bindings
+   Alt+1: open Project window
+   C+S+N: open a file interactively
+   C+B: go to declaration
+   ALT+F7, find all usage.
