@@ -1,0 +1,71 @@
+* nlp
+** reading notes: Twitter Sentiment Classification using Distant Supervision
+   Dropbox/book/nlp/TwitterDistantSupervision09.pdf
+*** summary
+    论文比较简单，打印出来后，用了不到一个小时就读完了。
+    亮点就是自动生成training dataset， 根据 twit里的 表情符。
+    亮点2是做了一个framework, 对比了不同的feature, 算法组合的效果。
+    
+    使用的feature为：
+    1. unigram。 即一个twit里每个单词. 如果它存在，值为1， 否则为0.
+       那么训练时每个data的feature 是所有data的字还是只包含当前data的中字呢。 从一个feature表中可以看出好像使用了所有的字。那对于一条新的twit, 当其出来新词时，会发生什么呢？
+    2. bigram。 效果不好，说是feature太稀疏了。但好处是可以考虑 not bad等这种词。
+    3. unigram + bigram. 比unigram 效果提升一点点。
+       
+    使用的算法 ：
+    1. keywords. 用已有的统计的keywords, 然后分别计算两个的数目来确定。效果不好
+    2. navie bayes
+    3. maximum entropy
+    4. SVM
+       
+       最后两种方法效果要稍微好一些。
+       
+       感觉直接可以将这个论文的内容说成自己做过的项目，也不是不行啊。
+       
+*** 做好的产品：一个网站，输入关键字，分析情感，并给出比例。
+    http://www.sentiment140.com/search?query=iphone&hl=en
+    可以直接输入query，然后自动搜索相关twit，并且给出sentiment 的分析结果。
+    
+    感觉还是挺实用的。
+    
+*** distant supervision
+    "Distant supervision" is a learning scheme in which a classifier is learned given a weakly labeled training set (training data is labeled automatically based on heuristics / rules).Dec 29, 2012
+*** noisy label
+    Might means the label is not 100% correct.
+    
+*** generate training dataset automatically, this  maybe a good method.
+    I am always interested in such method.
+    
+** Recall, Precision, and F-Score
+  precision 的分母是所有我们判断为 ‘是‘ 的数目，但有些条目其实‘不是‘。
+  recall的分母是所有本身为‘是‘的数目，但有些条目我们将它误判为‘不是‘。
+
+  如果recall 低，则表示本来是的条目，判断为不是
+
+  两个数据是对两种错误做了细分， 对判断错误的情况进行了细分。
+
+  F-score是二者的调和平均数。
+
+  关于调和平均数：
+  #+BEGIN_SRC text
+  调和平均数可以用在相同距离但速度不同时，平均速度的计算；如一段路程，前半段时速60公里，后半段时速30公里〔两段距离相等〕，则其平均速度为两者的调和平均数40公里。
+
+  另外，两个电阻R1, R2并联后的等效电阻Req：
+  {\displaystyle R_{eq}={\frac {R_{1}R_{2}}{R_{1}+R_{2}}}} R_{{eq}}={\frac  {R_{1}R_{2}}{R_{1}+R_{2}}}
+  恰为两电阻调和平均数的一半。
+  #+END_SRC
+
+
+   http://www.nltk.org/book/ch06.html
+
+   True positives are relevant items that we correctly identified as relevant.
+   True negatives are irrelevant items that we correctly identified as irrelevant.
+   False positives (or Type I errors) are irrelevant items that we incorrectly identified as relevant.
+   False negatives (or Type II errors) are relevant items that we incorrectly identified as irrelevant.
+
+   Given these four numbers, we can define the following metrics:
+   Precision, which indicates how many of the items that we identified were relevant, is TP/(TP+FP).
+   Recall, which indicates how many of the relevant items that we identified, is TP/(TP+FN).
+   The F-Measure (or F-Score), which combines the precision and recall to give a single score, is defined to be the harmonic mean of the precision and recall: (2 × Precision × Recall) / (Precision + Recall).
+
+   微博 情感分析
