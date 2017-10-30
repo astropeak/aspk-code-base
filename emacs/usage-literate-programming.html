@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>usage-literate-programming</title>
-<!-- 2016-12-23 Fri 11:00 -->
+<!-- 2017-09-25 Mon 14:22 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <style type="text/css">
@@ -146,6 +146,12 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-1">1.1. export org source block to file</a></li>
 <li><a href="#sec-1-2">1.2. export org text to the tangled file as comment</a></li>
 <li><a href="#sec-1-3">1.3. reference other code block</a></li>
+<li><a href="#sec-1-4">1.4. define variable in the source code block</a></li>
+<li><a href="#sec-1-5">1.5. create graphviz picture by source block, and export the generated picture instead of the source block</a></li>
+<li><a href="#sec-1-6">1.6. create uml picture</a></li>
+<li><a href="#sec-1-7">1.7. write the result to a file</a></li>
+<li><a href="#sec-1-8">1.8. communicate between different language</a></li>
+<li><a href="#sec-1-9">1.9. an example: use LP writing emacs config</a></li>
 </ul>
 </li>
 <li><a href="#sec-2">2. test</a>
@@ -194,7 +200,121 @@ All values are here: <a href="http://orgmode.org/org.html#noweb">http://orgmode.
 </p>
 
 <p>
+code block can be passed as vaule to parameters.
+</p>
+
+<p>
+A good feature: if there are more than one BLOCK<sub>NAME</sub> source blocks, then all the blocks will be imported. This is quite useful for put all global definitions in the global-definiton name while put these blocks everywhere in the org file.
+</p>
+
+<p>
+GOOD PRACTICE: there should be a uniform set of BLOCK<sub>NAME</sub>. such as: 'vars', 'methods', 'init', 'test', 'misc'. And only one block will be tangled, which includes all BLOCK<sub>NAMEs</sub>. 
+'vars': variables definition
+'methods': methods or function definition
+'misc': other codes.
+'init': the init code, which will be evaluated directly.
+'test': test related codes
+</p>
+
+<p>
+The bock used to tangle source codes:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="sources"></pre>
+</div>
+
+<p>
+The bock used to tangle test codes:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-elisp"></pre>
+</div>
+
+<p>
+QUESTION: can pattern/regexp be used in refrenced BLOCK<sub>NAME</sub>? Then we can define name like 'test-xxx-function' and refrence it with <a id="test" name="test"></a>. or 'methods-xxxx'.
+</p>
+
+<p>
+this is a good examle:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">ls -lhG --time-style long-iso
+</pre>
+</div>
+
+<p>
 Problem: when tangle, the referenced block's comment will not be included.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> define variable in the source code block</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+use the ':var' paramter. the value is such as 'vara=1 varb="123"'
+</p>
+
+<p>
+Problem: after tangle, the vars will not be expanded.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> create graphviz picture by source block, and export the generated picture instead of the source block</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+should get graphviz installed.
+use the ':exports results'.  Impressive. I should make full use of org mode!!
+</p>
+
+<div class="figure">
+<p><img src="some-illustration.png" alt="some-illustration.png" />
+</p>
+</div>
+
+<p>
+For these, I often set :exports results so that the code to generate the image isn’t exported.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> create uml picture</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+much the same as above, but use plantuml.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-7" class="outline-3">
+<h3 id="sec-1-7"><span class="section-number-3">1.7</span> write the result to a file</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+use the ':file' parameter. 
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-8" class="outline-3">
+<h3 id="sec-1-8"><span class="section-number-3">1.8</span> communicate between different language</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+通过一些parameter，能够实现多种语言协作。 这个功能非常强大。
+具体可以查看文章。 
+</p>
+
+<p>
+但export后就没这个效果了。。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-9" class="outline-3">
+<h3 id="sec-1-9"><span class="section-number-3">1.9</span> an example: use LP writing emacs config</h3>
+<div class="outline-text-3" id="text-1-9">
+<p>
+<a href="https://github.com/pierre-lecocq/literal-emacs">https://github.com/pierre-lecocq/literal-emacs</a>
 </p>
 </div>
 </div>
@@ -212,7 +332,7 @@ Hahah
 </p>
 <div class="org-src-container">
 
-<pre class="src src-elisp" id="block_a">(setq a <span style="color: #8b2252;">"123"</span>)
+<pre class="src src-elisp" id="block_a">(<span style="color: #a020f0;">setq</span> a <span style="color: #8b2252;">"123"</span>)
   (message <span style="color: #8b2252;">"aaa"</span>)
 </pre>
 </div>
@@ -222,8 +342,9 @@ Print the result
 </p>
 <div class="org-src-container">
 
-<pre class="src src-elisp">&lt;&lt;block_a&gt;&gt; 
-(message <span style="color: #8b2252;">"bbb, a:%S"</span> a)
+<pre class="src src-elisp">(<span style="color: #a020f0;">setq</span> a <span style="color: #8b2252;">"123"</span>)
+  (message <span style="color: #8b2252;">"aaa"</span>) 
+(message <span style="color: #8b2252;">"bbb, a:%S, %S, %S"</span> a vara varb)
 </pre>
 </div>
 </div>
@@ -231,8 +352,8 @@ Print the result
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Created: 2016-12-23 Fri 11:00</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2017-09-25 Mon 14:22</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

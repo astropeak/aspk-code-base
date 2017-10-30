@@ -65,12 +65,16 @@
     b -> c:
     c -> a;
   }
+#+END_SRC
+
+   #+RESULTS:
+   [[file:some-illustration.png]]
 
 For these, I often set :exports results so that the code to generate the image isn’t exported.
-#+END_SRC
+
 ** create uml picture
    much the same as above, but use plantuml.
-   #+BEGIN_SRC plantuml :file sequence.png :exports results
+   #+BEGIN_SRC NOT_USED_plantuml :file sequence.png :exports results
   @startuml sequence-diagram.png
 
     Alice -> Bob: synchronous call

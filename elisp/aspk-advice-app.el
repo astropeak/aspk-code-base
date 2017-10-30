@@ -34,7 +34,9 @@
 ;; (aspk/advice-app-log-functions-enter-and-exit "^aspk/window.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^make-overlay$")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^quail.*")
-;; (aspk/advice-app-log-functions-enter-and-exit "^aspk/tooltip--replace-line$")
+;; (aspk/advice-app-log-functions-enter-and-exit "^op/.*")
+;; (aspk/advice-app-log-functions-enter-and-exit "^git.*")
+
 
 
 (defun aspk/advice-app-dislog-functions-enter-and-exit (pattern)
@@ -45,4 +47,4 @@
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^company.*")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^quail.*")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^make-overlay$")
-;; (aspk/advice-app-dislog-functions-enter-and-exit "^aspk/tooltip--replace-line$")
+;; (aspk/advice-app-dislog-functions-enter-and-exit "^op/.*")
