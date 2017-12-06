@@ -19,6 +19,7 @@ class DirectedGraph:
 
         return list(all.difference(nexts))
 
+    # TODO:BUG: if the graph is not fully connected, then there will problem.
     def paths(self):
         '''Return all paths of this graph'''
         start_nodes = self.heads()

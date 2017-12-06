@@ -81,7 +81,7 @@ def format_locals(ll, padding):
     Handle cases when the self variable is not fully constructed, then there will be an error
     '''
     try:
-        return pad_string(pprint.pformat(frame.f_locals), padding)
+        return pad_string(pprint.pformat(ll), padding)
     except:
         try:
             return str(ll)
