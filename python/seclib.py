@@ -143,8 +143,15 @@ class MetaPage:
   MetaPage is a html page like this:
   https://www.sec.gov/Archives/edgar/data/883702/0000950131-94-001249-index.htm
   '''
-  def __init__(self, url):
+  def __init__(self, url=None, text=None):
     self.url = url
+    self._text = text
+
+  @property
+  def text(self):
+    if self._text is None:
+      self._text = self.response.text
+    return self._text
 
   @property
   def response(self):
@@ -155,7 +162,7 @@ class MetaPage:
   @property
   def soup(self):
     if not hasattr(self, '_soup'):
-      self._soup = BeautifulSoup(self.response.text, 'html.parser')
+      self._soup = BeautifulSoup(self.text, 'html.parser')
     return self._soup
 
   def filling_date(self):
