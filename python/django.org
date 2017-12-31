@@ -1,0 +1,17 @@
+* get query string from a template view/request object
+  1. First get the request object from a template view object by ~self.request~.
+  2. Then get the query string
+  #+begin_src python :results output
+  self.request.GET.get('key', 'defalut_vlaue')
+  #+end_src
+
+  ref:
+  https://stackoverflow.com/questions/3711349/django-and-query-string-parameters
+* add existing query string to bootstrap paginator
+  by adding ~extra=request.GET.urlencode~ to the template
+  #+BEGIN_SRC python
+  {% bootstrap_pagination lines url="?page=1" extra=request.GET.urlencode size="large" %}
+  #+END_SRC
+
+  ref:
+  https://stackoverflow.com/questions/2047622/how-to-paginate-django-with-other-get-variables
