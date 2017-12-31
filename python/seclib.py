@@ -17,37 +17,112 @@ def requests_wraper(url):
       import time
       time.sleep(5*_)
 
+def _is_file_table_header_row(row):
+  '''
+  '''
+  try:
+    ths = row.find_all('th')
+    target_texts = ['Seq', 'Description', 'Document', 'Type', 'Size']
+    real_texts = [th.text for th in ths]
+    if real_texts == target_texts:
+      return True
+  except:
+    return False
+
+def _is_file_table_complete_submission_row(row):
+  try:
+    columns = row.find_all('td')
+    if columns[1].text == 'Complete submission text file':
+      return True
+  except:
+    return False
+
+
+def _is_file_table(table):
+  '''table is a object of soup.find_all('table')[0],
+  A file table is a table that has a header row with below columnes:
+  ['Seq', 'Description', 'Document', 'Type', 'Size']
+  '''
+  try:
+    row = table.find('tr')
+    return _is_file_table_header_row(row)
+  except:
+    return False
+
+
+def _parse_file_table(table):
+  '''Parse a single file table'''
+  HOST = 'https://www.sec.gov'
+  trs = table.find_all('tr')
+  assert(_is_file_table_header_row(trs[0]))
+  if _is_file_table_complete_submission_row(trs[-1]):
+    rows = trs[1:-1]
+  else:
+    rows = trs[1:]
+
+  names = ['seq', 'description', 'document', 'type', 'size']
+  rst = []
+  for row in rows:
+    columns = row.find_all('td')
+    values = [column.text for column in columns]
+    values[2] = HOST + columns[2].a['href']
+    values = [x.strip() for x in values]
+    d = dict(zip(names, values))
+
+    try:
+      d['seq'] = int(d['seq'])
+    except:
+      d['seq'] = 0
+    try:
+      d['size'] = int(d['size'])
+    except:
+      d['size'] = 0
+
+    rst.append(d)
+
+  return rst
+
 def parse_table_file(soup):
-    HOST = 'https://www.sec.gov'
     # soup = BeautifulSoup(table_file_str, 'html.parser')
 
-    html_files = []
-    trs = soup.find_all('tr')
-    tr = trs[-1]
-    td = tr.find_all('td')
-    text_file = HOST + td[2].a['href']
-    ptype = trs[1].find_all('td')[3].text
+    table_files = []
+    tables = soup.find_all('table')
+    for table in tables:
+      if _is_file_table(table):
+        table_files.extend(_parse_file_table(table))
+    return table_files
 
-    for tr in trs[1:-1]:
-        td = tr.find_all('td')
-      # row.append(td.text)
-        if td[2].text == '':
-          href = ''
-          logging.debug('href not exists')
-        else: href = HOST + td[2].a['href']
-        row = {'type':td[3].text,
-               'href': href,
-               'seq': td[0].text,
-               'description':td[1].text,
-               'size':td[4].text,
-               'text_file':text_file,
-               'ptype':ptype}
+    # trs = soup.find_all('tr')
+    # tr = trs[-1]
+    # td = tr.find_all('td')
+    # # install IPython by 'pip3 install IPython'
+    # import IPython
+    # IPython.embed()
 
-        html_files.append(row)
 
-    # rst['html_files'] = html_files
+    # text_file = HOST + td[2].a['href']
+    # ptype = trs[1].find_all('td')[3].text
 
-    return html_files
+    # for tr in trs[1:-1]:
+    #     td = tr.find_all('td')
+    #   # row.append(td.text)
+    #     if td[2].text == '':
+    #       href = ''
+    #       logging.debug('href not exists')
+    #     else: href = HOST + td[2].a['href']
+    #     row = {'type':td[3].text,
+    #            'href': href,
+    #            'seq': td[0].text,
+    #            'description':td[1].text,
+    #            'size':td[4].text,
+    #            'text_file':text_file,
+    #            'ptype':ptype}
+
+    #     html_files.append(row)
+
+    # # rst['html_files'] = html_files
+
+    # return html_files
 
 def parse_company(soup):
     rst = {}
@@ -67,7 +142,7 @@ def parse_company(soup):
 
     b = re.match(r'.*State of Incorp.: ([^|\s]*)', a.text)
     # rst['identInfo'] = a.text
-    if b: rst['state'] = b.group(1)
+    if b: rst['state'] = b.group(1)[:2]
     else:
       rst['state'] = ''
       logging.info('company state not exist')
@@ -86,7 +161,7 @@ def parse_company(soup):
 
 def parse_filling_date(soup):
   date = soup.select_one('.info').text
-  return date
+  return date[:10]
 
 ex10_count = 0
 total_count = 0
