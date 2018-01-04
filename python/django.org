@@ -15,3 +15,15 @@
 
   ref:
   https://stackoverflow.com/questions/2047622/how-to-paginate-django-with-other-get-variables
+* sort by string length
+https://stackoverflow.com/questions/12804801/django-how-to-sort-queryset-by-number-of-character-in-a-field
+  #+begin_src python :results output
+  MyModel.objects.extra(select={'length':'Length(name)'}).order_by('length')
+  # or
+  # from django.db.models.functions import Length
+  # obj = MyModel.objects.all().order_by(Length(name).asc())
+  #+end_src
+
+
+
+

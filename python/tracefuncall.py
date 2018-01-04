@@ -1,22 +1,19 @@
 '''
 This module is use to trace all funcall's(print some log)
+
+Usage:
+python3 -m tracefuncall YOUR_PYTHON_FILE
+is exzatly the same thing as below command. But print out many traces to stdout
+python3 YOUR_PYTHON_FILE
+
+TODO: provide a way to define the filter
 '''
-
-# Use to filter file that we want to trace. Only files under this directory will be traced
-dirPattern= "dir_pattern"
-# dirPattern= "aspk_code_base"
-
 import logging
 import pprint
 import sys
 import re
 
 logger = logging.getLogger(__name__)
-# handler = logging.FileHandler('log.org')
-handler = logging.StreamHandler(sys.stdout)
-logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
-
 # logging.basicConfig(
 #         filename='app.log.org',
 #         level=logging.DEBUG,
@@ -24,10 +21,9 @@ logger.setLevel(logging.DEBUG)
 #         format='%(message)s'
 #     )
 
-logger.info("* Logs")
 
 _stop_trace_all = False
-_stop_trace_line = False
+_stop_trace_line = True
 
 def formatObject(obj, depth=0):
     # print('\t'*depth + ', '.join("%s:%s" % (f, getattr(obj, f)) for f in dir(obj)))
@@ -52,6 +48,9 @@ def default_filter(filename, funcname, lineno):
     #     return False
 
     # if 'logging/__init__.py' in filename and funcname == 'shutdown':
+    #     return False
+
+    # if 'tensorflow' in filename:
     #     return False
 
     return True
@@ -140,9 +139,11 @@ def tracefunc(frame, event, arg, indent=[1]):
         # print("arg: %s\n" % (arg))
     elif event == "return":
         logger.debug("%s Exit [%s:%s] %s" % ("*" * indent[0], filename, frame.f_lineno, frame.f_code.co_name))
-        logger.debug("%s Return value: %s" % (" " * indent[0], arg))
-        # print("frame: %s\n%s\n" % (dir(frame.f_code), frame.f_lineno))
-        # print("arg: " + str(arg))
+        try:
+            logger.debug("%s Return value: %s" % (" " * indent[0], arg))
+        except:
+            logger.debug("%s Return value: FAILED" % (" " * indent[0]))
+
         indent[0] -= 1
     elif event == "exception":
         logger.debug("%s Exception [%s:%s] %s" % ("*" * indent[0], filename, frame.f_lineno, frame.f_code.co_name))
@@ -150,5 +151,28 @@ def tracefunc(frame, event, arg, indent=[1]):
 
     return tracefunc
 
-import sys
-sys.settrace(tracefunc)
+def tracefuncall():
+    # handler = logging.FileHandler('log.org')
+    handler = logging.StreamHandler(sys.stdout)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    logger.info("* Logs")
+
+    sys.settrace(tracefunc)
+
+def traceline():
+    global _stop_trace_line
+    _stop_trace_line = False
+
+# THis can be usfull to run a python file with a module loaded from commandline. Such as:
+# python -m a b.py
+if __name__ == '__main__':
+    # this is the file to be executed
+    f = sys.argv[1]
+    variables={'__name__':'__main__'}
+
+    # to trace each line, just call traceline()
+
+    tracefuncall()
+    # execfile(f , variables)
+    exec(open(f).read() , variables)
