@@ -16,7 +16,6 @@ class MetaPageTest(unittest.TestCase):
     url = 'https://www.sec.gov/Archives/edgar/data/883702/0000950131-94-001249-index.htm'
     text = get_url_text(url)
     mp = MetaPage(text=text)
-    date = '1994-08-04'
     company = {'address': '13500 SOUTH PERRY AVE RIVERDALE IL 606271182 7088492500',
                'cik': '0000883702',
                'name': 'ACME METALS INC /DE/',
@@ -25,7 +24,7 @@ class MetaPageTest(unittest.TestCase):
                'fiscal_year_end': '1231',
     }
 
-    self.assertEqual(mp.filling_date(), date)
+    self.assertEqual(mp.filling_date(), '1994-08-04')
     self.assertEqual(mp.company(), company)
     table = mp.table()
     self.assertEqual(len(table), 18)
@@ -59,6 +58,23 @@ class MetaPageTest(unittest.TestCase):
     self.assertEqual(mp.form_type(), '10-Q')
     self.assertEqual(mp.accepted_date(), '2017-11-02')
     self.assertEqual(mp.period_of_report(), '2017-09-30')
+
+
+  def test__effect_form(self):
+    url = 'https://www.sec.gov/Archives/edgar/data/1570790/9999999995-17-003286-index.htm'
+    text = get_url_text(url)
+    mp = MetaPage(text=text)
+    self.assertEqual(mp.accepted_date(), '2017-12-22')
+    self.assertEqual(mp.filling_date(), None)
+    self.assertEqual(mp.period_of_report(), None)
+
+  def test__sc_13da_form(self):
+    url = 'https://www.sec.gov/Archives/edgar/data/1504304/0001504304-15-000114-index.htm'
+    text = get_url_text(url)
+    mp = MetaPage(text=text)
+    self.assertEqual(mp.period_of_report(), None)
+    self.assertEqual(mp.accepted_date(), '2015-09-10')
+    self.assertEqual(mp.filling_date(), '2015-09-10')
 
 
 if __name__ == '__main__':

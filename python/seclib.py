@@ -194,6 +194,13 @@ def parse_period_of_report(soup):
   except:
     return None
 
+def parse_header_info(soup):
+  info_heads = soup.select('.infoHead')
+  infos = soup.select('.info')
+  info_head_texts = [x.text.strip().lower().replace(' ', '_') for x in info_heads]
+  info_texts = [x.text.strip() for x in infos]
+  return dict(zip(info_head_texts, info_texts))
+
 ex10_count = 0
 total_count = 0
 total_filing_count = 0
@@ -271,8 +278,19 @@ class MetaPage:
       self._soup = BeautifulSoup(self.text, 'html.parser')
     return self._soup
 
+  @property
+  def header(self):
+    '''This is a dict version of header area'''
+    if not hasattr(self, '_header'):
+      self._header = parse_header_info(self.soup)
+    return self._header
+
   def filling_date(self):
-    return parse_filling_date(self.soup)
+    # return parse_filling_date(self.soup)
+    try:
+      return self.header.get('filing_date')[:10]
+    except:
+      return None
 
   def accession_no(self):
     return parse_accession_no(self.soup)
@@ -281,10 +299,18 @@ class MetaPage:
     return parse_form_type(self.soup)
 
   def accepted_date(self):
-    return parse_accepted_date(self.soup)
+    # return parse_accepted_date(self.soup)
+    try:
+      return self.header.get('accepted', None)[:10]
+    except:
+      return None
 
   def period_of_report(self):
-    return parse_period_of_report(self.soup)
+    try:
+    # return parse_period_of_report(self.soup)
+      return self.header.get('period_of_report', None)[:10]
+    except:
+      return None
 
   def company(self):
     return parse_company(self.soup)
