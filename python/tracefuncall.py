@@ -7,6 +7,9 @@ is exzatly the same thing as below command. But print out many traces to stdout
 python3 YOUR_PYTHON_FILE
 
 TODO: provide a way to define the filter
+
+Ref:
+https://pymotw.com/2/sys/tracing.html
 '''
 import logging
 import pprint
