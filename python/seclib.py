@@ -179,7 +179,7 @@ def parse_accession_no(soup):
   data = soup.select_one('#secNum').text
   return data.replace('SEC Accession No.', '').strip()
 
-def parse_filling_date(soup):
+def parse_filing_date(soup):
   date = soup.select_one('.info').text
   return date[:10]
 
@@ -285,8 +285,8 @@ class MetaPage:
       self._header = parse_header_info(self.soup)
     return self._header
 
-  def filling_date(self):
-    # return parse_filling_date(self.soup)
+  def filing_date(self):
+    # return parse_filing_date(self.soup)
     try:
       return self.header.get('filing_date')[:10]
     except:
@@ -363,6 +363,6 @@ if __name__ == '__main__':
   url = 'https://www.sec.gov/Archives/edgar/data/883702/0000950131-94-001249-index.htm'
   mp = MetaPage(url)
 
-  pprint(mp.filling_date())
+  pprint(mp.filing_date())
   pprint(mp.company())
   pprint(mp.table())
