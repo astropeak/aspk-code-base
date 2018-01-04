@@ -2,6 +2,7 @@ import functools
 import pickle
 import errno
 import os
+import hashlib
 
 def ensure_directory(directory):
   """
@@ -21,6 +22,12 @@ def filesig_keyfunc(self, thisfile, sleepN=1):
   mtime = repr(os.path.getmtime(thisfile))
   return "%s-%s" % (mtime, thisfile.replace(os.path.sep, '-'))
 
+def obj2hex(obj):
+  '''Conver a obj to a hex number. Two objects have same content will have same hex number'''
+  m = hashlib.md5()
+  m.update(str(obj).encode())
+  return m.hexdigest()
+
 def disk_cache(basename, directory, method=False, keyfunc=None):
   """
   Function decorator for caching pickleable return values on disk. Uses a
@@ -39,9 +46,13 @@ def disk_cache(basename, directory, method=False, keyfunc=None):
         key = (tuple(args), tuple(kwargs.items()))
         # Don't use self or cls for the invalidation hash.
         if method and key:
+          # TODO: feels here is a bug. Because all args will be the first element in key, so it will remove all args
           key = key[1:]
 
-        key = hash(key)
+        # BUG here: for different runs, hash will return different value for same object contents. this is only in python3.
+        # ref: https://stackoverflow.com/questions/17585730/what-does-hash-do-in-python
+        # key = hash(key)
+        key = obj2hex(key)
 
       filename = '{}-{}.pickle'.format(basename, key)
       filepath = os.path.join(directory, filename)
