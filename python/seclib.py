@@ -64,11 +64,17 @@ def _parse_file_table(table):
   rst = []
   for row in rows:
     columns = row.find_all('td')
-    values = [column.text for column in columns]
-    values[2] = HOST + columns[2].a['href']
-    values = [x.strip() for x in values]
+    values = [column.text.strip() for column in columns]
+
+    # the document, link to a row. if there is no link, the whole text's link will be used.
+    if values[2] == '':
+      values[2] = HOST + trs[-1].find_all('td')[2].a['href']
+    else:
+      values[2] = HOST + columns[2].a['href']
+
     d = dict(zip(names, values))
 
+    # convert seq and size to int.
     try:
       d['seq'] = int(d['seq'])
     except:
@@ -153,15 +159,40 @@ def parse_company(soup):
       rst['sic'] = -1
       logging.info('company sic not exist')
 
+    b = re.match(r'.*Fiscal Year End: (\d+)', a.text)
+    if b: rst['fiscal_year_end'] = b.group(1)
+    else:
+      rst['fiscal_year_end'] = None
+      logging.info('company fiscal year end not exist')
+
     a = soup.select('.mailer')
     rst['address'] = ' '.join(x.strip() for x in a[1].text.split('\n')[1:] if x != '')
     # rst['maillingAddr'] = a[0].text
 
     return rst
 
+def parse_form_type(soup):
+  data = soup.select_one('#formName strong').text
+  return data.replace('Form', '').strip()
+
+def parse_accession_no(soup):
+  data = soup.select_one('#secNum').text
+  return data.replace('SEC Accession No.', '').strip()
+
 def parse_filling_date(soup):
   date = soup.select_one('.info').text
   return date[:10]
+
+def parse_accepted_date(soup):
+  date = soup.select('.info')[1].text
+  return date[:10]
+
+def parse_period_of_report(soup):
+  try:
+    date = soup.select('.info')[3].text
+    return date[:10]
+  except:
+    return None
 
 ex10_count = 0
 total_count = 0
@@ -242,6 +273,18 @@ class MetaPage:
 
   def filling_date(self):
     return parse_filling_date(self.soup)
+
+  def accession_no(self):
+    return parse_accession_no(self.soup)
+
+  def form_type(self):
+    return parse_form_type(self.soup)
+
+  def accepted_date(self):
+    return parse_accepted_date(self.soup)
+
+  def period_of_report(self):
+    return parse_period_of_report(self.soup)
 
   def company(self):
     return parse_company(self.soup)
