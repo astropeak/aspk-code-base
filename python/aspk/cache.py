@@ -1,3 +1,7 @@
+'''
+TODO:
+1. Add a way to remove a cache, maybe given a basename, or based on time
+'''
 import functools
 import pickle
 import errno
