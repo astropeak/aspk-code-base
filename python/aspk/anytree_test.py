@@ -26,7 +26,7 @@ class AnytreeTest(unittest.TestCase):
     # export as graph
     from anytree.exporter import DotExporter
     # graphviz needs to be installed for the next line!
-    DotExporter(self.tree).to_picture("%s.png" % self.tree.name)
+    # DotExporter(self.tree).to_picture("%s.png" % self.tree.name)
 
   def test_add_child(self):
     print('')
