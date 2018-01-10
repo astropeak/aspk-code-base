@@ -37,8 +37,11 @@ class PeriodTaskRunner:
     job_thread = threading.Thread(target=_func)
     job_thread.start()
     self._thread = job_thread
+    logging.info('job stated')
 
   def stop(self):
     self._stop_event.set()
     if self._thread.isAlive():
       self._thread.join()
+
+    logging.info('job stoped')
