@@ -21,6 +21,9 @@ class PeriodTaskRunner:
   def stoped(self):
     return self._stop_event.is_set()
 
+  def started(self):
+    return self._thread != None and self._thread.isAlive()
+
   def start(self):
     def _func():
       def _func2():
@@ -34,14 +37,21 @@ class PeriodTaskRunner:
         schedule.run_pending()
         time.sleep(0.1)
 
-    job_thread = threading.Thread(target=_func)
-    job_thread.start()
-    self._thread = job_thread
-    logging.info('job stated')
+    if self.started():
+      logging.info('already started')
+    else:
+      self._stop_event.clear()
+      job_thread = threading.Thread(target=_func)
+      job_thread.start()
+      self._thread = job_thread
+      logging.info('job started')
 
   def stop(self):
-    self._stop_event.set()
-    if self._thread.isAlive():
-      self._thread.join()
-
-    logging.info('job stoped')
+    if self._thread == None:
+      logging.info('job not started or already stoped')
+    else:
+      self._stop_event.set()
+      if self._thread.isAlive():
+        self._thread.join()
+      self._thread = None
+      logging.info('job stoped')
