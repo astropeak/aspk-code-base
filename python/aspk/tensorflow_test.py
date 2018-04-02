@@ -128,6 +128,46 @@ class TensorflowTest(unittest.TestCase):
     # now v is 3.809999
     self.assertTrue(v < 4)
 
+  def test_conv2d(self):
+    input_batch = tf.constant([
+      [  # First Input (6x6x1)
+        [[0.0], [1.0], [2.0], [3.0], [4.0], [5.0]],
+        [[0.1], [1.1], [2.1], [3.1], [4.1], [5.1]],
+        [[0.2], [1.2], [2.2], [3.2], [4.2], [5.2]],
+        [[0.3], [1.3], [2.3], [3.3], [4.3], [5.3]],
+        [[0.4], [1.4], [2.4], [3.4], [4.4], [5.4]],
+        [[0.5], [1.5], [2.5], [3.5], [4.5], [5.5]],
+      ],
+    ])
+
+    # kernel dimension: (kernel_height, kernel_width, in_channel, out_channel)
+    # The meaning of out channel: in this example, like two kernel. Each element's dimention in the output is the same as the out_channle.
+    kernel = tf.constant([
+      # Kernel (3x3x1x2)
+      [[[0.0, 2.0]], [[0.5,0.0]], [[0.0,1.0]]],
+      # [[[0.0]], [[1.0]], [[0.0]]],
+      # [[[0.0]], [[0.5]], [[0.0]]],
+    ])
+    conv2d = tf.nn.conv2d(input_batch, kernel, strides=[1, 2, 3, 1], padding='SAME')
+    a = self.sess.run(conv2d)
+    print(a)
+
+
+    # 1x2x2x3
+    input_batch = tf.constant([
+      [[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]],
+       [[4.0, 2.0, 3.0], [8.0, 5.0, 6.0]],
+      ]
+    ])
+    # in_channel of the kernel must be equal to channel size of the input_batch.
+    # Looks like all channels are seperated parameters
+    kernel = tf.constant([
+      [[[1.0, 2.0, 3.0], [1.0, 2.0, 3.0], [1.0, 2.0, 3.0]]]
+    ])
+    conv2d = tf.nn.conv2d(input_batch, kernel, strides=[1, 1, 1, 1], padding='SAME')
+    a = self.sess.run(conv2d)
+    print(a)
+
 
 if __name__ == '__main__':
   suite = unittest.TestLoader().loadTestsFromTestCase(TensorflowTest)
