@@ -31,6 +31,10 @@ class Config:
         # wether print all local variables when printing a line event
         self.lineVariable = True
 
+
+        # the output file name. If None, then output to stdout
+        self.outputFilename = None
+
 config = Config()
 
 # config.include = '.*'
@@ -215,11 +219,15 @@ def tracefunc(frame, event, arg, indent=[1]):
     return tracefunc
 
 def tracefuncall():
-    # handler = logging.FileHandler('log.org')
-    handler = logging.StreamHandler(sys.stdout)
+    if config.outputFilename != None:
+        handler = logging.FileHandler(config.outputFilename)
+    else:
+        handler = logging.StreamHandler(sys.stdout)
+
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
     logger.info("* Logs")
+
 
     sys.settrace(tracefunc)
 

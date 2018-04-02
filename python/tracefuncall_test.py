@@ -1,10 +1,12 @@
 import tracefuncall
 
-tracefuncall.tracefuncall()
 tracefuncall.config.include = 'tracefuncall'
 tracefuncall.config.include = '.*'
 tracefuncall.config.lineInclude = 'tracefuncall'
 # tracefuncall.config.lineVariable = True
+
+tracefuncall.config.outputFilename = 'log.org'
+tracefuncall.tracefuncall()
 
 def foo():
     a = 123
