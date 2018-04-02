@@ -1,9 +1,15 @@
 import tracefuncall
 
-tracefuncall.dirPattern= "test"
+tracefuncall.tracefuncall()
+tracefuncall.config.include = 'tracefuncall'
+tracefuncall.config.include = '.*'
+tracefuncall.config.lineInclude = 'tracefuncall'
+# tracefuncall.config.lineVariable = True
 
 def foo():
+    a = 123
     print("In foo")
+    a = 'aaa'
     pass
 
 def bar():

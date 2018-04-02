@@ -16,6 +16,43 @@ import pprint
 import sys
 import re
 
+
+class Config:
+    def __init__(self):
+        # file name pattern. Seperated by os.path.seg. 
+        # self.include = 'tracefuncall'
+        self.include = '.*'
+        self.exclude = None
+
+        # FILE_NAMES: only trace line for the given files.Each is a pattern(regexp)
+        self.lineInclude = None
+        self.lineExclude = None
+
+        # wether print all local variables when printing a line event
+        self.lineVariable = True
+
+config = Config()
+
+# config.include = '.*'
+# config.exclude = '.*'
+
+# Feels below two not needed
+# config.dirInclude = '.*'
+# config.dirExclude = '.*'
+
+# possable value: 'disable'|'enable'|'local'|FILE_NAMES
+# 'disable': not trace line. The default value
+# 'enable': trace line
+# 'local': trace line and print all local variables
+# FILE_NAMES: only trace line for the given files.Each is a pattern(regexp)
+# config.lineInclude = '.*'
+# config.lineExclude = '.*'
+
+# wether print all local variables when printing a line event
+# config.lineVariable = False
+
+
+
 logger = logging.getLogger(__name__)
 # logging.basicConfig(
 #         filename='app.log.org',
@@ -26,7 +63,7 @@ logger = logging.getLogger(__name__)
 
 
 _stop_trace_all = False
-_stop_trace_line = True
+_stop_trace_line = False
 
 def formatObject(obj, depth=0):
     # print('\t'*depth + ', '.join("%s:%s" % (f, getattr(obj, f)) for f in dir(obj)))
@@ -43,7 +80,7 @@ def formatObject(obj, depth=0):
     except:
         return str(obj)
 
-def default_filter(filename, funcname, lineno):
+def default_filter(frame, event, arg, depth):
     '''
     The filter that control if we want to log this event
     '''
@@ -55,6 +92,25 @@ def default_filter(filename, funcname, lineno):
 
     # if 'tensorflow' in filename:
     #     return False
+    filename = getFilename(frame)
+    if config.include == None:
+        return False
+
+    if not re.search(config.include, filename):
+        return False
+
+    if config.exclude != None and re.search(config.exclude, filename):
+        return False
+
+    if event == 'line':
+        if config.lineInclude == None:
+            return False
+
+        if not re.search(config.lineInclude, filename):
+            return False
+
+        if config.lineExclude != None and re.search(config.lineExclude, filename):
+            return False
 
     return True
 
@@ -90,10 +146,20 @@ def format_locals(ll, padding):
         except:
             return 'FAILED TO LOCALS'
 
+def getFilename(frame):
+    return frame.f_code.co_filename
+
+def getLineno(frame):
+    return frame.f_lineno
+
+def getFuncname(frame):
+    return frame.f_code.co_name
+
+
 def tracefunc(frame, event, arg, indent=[1]):
-    filename = frame.f_code.co_filename
-    lineno = frame.f_lineno
-    funcname = frame.f_code.co_name
+    filename = getFilename(frame)
+    lineno = getLineno(frame)
+    funcname = getFuncname(frame)
 
 
     global _stop_trace_all
@@ -110,22 +176,15 @@ def tracefunc(frame, event, arg, indent=[1]):
     if filter is None or re is None:
         return
 
-    if not filter(filename, funcname, lineno):
+    if not filter(frame, event, arg, indent[0]):
         return tracefunc
 
     filename =  filename_converter(filename)
     # print(filename)
 
-    global _stop_trace_line
-    if 'logging/__init__.py' in filename and funcname == 'shutdown':
-        # To prevent dead lock
-        _stop_trace_line = True
-
     if event == "line" and not _stop_trace_line:
-        pass
         # TODO: enable this will cause dead lock
-        logger.debug("%s Line %s" % ("*" * (indent[0]+1), frame.f_lineno))
-        # logger.debug("%s %s" % (" " * (indent[0]+1), pprint.pformat(frame.f_locals)))
+        logger.debug("%s Line [%s:%s]" % ("*" * (indent[0]+1), filename, frame.f_lineno))
         logger.debug("%s" % format_locals(frame.f_locals, ' '* (indent[0]+1)))
     elif event == "call":
         indent[0] += 1
