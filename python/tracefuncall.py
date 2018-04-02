@@ -185,7 +185,8 @@ def tracefunc(frame, event, arg, indent=[1]):
     if event == "line" and not _stop_trace_line:
         # TODO: enable this will cause dead lock
         logger.debug("%s Line [%s:%s]" % ("*" * (indent[0]+1), filename, frame.f_lineno))
-        logger.debug("%s" % format_locals(frame.f_locals, ' '* (indent[0]+1)))
+        if config.lineVariable:
+            logger.debug("%s" % format_locals(frame.f_locals, ' '* (indent[0]+1)))
     elif event == "call":
         indent[0] += 1
         logger.debug("%s Call [%s:%s] %s" % ("*" * indent[0], filename, frame.f_lineno, frame.f_code.co_name))
