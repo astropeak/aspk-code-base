@@ -6,6 +6,7 @@ class TensorflowTest(unittest.TestCase):
     self.sess = tf.Session()
 
   def test_placeholder_must_in_feed_dict(self):
+    '''Placeholder is a mechanism to pass dynamic value to a model'''
     a = tf.placeholder(tf.int32)
     b = tf.constant(3)
     c = a*b
@@ -18,6 +19,7 @@ class TensorflowTest(unittest.TestCase):
       self.sess.run(c)
 
   def test_variable_initialization(self):
+    '''Variable is a used to represent a model's parameter, which is needed to be modified during training'''
     a = tf.Variable(3, name='my_a')
     b = tf.constant(3)
     c = a*b

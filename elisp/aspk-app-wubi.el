@@ -5,7 +5,7 @@
 ;; (require 'aspk-app-wubi-quail-modified)
 
 (setq aspk/app-wubi-selectlist
-      (aspk/selectlist-create 1 1 '("AA") 9))
+      (aspk/selectlist-create 1 1 '("AA") 5))
 
 (defun aspk/app-wubi-create-selectlist (&rest args)
     (aspk/selectlist-config aspk/app-wubi-selectlist

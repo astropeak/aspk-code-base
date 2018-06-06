@@ -8,7 +8,7 @@
 (move-overlay foo 5 20)
 (overlay-put foo 'face 'highlight)
 (overlay-put foo 'invisible nil)
-(overlay-put foo 'before-string "")
+(overlay-put foo 'before-string "__AAA__")
 ;; (overlay-put foo ' "s")
 
 (overlay-properties foo)
