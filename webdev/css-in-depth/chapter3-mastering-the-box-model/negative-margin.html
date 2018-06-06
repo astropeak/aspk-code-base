@@ -1,0 +1,64 @@
+<!-- Still don't know what negative margin is used for,,
+     cloumn1 and column2 both have a 1em margin. To let them still stay within container, a wrapper with negative margin is added.
+     The wrapper will be wider than the container by 2em. This 2em will compensate the extra margin of column 1 and 2(with will be added automatical by display:table-cess's border-spacing property.)
+  -->
+<html>
+  <head>
+    <style>
+      :root{
+      box-sizing:border-box;
+      }
+
+      *, ::before, ::after{
+      box-sizing:inherit;
+      }
+
+      body{
+      background-color:#eee;
+      }
+
+      #container{
+      max-width:680px;
+      margin:1.5em auto;
+      border:2px solid red;
+      }
+      #column-1, #column-2{
+      display:inline-block;
+      border:2px solid;
+      background-color:white;
+      min-height:10em;
+      }
+      #column-1{
+      width:70%;
+      margin-left:1em;
+      }
+
+      #column-2{
+      width:calc(30% - 4px - 1em - 1em - 1em);
+      margin-left:1em;
+      margin-right:1em;
+      }
+
+      #wrapper{
+      margin-left:calc(-3px - 1em);
+      margin-right:calc(-3px - 1em);
+
+      border:3px solid yellow;
+
+
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="wrapper">
+        <div id="column-1">
+        </div>
+        <div id="column-2">
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

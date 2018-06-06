@@ -1,0 +1,97 @@
+* Logs
+** Call [tracefuncall_test.py:17] bar
+*** Args
+   {}
+*** Line [tracefuncall_test.py:18]
+   {}
+*** Line [tracefuncall_test.py:19]
+   {}
+*** Call [tracefuncall_test.py:11] foo
+**** Args
+    {}
+**** Line [tracefuncall_test.py:12]
+    {}
+**** Line [tracefuncall_test.py:13]
+    {'a': 123}
+**** Line [tracefuncall_test.py:14]
+    {'a': 123}
+**** Line [tracefuncall_test.py:15]
+    {'a': 'aaa'}
+*** Exit [tracefuncall_test.py:15] foo
+    Return value: None
+*** Line [tracefuncall_test.py:20]
+   {}
+** Exit [tracefuncall_test.py:20] bar
+   Return value: None
+** Call [PYTHON/threading.py:1100] _exitfunc
+*** Args
+   {'self': <_MainThread(MainThread, started 140735567426368)>}
+*** Call [PYTHON/threading.py:866] __stop
+**** Args
+    {'self': <_MainThread(MainThread, started 140735567426368)>}
+**** Call [PYTHON/threading.py:400] notifyAll
+***** Args
+     {'self': <Condition(<thread.lock object at 0x10a32c110>, 0)>}
+***** Call [PYTHON/threading.py:373] notify
+****** Args
+      {'n': 0, 'self': <Condition(<thread.lock object at 0x10a32c110>, 0)>}
+****** Call [PYTHON/threading.py:300] _is_owned
+******* Args
+       {'self': <Condition(<thread.lock object at 0x10a32c110>, 0)>}
+****** Exit [PYTHON/threading.py:307] _is_owned
+       Return value: True
+****** Call [PYTHON/threading.py:64] _note
+******* Args
+       {'args': (<Condition(<thread.lock object at 0x10a32c110>, 0)>,),
+        'format': '%s.notify(): no waiters',
+        'self': <Condition(<thread.lock object at 0x10a32c110>, 0)>}
+****** Exit [PYTHON/threading.py:65] _note
+       Return value: None
+***** Exit [PYTHON/threading.py:390] notify
+      Return value: None
+**** Exit [PYTHON/threading.py:407] notifyAll
+     Return value: None
+*** Exit [PYTHON/threading.py:874] __stop
+    Return value: None
+*** Call [PYTHON/threading.py:1113] _pickSomeNonDaemonThread
+**** Args
+    {}
+**** Call [PYTHON/threading.py:1183] enumerate
+***** Args
+     {}
+**** Exit [PYTHON/threading.py:1192] enumerate
+     Return value: [<_MainThread(MainThread, stopped 140735567426368)>]
+**** Call [PYTHON/threading.py:1008] daemon
+***** Args
+     {'self': <_MainThread(MainThread, stopped 140735567426368)>}
+**** Exit [PYTHON/threading.py:1022] daemon
+     Return value: False
+**** Call [PYTHON/threading.py:995] isAlive
+***** Args
+     {'self': <_MainThread(MainThread, stopped 140735567426368)>}
+***** Call [PYTHON/threading.py:570] isSet
+****** Args
+      {'self': <threading._Event object at 0x10a4d6d50>}
+***** Exit [PYTHON/threading.py:572] isSet
+      Return value: True
+**** Exit [PYTHON/threading.py:1004] isAlive
+     Return value: False
+*** Exit [PYTHON/threading.py:1117] _pickSomeNonDaemonThread
+    Return value: None
+*** Call [PYTHON/threading.py:64] _note
+**** Args
+    {'args': (<_MainThread(MainThread, stopped 140735567426368)>,),
+     'format': '%s: exiting',
+     'self': <_MainThread(MainThread, stopped 140735567426368)>}
+*** Exit [PYTHON/threading.py:65] _note
+    Return value: None
+*** Call [PYTHON/threading.py:876] __delete
+**** Args
+    {'self': <_MainThread(MainThread, stopped 140735567426368)>}
+*** Exit [PYTHON/threading.py:902] __delete
+    Return value: None
+** Exit [PYTHON/threading.py:1111] _exitfunc
+   Return value: None
+** Call [PYTHON/atexit.py:13] _run_exitfuncs
+*** Args
+   {}

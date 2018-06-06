@@ -1,0 +1,68 @@
+<!--
+A simple todo list app, that you add todo items. No css style
+  -->
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <title>TODO List</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  </head>
+  
+  <body>
+    <div id="container"></div>
+    <script type="text/babel">
+      class HelloWorld extends React.Component{
+      render() {
+      return <div> <p>Hello, world!</p> </div>
+      }
+      }
+
+
+      class Todo extends React.Component{
+      _onclick(e){
+      //consloe.log("inputElement: %s", this._inputElement)
+      if (this._inputElement.value != "") {
+
+      this.setState({items:this.state.items.concat([this._inputElement.value])})
+      this._inputElement.value = ""
+      }
+      e.preventDefault()
+      }
+
+      constructor(props){
+      super(props)
+      this.state = {items:[]}
+      this._onclick = this._onclick.bind(this)
+      }
+
+      render(){
+      var items
+      items = this.state.items.map((item)=> <li>{item}</li>)
+      console.log(items)
+      return <div><form>
+          <input ref={(obj)=> this._inputElement = obj}  type="text" placeholder="Enter todo items"></input>
+          <input type ="submit" value="Add" onClick={this._onclick}></input>
+        </form>
+        <div id="items-container">
+          <ul>
+          {items}
+          </ul>
+        </div>
+      </div>
+      }
+      }
+
+      
+      ReactDOM.render(
+      <Todo/>,
+      document.querySelector("#container")
+      );
+      
+    </script>
+  </body>
+  
+</html>

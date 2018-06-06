@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <style>
+      body{
+      background-color:#eee;
+      }
+      #container{
+      max-width:680px;
+      margin:1.5em auto;
+      }
+      #header{
+      margin-bottom:1em;
+      background-color:white;
+      border:0px solid;
+      border-radius:10px;
+
+      }
+      #main{
+      background-color:white;
+      border:0px solid;
+      border-radius:10px;
+      }
+      .sect{
+      border:0px solid;
+      border-radius:10px;
+      background-color:#eee;
+      margin:1em 1em;
+      float:left;
+      width:calc(50% - 4em);
+      padding:1em;
+      }
+      .sect:nth-child(odd){
+      clear:both;
+      }
+
+      img{
+      width:50px;
+      height:50px;
+      }
+      .sect-image{
+      float:left;
+      padding-right:1em;
+      }
+
+      /* block formatting context */
+      .bfc {
+      overflow:auto;
+      }
+
+      .sect-body{
+      overflow:auto;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+        <h1>aaaa</h1>
+      </div>
+      <div id="main">
+        <h2>bbbb</h2>
+        <div id="main-body">
+          <div class="sect">
+            <img class = "sect-image" src="./assets/running.jpg">
+            <div class="sect-body">
+              <h4>1. ccc</h4>
+              <p>ddddd, sssssssssssssssssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaaaaaaaaa</p>
+              <div>ddddd</div>
+              <div>ddiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+                ddd</div>
+            </div>
+          </div>
+          <div class="sect">
+            <img class = "sect-image" src="./assets/running.jpg">
+            <div class="sect-body">
+              <h4>2. ccc</h4>
+              <p>ddddd</p>
+            </div>
+          </div>
+          <div class="sect">
+            <img class = "sect-image" src="./assets/running.jpg">
+            <div class="sect-body">
+              <h4>3. ccc</h4>
+              <p>ddddd</p>
+            </div>
+          </div>
+
+          <div class="sect">
+            <img class = "sect-image" src="./assets/running.jpg">
+            <div class="sect-body">
+              <h4>4. ccc</h4>
+              <p>ddddd</p>
+            </div>
+          </div>
+          <div style="clear:both">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
