@@ -64,3 +64,6 @@
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^quail.*")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^make-overlay$")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^op/.*")
+
+
+(provide 'aspk-advice-app)

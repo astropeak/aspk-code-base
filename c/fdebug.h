@@ -2,7 +2,7 @@
 #define DEBUG_H
 #include <time.h>
 
-#define ASPK_DEBUG_FILE_NAME "C:/aspk_debug_log.txt"
+#define ASPK_DEBUG_FILE_NAME "/tmp/aspk_debug_log.txt"
 static FILE *aspk_debug_file = NULL;
 
 

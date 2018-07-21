@@ -129,10 +129,12 @@ indicate the subtraction location in the fringe."
                 (const :tag "Add single line" single)
                 (const :tag "Add no lines but use fringe" fringe)))
 
-(defcustom vdiff-subtraction-fill-char ?-
+(defcustom vdiff-subtraction-fill-char ? 
   "Character to use for filling subtraction lines. See also
 `vdiff-subtraction-style'."
   :type 'integer)
+
+;; (setq vdiff-subtraction-fill-char ? )
 
 (defcustom vdiff-use-ancestor-as-merge-buffer nil
   "When in a merge conflict file and text from the ancestor file
@@ -149,6 +151,17 @@ conflicts as the merge buffer."
 (defface vdiff-change-face
   '((t :inherit diff-changed))
   "Face for changes")
+
+(defface vdiff-change-face-2
+  '((default :foreground "black")
+    (((class color) (min-colors 88) (background light))
+     (:background "green")))
+  "Face used for the tooltip.")
+
+
+(setq vdiff-change-face-var 'vdiff-addition-face)
+
+;; (setq vdiff-change-face-var 'vdiff-change-face-2)
 
 (defface vdiff-closed-fold-face
   '((t :inherit region))
@@ -531,7 +544,7 @@ an addition when compared to other vdiff buffers."
                         nil (match-string 4) (match-string 5))))
              (t (error "vdiff: Unexpected code in parse-diff")))
            res))))
-    (nreverse res)))
+     (nreverse res)))
 
 (defun vdiff--parse-diff3 (buf)
   "Parse diff3 output in BUF and return list of hunks."
@@ -848,7 +861,7 @@ of a \"word\"."
 
 ;; * Add overlays
 
-(defun vdiff--make-subtraction-string (n-lines)
+(defun vdiff--make-subtraction-string (n-lines face)
   "Make string to fill in space for lines missing in a buffer."
   (let* ((width (- (window-text-width
                     (get-buffer-window (current-buffer) 0)) 2))
@@ -856,6 +869,7 @@ of a \"word\"."
                       (get-buffer-window (current-buffer) 0)))
          (max-lines (floor (* 0.7 win-height)))
          (truncate (> n-lines max-lines))
+         ;; (truncate nil)
          (trunc-n-lines
           (cond ((eq 'single vdiff-subtraction-style) 1)
                 (truncate max-lines)
@@ -880,14 +894,45 @@ of a \"word\"."
                                 vdiff-subtraction-fringe-face))
       (propertize
        (concat (mapconcat #'identity string "\n") "\n")
-       'face 'vdiff-subtraction-face))))
+       ;; 'face 'vdiff-subtraction-face))))
+       'face face))))
 
-(defun vdiff--add-subtraction-overlay (n-lines)
+(defun vdiff--add-subtraction-overlay (which-buffer n-lines)
   (let* ((ovr (make-overlay (point) (1+ (point)))))
-    (overlay-put ovr 'before-string (vdiff--make-subtraction-string n-lines))
-    (overlay-put ovr 'vdiff-type 'subtraction)
+    (if (eq which-buffer 'A)
+        (progn
+          (overlay-put ovr 'before-string (vdiff--make-subtraction-string n-lines 'vdiff-addition-face))
+          (overlay-put ovr 'vdiff-type 'addition))
+      (overlay-put ovr 'before-string (vdiff--make-subtraction-string n-lines 'vdiff-subtraction-face))
+      (overlay-put ovr 'vdiff-type 'subtraction)
+      )
     (overlay-put ovr 'vdiff t)
     ovr))
+
+(defun vdiff--add-hunk-overlay-2
+    (n-lines &optional type n-subtraction-lines)
+  (let ((beg (point))
+        (end (save-excursion
+               (forward-line n-lines)
+               (point))))
+    (let ((ovr (make-overlay beg end))
+          ;; (type (if addition 'addition 'change))
+          (face (cond
+                 ((eq type 'addition) 'vdiff-addition-face)
+                 ((eq type 'change) vdiff-change-face-var)
+                 ((eq type 'subtraction) 'vdiff-subtraction-face))))
+      (overlay-put ovr 'vdiff-type type)
+      (overlay-put ovr 'face face)
+      (overlay-put ovr 'vdiff t)
+      (when (and n-subtraction-lines
+                 (> n-subtraction-lines 0))
+        ;; (save-excursion
+        ;;   (insert (make-string n-subtraction-lines ?\n))
+        ;;   )
+        (overlay-put ovr 'after-string
+                     (vdiff--make-subtraction-string n-subtraction-lines face))
+        )
+      ovr)))
 
 (defun vdiff--add-hunk-overlay
     (n-lines &optional addition n-subtraction-lines)
@@ -897,14 +942,18 @@ of a \"word\"."
                (point))))
     (let ((ovr (make-overlay beg end))
           (type (if addition 'addition 'change))
-          (face (if addition 'vdiff-addition-face 'vdiff-change-face)))
+          (face (if addition 'vdiff-addition-face vdiff-change-face-var)))
       (overlay-put ovr 'vdiff-type type)
       (overlay-put ovr 'face face)
       (overlay-put ovr 'vdiff t)
       (when (and n-subtraction-lines
                  (> n-subtraction-lines 0))
+        ;; (save-excursion
+        ;;   (insert (make-string n-subtraction-lines ?\n))
+        ;;   )
         (overlay-put ovr 'after-string
-                     (vdiff--make-subtraction-string n-subtraction-lines)))
+                     (vdiff--make-subtraction-string n-subtraction-lines))
+        )
       ovr)))
 
 (defun vdiff-fold-string-default (n-lines first-line-text width)
@@ -918,12 +967,12 @@ of a \"word\"."
                 (substring-no-properties
                  first-line-text 0 (- width (length start)))
                 "\n")
-        (concat start
-                first-line-text
-                (make-string
-                 (- width (length start) (length first-line-text))
-                 ?-)
-                "\n"))))
+      (concat start
+              first-line-text
+              (make-string
+               (- width (length start) (length first-line-text))
+               ?-)
+              "\n"))))
 
 (defun vdiff--make-fold (buffer range)
   (with-current-buffer buffer
@@ -1025,16 +1074,28 @@ of a \"word\"."
 (defun vdiff--remove-fold-overlays (_)
   (clrhash (vdiff-session-folds vdiff--session)))
 
-(defun vdiff--add-diff-overlay (this-len other-len-1 other-len-2)
+(defun vdiff--add-diff-overlay (which-buffer this-len other-len-1 other-len-2)
   (let ((max-other-len (max (if other-len-1 other-len-1 0)
                             (if other-len-2 other-len-2 0))))
-    (cond ((and (null other-len-1) (null other-len-2))
-           (vdiff--add-hunk-overlay this-len t))
-          ((null this-len)
-           (vdiff--add-subtraction-overlay max-other-len))
-          (t
-           (vdiff--add-hunk-overlay this-len nil
-                                    (- max-other-len this-len))))))
+    (cond
+     ;; other is null
+     ((and (null other-len-1) (null other-len-2))
+      (if (eq which-buffer 'A)
+          (vdiff--add-hunk-overlay-2 this-len 'subtraction)
+        (vdiff--add-hunk-overlay-2 this-len 'addition)
+        ))
+     ;; this is null
+     ((null this-len)
+      (vdiff--add-subtraction-overlay which-buffer max-other-len)
+      ;; (if (eq which-buffer 'A)
+      ;;     (vdiff--add-hunk-overlay-2 this-len 'addition)
+      ;;   (vdiff--add-hunk-overlay-2 this-len 'subtraction)
+      ;;   )
+      )
+     ;; neither is none
+     (t
+      (vdiff--add-hunk-overlay-2 this-len 'change (- max-other-len this-len))
+      ))))
 
 (defun vdiff--refresh-overlays (session)
   "Delete and recreate overlays in both buffers."
@@ -1095,16 +1156,16 @@ of a \"word\"."
               (with-current-buffer a-buffer
                 (forward-line (- a-beg a-line))
                 (setq a-line a-beg)
-                (setq ovr-a (vdiff--add-diff-overlay a-len b-len c-len)))
+                (setq ovr-a (vdiff--add-diff-overlay 'A a-len b-len c-len)))
               (with-current-buffer b-buffer
                 (forward-line (- b-beg b-line))
                 (setq b-line b-beg)
-                (setq ovr-b (vdiff--add-diff-overlay b-len a-len c-len)))
+                (setq ovr-b (vdiff--add-diff-overlay 'B b-len a-len c-len)))
               (when c-buffer
                 (with-current-buffer c-buffer
                   (forward-line (- c-beg c-line))
                   (setq c-line c-beg)
-                  (setq ovr-c (vdiff--add-diff-overlay c-len a-len b-len))))
+                  (setq ovr-c (vdiff--add-diff-overlay 'C c-len a-len b-len))))
               (let ((ovr-group (vdiff--non-nil-list ovr-a ovr-b ovr-c)))
                 (overlay-put ovr-a 'vdiff-a t)
                 (overlay-put ovr-a 'vdiff-hunk-overlays ovr-group)
@@ -1613,7 +1674,7 @@ with non-nil USE-FOLDS."
 
 (defun vdiff--init-session
     (buffer-a buffer-b
-     &optional buffer-c on-quit prior-window-config kill-buffers-on-quit)
+              &optional buffer-c on-quit prior-window-config kill-buffers-on-quit)
   (make-vdiff-session
    :buffers (vdiff--non-nil-list buffer-a buffer-b buffer-c)
    :process-buffer (generate-new-buffer-name " *vdiff* ")
@@ -1670,7 +1731,7 @@ versa)."
 ;;;###autoload
 (defun vdiff-buffers
     (buffer-a buffer-b
-     &optional rotate on-quit restore-windows-on-quit kill-buffers-on-quit)
+              &optional rotate on-quit restore-windows-on-quit kill-buffers-on-quit)
   "Start a vdiff session. If called interactively, you will be
 asked to select two buffers. ROTATE adjusts the buffer's
 initial layout. A prefix argument can be used to set this
@@ -1734,7 +1795,7 @@ Should take the arguments (BUFFER-A BUFFER-B BUFFER-C)."
 ;;;###autoload
 (defun vdiff-buffers3
     (buffer-a buffer-b buffer-c
-     &optional on-quit restore-windows-on-quit kill-buffers-on-quit)
+              &optional on-quit restore-windows-on-quit kill-buffers-on-quit)
   "Start a vdiff session. If called interactively, you will be
 asked to select two buffers. ON-QUIT is a function to run on
 exiting the vdiff session. It is called with the three vdiff
@@ -1795,9 +1856,9 @@ function for ON-QUIT to do something useful with the result."
                            (smerge--get-marker smerge-end-re "OTHER")
                            "*")))
            (ancestor (generate-new-buffer
-                  (concat "*" filename " "
-                          (smerge--get-marker smerge-end-re "ANCESTOR")
-                          "*")))
+                      (concat "*" filename " "
+                              (smerge--get-marker smerge-end-re "ANCESTOR")
+                              "*")))
            ancestor-used merge-buffer)
       (with-current-buffer mine
         (buffer-disable-undo)
@@ -1883,7 +1944,7 @@ nothing to revert then this command fails."
   ;; Taken from `ediff-current-file'
   (unless (or (not (eq revert-buffer-function #'revert-buffer--default))
               (not (eq revert-buffer-insert-file-contents-function
-               #'revert-buffer-insert-file-contents--default-function))
+                       #'revert-buffer-insert-file-contents--default-function))
               (and buffer-file-number
                    (or (buffer-modified-p)
                        (not (verify-visited-file-modtime
@@ -2011,7 +2072,7 @@ automatically after calling commands like `vdiff-files' or
   (cond (vdiff-mode
          (vdiff--buffer-init)
          (when vdiff-lock-scrolling
-          (add-hook 'window-scroll-functions #'vdiff--scroll-function nil t)))
+           (add-hook 'window-scroll-functions #'vdiff--scroll-function nil t)))
         (t
          (vdiff--buffer-cleanup))))
 

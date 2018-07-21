@@ -2,6 +2,7 @@
 (define-key vdiff-mode-map (kbd "C-c") vdiff-mode-prefix-map)
 (setq vdiff-lock-scrolling t)
 
+
 ;; diff program/algorithm to use. Allows choice of diff or git diff along with
 ;; the various algorithms provided by these commands. See
 ;; `vdiff-diff-algorithms' for the associated command line arguments.
@@ -39,7 +40,7 @@
 (setq vdiff-default-refinement-syntax-code "w")
 
 ;; If non-nil, automatically refine all hunks.
-(setq vdiff-auto-refine nil)
+(setq vdiff-auto-refine t)
 
 ;; How to represent subtractions (i.e., deleted lines). The
 ;; default is full which means add the same number of (fake) lines
@@ -50,59 +51,53 @@
 
 ;; Character to use for filling subtraction lines. See also
 ;; `vdiff-subtraction-style'.
-(setq vdiff-subtraction-fill-char ?-)
+(setq vdiff-subtraction-fill-char ? )
 
 (setq auto-window-vscroll nil)
 
+(defun A ()
+  (interactive)
+  (vdiff-files "/Users/astropeak/Downloads/vcjobs_logparser.py" "/Users/astropeak/Downloads/vcjobs_logparser-2.py")
+  )
+
+(defun B ()
+  (interactive)
+  (vdiff-files "/Users/astropeak/Downloads/vcjobs_logparser-2.py" "/Users/astropeak/Downloads/vcjobs_logparser.py")
+  )
 
 
-(defun vdiff--scroll-function (&optional window window-start)
-  "Sync scrolling of all vdiff windows."
-  (let* ((window (or window (selected-window)))
-         (update-window-start (null window-start))
-         (window-start (or window-start (progn
-                                          ;; redisplay updates window-start in
-                                          ;; the case where the scroll function
-                                          ;; is called manually
-                                          (redisplay)
-                                          (window-start)))))
-    (message "%s, %s" window window-start)
-    (when (and (eq window (selected-window))
-               (cl-every #'window-live-p (vdiff--all-windows))
-               (vdiff--buffer-p)
-               (not vdiff--in-scroll-hook)
-               vdiff--new-command)
-      (setq vdiff--new-command nil)
-      (let* ((2-scroll-data (vdiff--other-win-scroll-data
-                             window window-start))
-             (2-win (nth 0 2-scroll-data))
-             (2-start-pos (nth 1 2-scroll-data))
-             (2-pos (nth 2 2-scroll-data))
-             (2-scroll (nth 3 2-scroll-data))
-             ;; 1 is short for this; 2 is the first other and 3 is the second
-             (vdiff--in-scroll-hook t))
-        (message "%s" 2-scroll-data)
-        (when (and 2-pos 2-start-pos)
-          (set-window-point 2-win 2-pos)
-          ;; For some reason without this unless the vscroll gets eff'd
-          (unless (= (progn
-                       (when update-window-start
-                         (redisplay))
-                       (window-start 2-win))
-                     2-start-pos)
-            (message "Set window start to: %s %s" 2-win 2-start-pos)
-            (set-window-start 2-win 2-start-pos))
-          (vdiff--set-vscroll-and-force-update 2-win 2-scroll))
-        (when vdiff-3way-mode
-          (let*
-              ((3-scroll-data (vdiff--other-win-scroll-data
-                               window window-start t))
-               (3-win (nth 0 3-scroll-data))
-               (3-start-pos (nth 1 3-scroll-data))
-               (3-pos (nth 2 3-scroll-data))
-               (3-scroll (nth 3 3-scroll-data)))
-            (when (and 3-start-pos 3-pos)
-              (set-window-point 3-win 3-pos)
-              (set-window-start 3-win 3-start-pos)
-              (vdiff--set-vscroll-and-force-update 3-win 3-scroll))))))))
+(defun C ()
+  (interactive)
+  (vdiff-files "/Users/astropeak/backup/.emacs.d/elpa/vdiff-0.2.2/vdiff.el" "/Users/astropeak/Dropbox/project/aspk-code-base/elisp/aspk-vdiff.el"))
 
+(defun aspk-vdiff-print-all-overlay ()
+  (interactive)
+  (let* ((ovl (vdiff--overlay-at-pos))
+         (type (overlay-get ovl 'vdiff-type))
+         (face (overlay-get ovl 'face))
+         )
+    (message "type: %s, face: %s" type face) 
+    ;; (overlay-put ovl 'face vdiff-change-face)
+    ;; (overlay-put ovl 'face 'highlight)
+    ))
+
+(defun aspk-ediff-set-window-line (file-line display-line)
+  "Set this buffer's line FILE-LINE to be displayed in window DISPLAY-LINE"
+  
+  )
+(defun aspk-ediff-scroll-other-window-one-line ()
+  (interactive)
+  ()
+  )
+(defun aaa ()
+  (scroll-other-window-down -1)
+  (redisplay)
+  )
+;; (aaa)
+(defun aaa ()
+
+(setq scroll-step           1
+      scroll-conservatively 10000
+      scroll-margin 1
+      ))
+;; (aaa)

@@ -1,3 +1,6 @@
 * TODOs
 ** TODO cmdopt.Option: add a method to display the help
    - State "TODO"       from ""           [2018-01-08 Mon 21:54]
+* how to run
+  1. run a single case
+     python -m unittest filesystem_test.SshFSTest.test_rmfile
