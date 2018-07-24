@@ -105,3 +105,8 @@ def create_file(filename, content='', makedir=True):
   ensure_dir(filename)
   with open(filename, 'w') as f:
     f.write(content)
+
+
+def thisFileDir():
+  return os.path.dirname(os.path.abspath(__file__))
+

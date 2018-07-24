@@ -42,8 +42,14 @@ class SshFS:
 
   def listdir(self, dir):
     logger.debug("SshFS listdir. dir: %s" % dir)
-    rst = self.sshlib.run_python_script('1.py', [dir], json_output=True)
+    rst = self.sshlib.run_python_script(util.thisFileDir() + '/1.py', ["'%s'" % dir], json_output=True)
     logger.debug("SshFS listdir. rst: %s" % rst)
+    return rst
+
+  def isdir(self, path):
+    logger.debug("SshFS isdir. path: %s" % path)
+    rst = self.sshlib.run_python_script(util.thisFileDir() + '/2.py', ["'%s'" % path], json_output=True)
+    logger.debug("SshFS isdir. rst: %s" % rst)
     return rst
 
   def mkdir(self, dir):
