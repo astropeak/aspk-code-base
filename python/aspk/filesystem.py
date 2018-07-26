@@ -16,6 +16,7 @@ class SshFS:
     self.username = username
     self.password = password
     self.local_root_dir = local_root_dir
+    util.ensure_dir(self.local_root_dir + '/aa')
     self.sshlib = SshLib(self.hostname, self.username, self.password)
 
   def open(self, filename, mode):
@@ -47,32 +48,28 @@ class SshFS:
     return rst
 
   def isdir(self, path):
-    logger.debug("SshFS isdir. path: %s" % path)
-    rst = self.sshlib.run_python_script(util.thisFileDir() + '/2.py', ["'%s'" % path], json_output=True)
-    logger.debug("SshFS isdir. rst: %s" % rst)
-    return rst
+    try: 
+      self.sshlib.run_command("test -d '%s'" % path)
+      return True
+    except: pass
+    return False
 
   def mkdir(self, dir):
-    return self._run_command("mkdir -p '%s'" % dir, success_pattern='^\s*$')
+    return self.sshlib.run_command("mkdir -p '%s'" % dir)
 
   def exists(self, path):
-    return self._run_command("ls '%s'" % path, fail_pattern='.*No such file or directory\s*$')
+    try:
+      self.sshlib.run_command("ls '%s'" % path)
+      return True
+    except: pass
+
+    return False
 
   def rmfile(self, file):
-    return self._run_command("rm  '%s'" % file, success_pattern='^\s*$')
+    self.sshlib.run_command("rm  '%s'" % file)
 
   def rmdir(self, dir):
-    return self._run_command("rm -r '%s'" % dir, success_pattern='^\s*$')
-
-  def _run_command(self, command, success_pattern=None, fail_pattern=None):
-    rst = self.sshlib.run_command(command)
-    if success_pattern:
-      if re.match(success_pattern, rst, re.DOTALL): return True
-      else: return False
-    if fail_pattern:
-      if re.match(fail_pattern, rst, re.DOTALL): return False
-      else: return True
-    raise Exception("neither success_pattern nor fail_pattern matched")
+    self.sshlib.run_command("rm -r '%s'" % dir)
 
 class FS_Open:
   def __init__(self, fs, filename, mode):

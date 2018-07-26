@@ -51,17 +51,37 @@ class SshFSTest(unittest.TestCase):
     self.assertTrue(o)
 
 
+  def test__dir(self):
+    hostname = '192.168.118.118'
+    username = 'test'
+    password = 'jjjj@222'
+    file_content = 'HHHHHHHHHHHHHH ssss'
+    sfs = SshFS(hostname, username, password, '/tmp/sshfs')
+    o = sfs.isdir('/home/sssss')
+    self.assertFalse(o)
+    o = sfs.isdir('/home/test')
+    self.assertTrue(o)
+
+    dir = '/home/test/tmp/a b c'
+    try: sfs.rmdir(dir)
+    except: pass
+    self.assertFalse(sfs.isdir(dir))
+    sfs.mkdir(dir)
+    self.assertTrue(sfs.isdir(dir))
+    sfs.rmdir(dir)
+    self.assertFalse(sfs.isdir(dir))
+
+
   def test_rmfile(self):
     hostname = '192.168.118.118'
     username = 'test'
     password = 'jjjj@222'
     file_content = 'HHHHHHHHHHHHHH ssss'
     sfs = SshFS(hostname, username, password, '/tmp/sshfs')
-    o = sfs.rmfile('/home/sssss')
-    self.assertFalse(o)
-
-    o = sfs.rmfile('/home/test/tmp/a')
-    self.assertTrue(o)
+    with self.assertRaisesRegexp(Exception, '.*'):
+      sfs.rmfile('/home/sssss')
+    
+    sfs.rmfile('/home/test/tmp/a')
 
 # The main
 if __name__ == '__main__':

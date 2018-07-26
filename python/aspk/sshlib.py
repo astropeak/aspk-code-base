@@ -97,6 +97,7 @@ def do_ssh_cmd(username, password, hostname, cmd):
   logger.debug('do ssh command. command :%s' % ssh_cmd)
   (exitcode, output) = _do_password_needed_command(ssh_cmd, password)
   if exitcode != 0:
-    raise Exception("Ssh cmd failed.\n\tuser: %s\n\tcmd: %s\n\toutput: %s\n\thost: %s\n\tp: %s" % (username, cmd, output.replace('\r', '').replace('\n', '\\n'), hostname, password))
+    # raise Exception("Ssh cmd failed.\n\tuser: %s\n\tcmd: %s\n\toutput: %s\n\thost: %s\n\tp: %s" % (username, cmd, output.replace('\r', '').replace('\n', '\\n'), hostname, password))
+    raise Exception(output)
 
   return output
