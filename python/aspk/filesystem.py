@@ -16,7 +16,7 @@ class SshFS:
     self.username = username
     self.password = password
     self.local_root_dir = local_root_dir
-    util.ensure_dir(self.local_root_dir + '/aa')
+    util.ensure_dir(self.local_root_dir)
     self.sshlib = SshLib(self.hostname, self.username, self.password)
 
   def open(self, filename, mode):
