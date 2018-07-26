@@ -1,6 +1,10 @@
 import unittest
 import os
 from sshlib import *
+import util
+import logging
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
 
 class SshLibTest(unittest.TestCase):
   def test__aa(self):
@@ -27,11 +31,12 @@ class SshLibTest(unittest.TestCase):
         self.assertEqual(f1.read(), f2.read())
 
   def test__python_command(self):
+    ''''This seems a know failed test case'''
     hostname = '192.168.118.118'
     username = 'test'
     password = 'jjjj@222'
     sl = SshLib(hostname, username, password)
-    o = sl.run_command("python -c 'import os;a = os.listdir(\"/home/test\");b=[x for x in a if os.path.isdir(x)]'")
+    o = sl.run_command("python -c 'import os; a = os.listdir(\"/home/test\");b=[x for x in a if os.path.isdir(x)]'")
     print('run_command result: %s' % o)
 
 
@@ -47,10 +52,35 @@ class SshLibTest(unittest.TestCase):
     print('run_command result: %s' % o)
     # print('run_command json result: %s' % a)
 
+  def test__login_denied(self):
+    '''Test if password is wrong, then it should raise a login denied error'''
+    hostname = '192.168.118.118'
+    username = 'test'
+    password = 'jjjj@222a'
+    sl = SshLib(hostname, username, password)
+    with self.assertRaises(LoginDenied):
+      sl.run_command('ls -la')
+
+      
+
+
+  def test__permission_denied(self):
+    '''Test if put (DEMO VERSION!) a file ther you have no write permission, a PermissionDenied error will be raised'''
+    hostname = '192.168.118.118'
+    username = 'test'
+    password = 'jjjj@222'
+    sl = SshLib(hostname, username, password)
+    local_file = '/tmp/alsdjsss'
+    util.create_file(local_file, 'aaaa')
+    remote_file = '/home/astropeaka/alsdjsss'
+    with self.assertRaisesRegexp(Exception, 'No such file or directory'):
+      sl.put_file(local_file, remote_file)
+    remote_file = '/home/astropeak/alsdjsss'
+    with self.assertRaisesRegexp(Exception, 'Permission denied'):
+      sl.put_file(local_file, remote_file)
+
+
 # The main
 if __name__ == '__main__':
-  import logging
-  logging.basicConfig()
-  logging.getLogger().setLevel(logging.DEBUG)
   suite = unittest.TestLoader().loadTestsFromTestCase(SshLibTest)
   unittest.TextTestRunner(verbosity=2).run(suite)
