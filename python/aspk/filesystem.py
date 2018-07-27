@@ -6,7 +6,7 @@ from aspk import util
 logger = logging.getLogger(__name__)
 
 class SshFS:
-  def __init__(self, hostname, username, password, local_root_dir):
+  def __init__(self, hostname, username, password, local_root_dir='/tmp'):
     '''
     - local_root_dir: where the remote file will be put to
     '''
@@ -71,6 +71,18 @@ class SshFS:
   def rmdir(self, dir):
     self.sshlib.run_command("rm -r '%s'" % dir)
 
+  def as_local_file_name(self, filename):
+    '''A with context that convert the remote filename to localfilename.
+    At exit, will clean the local file.
+    '''
+
+    logger.debug("SshFS as_local_file_name. filename: %s" % (filename))
+    rst = FS_LocalFile(self, filename)
+    logger.debug("SshFS as_local_file_name. rst: %s" % rst)
+    return rst
+
+
+
 class FS_Open:
   def __init__(self, fs, filename, mode):
     self.fs = fs
@@ -131,3 +143,95 @@ class FS_Open:
   #     return getattr(self.fileobject, attr)
 
   #   raise AttributeError('no attribute %s', attr)
+
+
+
+class FS_LocalFile:
+  def __init__(self, fs, filename):
+    self.fs = fs
+    self.filename = filename
+    self.local_file = self.fs.get_file(self.filename)
+    logger.debug("FS_LocalFile __init__. filename: %s, local file: %s" % (self.filename, self.local_file))
+
+  def __enter__(self):
+    return self.local_file
+
+  def __exit__(self, type, value, traceback):
+    self.close()
+
+  def close(self):
+    os.unlink(self.local_file)
+
+
+    
+class SharedFolderFS_LocalFile:
+  def __init__(self, fs, filename, readonly):
+    self.fs = fs
+    self.filename = filename
+    self.readonly = readonly
+    local_file = None
+    if readonly: local_file = fs.convert_to_local_filepath(self.filename)
+    if local_file:
+      self.direct_local_file = True
+    else:
+      local_file = self.fs.get_file(self.filename)
+      self.direct_local_file = False
+
+    self.local_file = local_file
+    logger.debug("SharedFolderFS_LocalFile __init__. filename: %s, local file: %s, direct_local_file: %s" % (self.filename, self.local_file, self.direct_local_file))
+
+  def __enter__(self):
+    return self.local_file
+
+  def __exit__(self, type, value, traceback):
+    self.close()
+
+  def close(self):
+    if not self.direct_local_file: os.unlink(self.local_file)
+
+class SharedFolderSshFS(SshFS):
+  def __init__(self, hostname, username, password, local_root_dir,
+               local_shared_folder, remote_shared_folder):
+    '''
+    - local_root_dir: where the remote file will be put to
+    '''
+    logger.debug("Ssh FS init. hostname: %s, username: %s, local_root_dir: %s" % (
+      hostname, username, local_root_dir))
+    SshFS.__init__(self, hostname, username, password, local_root_dir)
+    self.local_shared_folder = local_shared_folder
+    self.remote_shared_folder = remote_shared_folder
+
+    
+  def open(self, filename, mode):
+    logger.debug("SshFS open. filename: %s, mode: %s" % (filename, mode))
+    if mode.startswith('r'):
+      local_file  = self.convert_to_local_filepath(filename)
+      if local_file:
+        logger.debug("SshFS open. local file exists and readable. local_file: %s" % local_file)
+        return open(local_file, mode)
+
+    rst = FS_Open(self, filename, mode)
+    logger.debug("SshFS open. rst: %s" % rst)
+    return rst
+
+  def convert_to_local_filepath(self, remote_file):
+    '''Return the local filepath for the given remote filepath if exists. Else None'''
+    if remote_file.startswith(self.remote_shared_folder):
+      local_file = re.sub(self.remote_shared_folder, self.local_shared_folder, remote_file)
+      if util.check_file_readable(local_file):
+        return local_file
+    else: return None
+
+  def as_local_file_name(self, filename, readonly=False):
+    '''A with context that convert the remote filename to localfilename.
+    At exit, will clean the local file.
+
+    If readonly is True, then some optimization miaght be done.
+    '''
+
+    logger.debug("SharedFolderSshFS as_local_file_name. filename: %s, readonly: %s" % (filename, readonly))
+    rst = SharedFolderFS_LocalFile(self, filename, readonly)
+    logger.debug("SharedFolderSshFS as_local_file_name. rst: %s" % rst)
+    return rst
+
+

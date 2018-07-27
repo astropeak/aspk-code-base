@@ -102,7 +102,7 @@ def create_file(filename, content='', makedir=True):
     - content: the content that should be filled to the file
     - makedir: if the directory not exists, then first make dir
   '''
-  ensure_dir(filename)
+  ensure_dir(os.path.basename(filename))
   with open(filename, 'w') as f:
     f.write(content)
 
