@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 from sshlib import SshLib
 import logging
 from aspk import util
@@ -170,7 +171,7 @@ class SharedFolderFS_LocalFile:
     self.filename = filename
     self.readonly = readonly
     local_file = None
-    if readonly: local_file = fs.convert_to_local_filepath(self.filename)
+    if readonly: local_file = fs.convert_to_local_readable_filepath(self.filename)
     if local_file:
       self.direct_local_file = True
     else:
@@ -205,7 +206,7 @@ class SharedFolderSshFS(SshFS):
   def open(self, filename, mode):
     logger.debug("SshFS open. filename: %s, mode: %s" % (filename, mode))
     if mode.startswith('r'):
-      local_file  = self.convert_to_local_filepath(filename)
+      local_file  = self.convert_to_local_readable_filepath(filename)
       if local_file:
         logger.debug("SshFS open. local file exists and readable. local_file: %s" % local_file)
         return open(local_file, mode)
@@ -216,11 +217,20 @@ class SharedFolderSshFS(SshFS):
 
   def convert_to_local_filepath(self, remote_file):
     '''Return the local filepath for the given remote filepath if exists. Else None'''
-    if remote_file.startswith(self.remote_shared_folder):
+    if self.is_path_under_shared_folder(remote_file):
       local_file = re.sub(self.remote_shared_folder, self.local_shared_folder, remote_file)
-      if util.check_file_readable(local_file):
-        return local_file
+      return local_file
     else: return None
+
+  def convert_to_local_readable_filepath(self, remote_file):
+    '''Return the local filepath for the given remote filepath if exists. Else None'''
+    local_file = self.convert_to_local_filepath(remote_file)
+    if local_file and util.check_file_readable(local_file):
+      return local_file
+    else: return None
+
+  def is_path_under_shared_folder(self, path):
+    return path.startswith(self.remote_shared_folder)
 
   def as_local_file_name(self, filename, readonly=False):
     '''A with context that convert the remote filename to localfilename.
@@ -234,4 +244,48 @@ class SharedFolderSshFS(SshFS):
     logger.debug("SharedFolderSshFS as_local_file_name. rst: %s" % rst)
     return rst
 
+  def listdir(self, dir):
+    logger.debug("SshFS listdir. dir: %s" % dir)
+    local_dir = self.convert_to_local_readable_filepath(dir)
+    if local_dir:
+      logger.debug("SshFS listdir. local dir exists and readable. local_dir: %s" % local_dir)
+      a = os.listdir(local_dir)
+      rst = []
+      for x in a:
+        x = x.decode('utf8')
+        b = u'%s/%s' % (local_dir, x)
+        b = b.encode('utf8')
+        if os.path.isdir(b): c = ('dir', x)
+        else: c = ('file', x)
+        rst.append(c)
+    else:
+      rst = self.sshlib.run_python_script(util.thisFileDir() + '/1.py', ["'%s'" % dir], json_output=True)
+
+    logger.debug("SshFS listdir. rst: %s" % rst)
+    return rst
+
+  def isdir(self, path):
+    local_dir = self.convert_to_local_filepath(path)
+    if local_dir:
+      return os.path.isdir(local_dir)
+    else:
+      return SshFS.isdir(self, path)
+
+  def exists(self, path):
+    local_dir = self.convert_to_local_filepath(path)
+    if local_dir:
+      return os.path.exists(local_dir)
+    else:
+      return SshFS.exists(self, path)
+
+  def get_file(self, filename):
+    local_file = self.convert_to_local_filepath(filename)
+    if local_file:
+      file = self._make_local_file_name(filename)
+      shutil.copyfile(local_file, file)
+      return file
+    else:
+      return SshFS.get_file(self, filename)
+
+  # def put_file(self, local_file, remote_file):
 
