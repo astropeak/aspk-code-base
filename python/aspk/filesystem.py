@@ -217,10 +217,14 @@ class SharedFolderSshFS(SshFS):
 
   def convert_to_local_filepath(self, remote_file):
     '''Return the local filepath for the given remote filepath if exists. Else None'''
+    logger.debug("convert_to_local_filepath. remote_file: %s" % remote_file)
     if self.is_path_under_shared_folder(remote_file):
       local_file = re.sub(self.remote_shared_folder, self.local_shared_folder, remote_file)
+      logger.debug("convert_to_local_filepath. local_file: %s" % local_file)
       return local_file
-    else: return None
+    else:
+      logger.debug("convert_to_local_filepath. local_file: None")
+      return None
 
   def convert_to_local_readable_filepath(self, remote_file):
     '''Return the local filepath for the given remote filepath if exists. Else None'''
