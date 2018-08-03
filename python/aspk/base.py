@@ -1,10 +1,13 @@
 # fluent python, chapter 19: dynamic attributes
 
-from collections import abc
+try:
+    from collections import abc
+except:
+    pass
 import keyword
 
 class FrozenJSON:
-    """A read-only façade for navigating a JSON-like object
+    """A read-only facade for navigating a JSON-like object
        using attribute notation
     """
 
@@ -32,7 +35,7 @@ class FrozenJSON:
 
 
 class FrozenJSON:
-    """A read-only façade for navigating a JSON-like object
+    """A read-only facade for navigating a JSON-like object
        using attribute notation
     """
 
@@ -56,3 +59,11 @@ class FrozenJSON:
             return getattr(self.__data, name)
         else:
             return FrozenJSON(self.__data[name])
+
+
+class LazyObject(object):
+    def __init__(self, getter):
+        self.getter = getter
+
+    def __getattr__(self, attr):
+        return self.getter(attr)

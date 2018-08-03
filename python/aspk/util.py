@@ -1,6 +1,8 @@
 import code
 import sys
 import random
+import settings
+
 def start_interactive_shell():
   '''Start a interactive shell
 
@@ -110,3 +112,7 @@ def create_file(filename, content='', makedir=True):
 def thisFileDir():
   return os.path.dirname(os.path.abspath(__file__))
 
+
+def get_remote_python_script_path(p):
+  python_script = '%s/%s' % (settings.REMOTE_ASPK_CODE_BASE_PYTHON_PATH, p)
+  return python_script

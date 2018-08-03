@@ -5,6 +5,8 @@ from sshlib import SshLib
 import logging
 from aspk import util
 logger = logging.getLogger(__name__)
+import datetime
+import settings
 
 class SshFS:
   def __init__(self, hostname, username, password, local_root_dir='/tmp'):
@@ -44,7 +46,8 @@ class SshFS:
 
   def listdir(self, dir):
     logger.debug("SshFS listdir. dir: %s" % dir)
-    rst = self.sshlib.run_python_script(util.thisFileDir() + '/1.py', ["'%s'" % dir], json_output=True)
+    python_script = util.get_remote_python_script_path('aspk/1.py')
+    rst = self.sshlib.run_python_script(python_script, ["'%s'" % dir], json_output=True)
     logger.debug("SshFS listdir. rst: %s" % rst)
     return rst
 
@@ -66,6 +69,36 @@ class SshFS:
 
     return False
 
+  def size(self, path):
+    s = self._run_command(path, "stat -c %%s '%s'")
+    return int(s)
+
+  def modified_time(self, path):
+    s = self._run_command(path, "stat -c %%Y '%s'")
+    return datetime.datetime.fromtimestamp(int(s))
+
+  def writable(self, path):
+    try:
+      self.sshlib.run_command("test -w '%s'" % path)
+      return True
+    except:
+      return False
+
+  def readable(self, path):
+    try:
+      self.sshlib.run_command("test -r '%s'" % path)
+      return True
+    except:
+      return False
+
+  def _run_command(self, path, command_formatter):
+    cmd = command_formatter % (path)
+    try:
+      r = self.sshlib.run_command(cmd)
+      return r.strip()
+    except:
+      return False
+
   def rmfile(self, file):
     self.sshlib.run_command("rm  '%s'" % file)
 
@@ -82,7 +115,47 @@ class SshFS:
     logger.debug("SshFS as_local_file_name. rst: %s" % rst)
     return rst
 
+class CachedSshFS_FileInfo(object):
+  def __init__(self, sshlib, expire_period=5):
+    self.sshlib = sshlib
+    def real_getter(path):
+      return self.sshlib.run_python_script(util.get_remote_python_script_path('aspk/cmd_get_all_info.py'), ["'%s'" % path], json_output=True)
 
+    dg = DataGetter(real_getter, expire_period)
+    self.dg = dg
+
+  def listdir(self, path):
+    d = self.dg.path(path)
+    if not d.exists or d.type != 'dir':
+      raise ValueError("Path is not a directory: %s" % path)
+
+    rst = []
+    for e in d.children:
+      rst.append((e['type'], e['name']))
+
+    return rst
+
+  def exists(self, path):
+    d = self.dg.path(path)
+    return d.exists
+
+  def isdir(self, path):
+    d = self.dg.path(path)
+    return d.exists and d.type == 'dir'
+
+  def size(self, path):
+    d = self.dg.path(path)
+    return d.size
+
+  def modified_time(self, path):
+    d = self.dg.path(path)
+    return datetime.datetime.fromtimestamp(d.modified_time)
+
+  def writable(self, path):
+    return self.dg.path(path).writable
+
+  def readable(self, path):
+    return self.dg.path(path).readable
 
 class FS_Open:
   def __init__(self, fs, filename, mode):
@@ -190,7 +263,51 @@ class SharedFolderFS_LocalFile:
   def close(self):
     if not self.direct_local_file: os.unlink(self.local_file)
 
-class SharedFolderSshFS(SshFS):
+class LocalFS(object):
+  def open(self, filename, mode):
+    return open(filename, mode)
+
+  def listdir(self, dir):
+    a = os.listdir(dir)
+    rst = []
+    for x in a:
+      x = x.decode(settings.SYSTEM_ENCODING)
+      b = u'%s/%s' % (dir, x)
+      b = b.encode(settings.SYSTEM_ENCODING)
+      if os.path.isdir(b): c = ('dir', x)
+      else: c = ('file', x)
+      rst.append(c)
+
+    return rst
+
+  def isdir(self, path):
+    return os.path.isdir(path)
+
+  def exists(self, path):
+    return os.path.exists(path)
+
+  def size(self, path):
+    return os.path.getsize(path)
+
+  def modified_time(self, path):
+    return datetime.datetime.fromtimestamp(os.path.getmtime(path))
+
+  def writable(self, path):
+    return util.check_file_writable(path)
+
+  def readable(self, path):
+    return util.check_file_readable(path)
+
+def dispath_method(name, select_first, class1, class2):
+  logger.debug('dispath_method. name: %s, select_first: %s, class1: %s, class2: %s' % (name, select_first, class1, class2))
+  if select_first and hasattr(class1, name):
+    logger.debug("Select class1. %s" % name)
+    return getattr(class1, name)
+  else:
+    logger.debug("Select class2. %s" % name)
+    return getattr(class2, name)
+
+class SharedFolderSshFS(SshFS, LocalFS):
   def __init__(self, hostname, username, password, local_root_dir,
                local_shared_folder, remote_shared_folder):
     '''
@@ -202,7 +319,8 @@ class SharedFolderSshFS(SshFS):
     self.local_shared_folder = local_shared_folder
     self.remote_shared_folder = remote_shared_folder
 
-    
+    self.__classes = [LocalFS, SshFS]
+
   def open(self, filename, mode):
     logger.debug("SshFS open. filename: %s, mode: %s" % (filename, mode))
     if mode.startswith('r'):
@@ -230,8 +348,11 @@ class SharedFolderSshFS(SshFS):
     '''Return the local filepath for the given remote filepath if exists. Else None'''
     local_file = self.convert_to_local_filepath(remote_file)
     if local_file and util.check_file_readable(local_file):
+      logger.debug("convert_to_local_readable_filepath. local_file: %s" % local_file)
       return local_file
-    else: return None
+    else:
+      logger.debug("convert_to_local_readable_filepath. local_file: None")
+      return None
 
   def is_path_under_shared_folder(self, path):
     return path.startswith(self.remote_shared_folder)
@@ -249,38 +370,27 @@ class SharedFolderSshFS(SshFS):
     return rst
 
   def listdir(self, dir):
-    logger.debug("SshFS listdir. dir: %s" % dir)
-    local_dir = self.convert_to_local_readable_filepath(dir)
-    if local_dir:
-      logger.debug("SshFS listdir. local dir exists and readable. local_dir: %s" % local_dir)
-      a = os.listdir(local_dir)
-      rst = []
-      for x in a:
-        x = x.decode('utf8')
-        b = u'%s/%s' % (local_dir, x)
-        b = b.encode('utf8')
-        if os.path.isdir(b): c = ('dir', x)
-        else: c = ('file', x)
-        rst.append(c)
-    else:
-      rst = self.sshlib.run_python_script(util.thisFileDir() + '/1.py', ["'%s'" % dir], json_output=True)
-
-    logger.debug("SshFS listdir. rst: %s" % rst)
-    return rst
-
+    # logger.debug("SshFS listdir. dir: %s" % dir)
+    return self.__dispatch('listdir', dir)
   def isdir(self, path):
-    local_dir = self.convert_to_local_filepath(path)
-    if local_dir:
-      return os.path.isdir(local_dir)
-    else:
-      return SshFS.isdir(self, path)
+    return self.__dispatch('isdir', path)
+
+  def __dispatch(self, method_name, path):
+    local_dir = self.convert_to_local_readable_filepath(path)
+    method = dispath_method(method_name, local_dir, self.__classes[0], self.__classes[1])
+    return method(self, path)
 
   def exists(self, path):
-    local_dir = self.convert_to_local_filepath(path)
-    if local_dir:
-      return os.path.exists(local_dir)
-    else:
-      return SshFS.exists(self, path)
+    return self.__dispatch('exists', path)
+
+  def size(self, path):
+    return self.__dispatch('size', path)
+  def modified_time(self, path):
+    return self.__dispatch('modified_time', path)
+  def writable(self, path):
+    return self.__dispatch('writable', path)
+  def readable(self, path):
+    return self.__dispatch('readable', path)
 
   def get_file(self, filename):
     local_file = self.convert_to_local_filepath(filename)
@@ -293,3 +403,75 @@ class SharedFolderSshFS(SshFS):
 
   # def put_file(self, local_file, remote_file):
 
+
+
+class CachedSharedFolderSshFS(CachedSshFS_FileInfo, SharedFolderSshFS):
+  def __init__(self, hostname, username, password, local_root_dir,
+               local_shared_folder, remote_shared_folder,
+               expire_period):
+    SharedFolderSshFS.__init__(self, hostname, username, password, local_root_dir,
+               local_shared_folder, remote_shared_folder)
+
+    CachedSshFS_FileInfo.__init__(self, self.sshlib, expire_period)
+
+from store import MemStore
+from base import LazyObject
+class DataGetter:
+  store = MemStore(expire_period=10)
+
+  def __init__(self, real_getter, expire_period=10):
+    # real_getter's result will be a dict and each key will become an attribute
+    self.real_getter = real_getter
+    self.store.expire_period = expire_period
+
+  def _get_real_data_and_update_cache(self, path):
+    data = self.real_getter(path)
+    self.store.save(path, data)
+
+    if 'type' in data and data['type'] == 'dir':
+      for c in data['children']:
+        if path == '/':
+          p = '/%s' % (c['name'])
+        else:
+          p = '%s/%s' % (path, c['name'])
+        # del c['name']
+        self.store.save(p, c)
+
+    return data
+
+  def get_attr(self, path, attr, not_use_cache=False):
+    data = None
+    # first try to get from cache
+    if not not_use_cache:
+      data = self.store.get(path)
+
+    # dat not exists in cache or don't get from cache, then get real data
+    if data is None:
+      data = self._get_real_data_and_update_cache(path)
+
+    # if data is get form cache, then some attribute maybe none.
+    # in this case, we need to get from real data
+    if attr not in data or data[attr] is None:
+      data = self._get_real_data_and_update_cache(path)
+
+    return data[attr]
+
+  def path(self, path, not_use_cache=False):
+    def func(attr):
+      return self.get_attr(path, attr, not_use_cache)
+
+    return LazyObject(func)
+
+
+def Closure():
+  dg = DataGetter(None)
+  def create_attr_getter(real_getter, path):
+    dg.real_getter = real_getter
+    def func(attr):
+      return dg.get_attr(path, attr)
+
+    return func
+
+  return create_attr_getter
+
+create_attr_getter = Closure()

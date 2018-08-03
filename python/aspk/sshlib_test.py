@@ -5,6 +5,7 @@ import util
 import logging
 logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
+import settings
 
 class SshLibTest(unittest.TestCase):
   def test__aa(self):
@@ -44,9 +45,10 @@ class SshLibTest(unittest.TestCase):
     hostname = '192.168.118.118'
     username = 'test'
     password = 'jjjj@222'
-    python_script='1.py'
+    python_script= '%s/%s' % (settings.REMOTE_ASPK_CODE_BASE_PYTHON_PATH,
+                              'aspk/cmd_get_all_info.py')
     sl = SshLib(hostname, username, password)
-    o = sl.run_python_script(python_script, remote_dir='/work', json_output=True)
+    o = sl.run_python_script(python_script, ['/home/test'], json_output=True)
     # import json
     # 0 = json.loads(o)
     print('run_command result: %s' % o)

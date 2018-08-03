@@ -3,6 +3,7 @@ from filesystem import *
 import logging
 logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
+import  time
 
 
 class SshFSTest(unittest.TestCase):
@@ -118,9 +119,100 @@ class SharedFolderSshFSTest(SshFSTest):
     # the file should be deleted
     self.assertFalse(os.path.isfile(lfn))
 
+class DataGetterTest(unittest.TestCase):
+  def setUp(self):
+    hostname = '192.168.118.118'
+    username = 'test'
+    password = 'jjjj@222'
+    remote_shared_folder = '/mnt/hgfs/astropeak'
+    local_shared_folder = '/home/astropeak'
+    sfs = SharedFolderSshFS(hostname, username, password, '/tmp/sshfs',
+                            local_shared_folder, remote_shared_folder)
+    self.sfs = sfs
+    self.real_getter_called = False
+    def real_getter(path):
+      self.real_getter_called = True
+      return sfs.sshlib.run_python_script(util.thisFileDir() + '/cmd_get_all_info.py', ["'%s'" % path], json_output=True)
+
+    dg = DataGetter(real_getter)
+    self.dg = dg
+
+  def assertRealGetterCalled(self, path, attr, iscalled):
+    self.real_getter_called = False
+    s = self.dg.get_attr(path, attr)
+    self.assertTrue(self.real_getter_called == iscalled)
+    return s
+
+  def test__aa(self):
+    path = '/home/test'
+    r = self.assertRealGetterCalled(path, 'size', True)
+    print('size: ', r)
+    r = self.assertRealGetterCalled(path, 'exists', False)
+    print('exists: ', r)
+    r = self.assertRealGetterCalled(path, 'children', False)
+    print('children: ', r)
+
+    path = '%s/%s' % (path, 'tmp')
+    r = self.assertRealGetterCalled(path, 'size', False)
+    print('size: ', r)
+    r = self.assertRealGetterCalled(path, 'exists', False)
+    print('exists: ', r)
+    r = self.assertRealGetterCalled(path, 'children', True)
+    print('children: ', r)
+
+class CachedSshFSTest(SshFSTest):
+  ''''All test case of SshFSTest should also passed for CachedSshFSTest'''
+  def setUp(self):
+    hostname = '192.168.118.118'
+    username = 'test'
+    password = 'jjjj@222'
+    remote_shared_folder = '/mnt/hgfs/astropeak'
+    local_shared_folder = '/home/astropeak'
+    self.expire_period = 2
+    sfs = CachedSshFS(hostname, username, password, '/tmp/sshfs',
+                      expire_period=self.expire_period)
+    self.sfs = sfs
+
+  def test__dir(self):
+    sfs = self.sfs
+    o = sfs.isdir('/home/sssss')
+    self.assertFalse(o)
+    o = sfs.isdir('/home/test')
+    self.assertTrue(o)
+
+    dir = '/home/test/tmp/a b c'
+    try: sfs.rmdir(dir)
+    except: pass
+    self.assertFalse(sfs.isdir(dir))
+    sfs.mkdir(dir)
+    # Because the result is cached, so here is should sitll be false
+    self.assertFalse(sfs.isdir(dir))
+    time.sleep(self.expire_period)
+    self.assertTrue(sfs.isdir(dir))
+    sfs.rmdir(dir)
+    self.assertTrue(sfs.isdir(dir))
+    time.sleep(self.expire_period)
+    self.assertFalse(sfs.isdir(dir))
+
+
+class CachedSharedFolderSshFSTest(SharedFolderSshFSTest):
+  def setUp(self):
+    hostname = '192.168.118.118'
+    username = 'test'
+    password = 'jjjj@222'
+    remote_shared_folder = '/mnt/hgfs/astropeak'
+    local_shared_folder = '/home/astropeak'
+    sfs = CachedSharedFolderSshFS(hostname, username, password, '/tmp/sshfs',
+                            local_shared_folder, remote_shared_folder,
+    10)
+    self.sfs = sfs
+
+
 # The main
 if __name__ == '__main__':
   suite = unittest.TestLoader().loadTestsFromTestCase(SshFSTest)
   suite2 = unittest.TestLoader().loadTestsFromTestCase(SharedFolderSshFSTest)
-  unittest.TextTestRunner(verbosity=2).run(suite)
-  unittest.TextTestRunner(verbosity=2).run(suite2)
+  suite3 = unittest.TestLoader().loadTestsFromTestCase(CachedSharedFolderSshFSTest)
+  # unittest.TextTestRunner(verbosity=2).run(suite)
+  # unittest.TextTestRunner(verbosity=2).run(suite2)
+  unittest.TextTestRunner(verbosity=2).run(suite3)
