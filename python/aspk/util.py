@@ -61,18 +61,14 @@ def ensure_dir(directory):
 
 
 import os.path
-def check_file_readable(fnm):
+def check_path_readable(fnm):
   return os.access(fnm, os.R_OK)
 
-def check_file_writable(fnm):
+def check_path_writable(fnm):
   '''https://www.novixys.com/blog/python-check-file-can-read-write/'''
   if os.path.exists(fnm):
     # path exists
-    if os.path.isfile(fnm): # is it a file or a dir?
-      # also works when file is a link and the target is writable
-      return os.access(fnm, os.W_OK)
-    else:
-      return False # path is a dir, so cannot write as a file
+    return os.access(fnm, os.W_OK)
 
   # target does not exist, check perms on parent dir
   pdir = os.path.dirname(fnm)

@@ -293,10 +293,10 @@ class LocalFS(object):
     return datetime.datetime.fromtimestamp(os.path.getmtime(path))
 
   def writable(self, path):
-    return util.check_file_writable(path)
+    return util.check_path_writable(path)
 
   def readable(self, path):
-    return util.check_file_readable(path)
+    return util.check_path_readable(path)
 
 def dispath_method(name, select_first, class1, class2):
   logger.debug('dispath_method. name: %s, select_first: %s, class1: %s, class2: %s' % (name, select_first, class1, class2))
@@ -347,7 +347,7 @@ class SharedFolderSshFS(SshFS, LocalFS):
   def convert_to_local_readable_filepath(self, remote_file):
     '''Return the local filepath for the given remote filepath if exists. Else None'''
     local_file = self.convert_to_local_filepath(remote_file)
-    if local_file and util.check_file_readable(local_file):
+    if local_file and util.check_path_readable(local_file):
       logger.debug("convert_to_local_readable_filepath. local_file: %s" % local_file)
       return local_file
     else:

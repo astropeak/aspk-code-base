@@ -24,8 +24,8 @@ elif os.path.isdir(path):
   children = []
   data = {'exists':True, 'type': 'dir',
           'size': size, 'modified_time': modified_time, 'children': children,
-          'writable':util.check_file_writable(dir),
-          'readable':util.check_file_writable(dir)
+          'readable':util.check_path_readable(dir),
+          'writable':util.check_path_writable(dir),
   }
   for x in a:
     x = x.decode(settings.SYSTEM_ENCODING)
@@ -41,8 +41,8 @@ elif os.path.isdir(path):
          'exists': True,
          'size': size,
          'modified_time': modified_time,
-         'writable':util.check_file_writable(b),
-         'readable':util.check_file_writable(b)
+         'writable':util.check_path_writable(b),
+         'readable':util.check_path_readable(b)
     }
     children.append(d)
 
@@ -51,8 +51,8 @@ else:
   size, modified_time = get_stat_info(path)
   data = {'exists': True, 'type': 'file',
           'size': size, 'modified_time': modified_time,
-          'writable':util.check_file_writable(path),
-          'readable':util.check_file_writable(path)
+          'writable':util.check_path_writable(path),
+          'readable':util.check_path_readable(path)
   }
   rst = data
 
