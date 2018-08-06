@@ -116,13 +116,24 @@ class SshFS:
     return rst
 
 class CachedSshFS_FileInfo(object):
+  stores = {}
   def __init__(self, sshlib, expire_period=5):
     self.sshlib = sshlib
     def real_getter(path):
       return self.sshlib.run_python_script(util.get_remote_python_script_path('aspk/cmd_get_all_info.py'), ["'%s'" % path], json_output=True)
 
-    dg = DataGetter(real_getter, expire_period)
+    self.expire_period = expire_period
+    store = self._get_or_create_store_for_user()
+    dg = DataGetter(real_getter, store)
     self.dg = dg
+
+  def _get_or_create_store_for_user(self):
+    if not self.username in self.stores:
+      logger.info("Create store for user %s, expire_period: %s" %
+                  (self.username, self.expire_period))
+      self.stores[self.username] = MemStore(expire_period=self.expire_period)
+
+    return self.stores[self.username]
 
   def listdir(self, path):
     d = self.dg.path(path)
@@ -416,13 +427,12 @@ class CachedSharedFolderSshFS(CachedSshFS_FileInfo, SharedFolderSshFS):
 
 from store import MemStore
 from base import LazyObject
+# TODO: part of this class can (DEMO VERSION!) be a generic class, such as combining the store and the real_getter part: when get, first check if it exists in the store, if yes, then get from the cache, if no, then first get from the real_getter, then save it in the store, and return that value.
 class DataGetter:
-  store = MemStore(expire_period=10)
-
-  def __init__(self, real_getter, expire_period=10):
+  def __init__(self, real_getter, store):
     # real_getter's result will be a dict and each key will become an attribute
     self.real_getter = real_getter
-    self.store.expire_period = expire_period
+    self.store = store
 
   def _get_real_data_and_update_cache(self, path):
     data = self.real_getter(path)
@@ -461,17 +471,3 @@ class DataGetter:
       return self.get_attr(path, attr, not_use_cache)
 
     return LazyObject(func)
-
-
-def Closure():
-  dg = DataGetter(None)
-  def create_attr_getter(real_getter, path):
-    dg.real_getter = real_getter
-    def func(attr):
-      return dg.get_attr(path, attr)
-
-    return func
-
-  return create_attr_getter
-
-create_attr_getter = Closure()
