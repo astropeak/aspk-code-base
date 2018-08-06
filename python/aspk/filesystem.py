@@ -1,7 +1,7 @@
 import os
 import re
 import shutil
-from sshlib import SshLib
+from sshlib import SshLib, LoginDenied
 import logging
 from aspk import util
 logger = logging.getLogger(__name__)
