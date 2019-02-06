@@ -133,5 +133,10 @@
             (aspk/tree-iterate -------subtree fn tree (+ depth 1)))
           (cdr tree))))
 
+;; TODO: if the parameter is fn, then there will be an error. Because it is the same in aspk/tree-iterate. This is a bad behavior of dynamic scoping
+(defun aspk/tree-iterate-element-value (tree -fn)
+  "Iterate all element value in the TREE, with function FN."
+  (aspk/tree-iterate tree (lambda (elem-subtree parent-subtree depth)
+                            (funcall -fn (car elem-subtree)))))
 
 (provide 'aspk-tree)

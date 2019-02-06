@@ -50,6 +50,7 @@
 ;; (aspk/advice-app-log-functions-enter-and-exit "^quail.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^op/.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^git.*")
+;; (aspk/advice-app-log-functions-enter-and-exit "^pns.*")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^pns.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^ediff.*")
 

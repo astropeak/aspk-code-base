@@ -3,6 +3,7 @@
 
 (defconst DIS 0 "disabled")
 (defconst ERROR 1 "error")
+(defconst ERR 1 "error")
 (defconst WARNING 2 "warning")
 (defconst HIGH 3 "high level log")
 (defconst MEDIUM 4 "medium level log")

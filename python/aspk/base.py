@@ -6,6 +6,7 @@ except:
     pass
 import keyword
 
+# this class works on python 2 while the second one not
 class FrozenJSON:
     """A read-only facade for navigating a JSON-like object
        using attribute notation
