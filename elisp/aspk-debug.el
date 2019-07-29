@@ -39,26 +39,67 @@
               nil))
         nil))))
 
+
+
+;; (defun aspk-debug-format-header ()
+;;   (format "%s:%s:%s"
+;;           (file-name-nondirectory (or (buffer-file-name) ""))
+;;           (or (dbg-find-current-function-name) "")
+;;           (line-number-at-pos)))
+
 ;; TODO: print the function name instead of the file name.
 ;; If the macro is called in a function, then the... maybe it is right
-(defmacro aspk/trace (lvl &rest args-syms)
+(defmacro aspk-debug-format-var-list (&rest args-syms)
+  "Change a var list (a b) to a string: \"a=123, b=456\""
+  ;; TODO: the parameter may be excutes more than one times
+  (let ((temp-var (cl-gensym "aspk-debug")))
+    `(let ((,temp-var ,(format "%s:%s:%s:\t" (file-name-nondirectory (or (buffer-file-name) ""))
+                               (or (dbg-find-current-function-name) "") (line-number-at-pos))))
+       (format "%s\t%s" ,temp-var
+       (mapconcat (lambda (s) (format "%s=%S" s (symbol-value s)))
+                  (quote ,args-syms)
+                  ", ")))))
+
+(format "%S" (macroexpand '(aspk-debug-format-var-list a)))
+
+(aspk-debug-format-var-list a b)
+
+
+(defmacro aspk/trace-2-str (lvl &rest args-syms)
   ;; TODO: the parameter may be excutes more than one times
   (let ((temp-var (make-symbol "str")))
     `(and
       (<= ,lvl *dbg-current-level*)
-      (let ((,temp-var ,(format "%s:%s:%s:\t" (file-name-nondirectory (or (buffer-file-name) ""))
-                          (dbg-find-current-function-name) (line-number-at-pos))))
-        ;;(message "args-syms(in let)=%s" (quote ,args-syms))
-        (dolist (s (quote ,args-syms))
-          ;;(dbg TRIV s)
-          ;;(message "s=%s" s)
-          (setq ,temp-var (concat ,temp-var (format "%s=%S, " s (symbol-value s)))))
-        (message "%s" (substring ,temp-var 0 (- (length ,temp-var) 2)))))))
+      (format "[%s] %s" ',lvl (aspk-debug-format-var-list ,@args-syms)))))
 
-;; (setq str "AAA")
-;; (setq a (make-symbol "str"))
-;; (set a "BBB")
-;; (eq  (make-symbol "str"))
+(format "%S" (macroexpand '(aspk/trace-2-str ERR a b)))
+
+
+(defun a()
+  (message "%s" (aspk/trace-2-str ERR a))
+  )
+
+(defmacro aspk/trace (lvl &rest args-syms)
+  `(message "%s" (aspk/trace-2-str ,lvl ,@args-syms)))
+
+(aspk/trace ERR a)
+
+(format "%S" (macroexpand '(aspk/trace-2-str ERR a)))
+
+
+;; (defmacro aspk/trace (lvl &rest args-syms)
+;;   ;; TODO: the parameter may be excutes more than one times
+;;   (let ((temp-var (make-symbol "str")))
+;;     `(and
+;;       (<= ,lvl *dbg-current-level*)
+;;       (let ((,temp-var ,(format "%s:%s:%s:\t" (file-name-nondirectory (or (buffer-file-name) ""))
+;;                                 (dbg-find-current-function-name) (line-number-at-pos))))
+;;         ;;(message "args-syms(in let)=%s" (quote ,args-syms))
+;;         (dolist (s (quote ,args-syms))
+;;           ;;(dbg TRIV s)
+;;           ;;(message "s=%s" s)
+;;           (setq ,temp-var (concat ,temp-var (format "%s=%S, " s (symbol-value s)))))
+;;         (message "%s" (substring ,temp-var 0 (- (length ,temp-var) 2)))))))
 
 (defmacro tracee (&rest args-syms)
   `(aspk/trace ERROR ,@args-syms))
@@ -72,7 +113,5 @@
   `(aspk/trace LOW ,@args-syms))
 
 ;; (macroexpand '(tracem a))
-;; (tracem a)
-;; (trace ERR a)
 
 (provide 'aspk-debug)

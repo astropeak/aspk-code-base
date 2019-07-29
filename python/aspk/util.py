@@ -1,7 +1,7 @@
 import code
 import sys
 import random
-import settings
+import aspk.settings
 
 def start_interactive_shell():
   '''Start a interactive shell

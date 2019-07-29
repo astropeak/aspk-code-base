@@ -52,8 +52,7 @@
 ;; (aspk/advice-app-log-functions-enter-and-exit "^git.*")
 ;; (aspk/advice-app-log-functions-enter-and-exit "^pns.*")
 ;; (aspk/advice-app-dislog-functions-enter-and-exit "^pns.*")
-;; (aspk/advice-app-log-functions-enter-and-exit "^ediff.*")
-
+;; (aspk/advice-app-log-functions-enter-and-exit "^show-paren.*")
 
 
 (defun aspk/advice-app-dislog-functions-enter-and-exit (pattern)

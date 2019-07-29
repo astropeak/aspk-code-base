@@ -19,6 +19,7 @@
 
 (xx-2)
 
+(tracee a)
 
 ;; (macroexpand '(aspk/trace ERR a b))
 

@@ -7,4 +7,7 @@ PYTHON_BINARY = 'python'
 
 
 # variables defined in user_settings.py will override the same variables in this file
-from user_settings import *
+try:
+  from user_settings import *
+except:
+  pass
