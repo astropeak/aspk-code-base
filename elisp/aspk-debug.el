@@ -62,7 +62,7 @@
 
 (format "%S" (macroexpand '(aspk-debug-format-var-list a)))
 
-(aspk-debug-format-var-list a b)
+;; (aspk-debug-format-var-list a b)
 
 
 (defmacro aspk/trace-2-str (lvl &rest args-syms)
@@ -72,19 +72,19 @@
       (<= ,lvl *dbg-current-level*)
       (format "[%s] %s" ',lvl (aspk-debug-format-var-list ,@args-syms)))))
 
-(format "%S" (macroexpand '(aspk/trace-2-str ERR a b)))
+;; (format "%S" (macroexpand '(aspk/trace-2-str ERR a b)))
 
 
-(defun a()
-  (message "%s" (aspk/trace-2-str ERR a))
-  )
+;; (defun a()
+;;   (message "%s" (aspk/trace-2-str ERR a))
+;;   )
 
 (defmacro aspk/trace (lvl &rest args-syms)
   `(message "%s" (aspk/trace-2-str ,lvl ,@args-syms)))
 
-(aspk/trace ERR a)
+;; (aspk/trace ERR a)
 
-(format "%S" (macroexpand '(aspk/trace-2-str ERR a)))
+;; (format "%S" (macroexpand '(aspk/trace-2-str ERR a)))
 
 
 ;; (defmacro aspk/trace (lvl &rest args-syms)

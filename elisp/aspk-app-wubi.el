@@ -33,14 +33,18 @@
 ;; (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-delete-selectlist)
 
 (aspk/advice-delete 'quail-translate-key)
-(aspk/advice-delete 'quail-start-translation)
 (aspk/advice-delete 'quail-update-translation)
 (aspk/advice-delete 'quail-input-method)
 
-(aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
+;; enable pop list by uncomment below lines
+;; (aspk/advice-add 'quail-translate-key 'after 'aspk/app-wubi-create-selectlist)
+;; (aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-selectlist)
+;; (aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-hide-selectlist)
+
+
+(aspk/advice-delete 'quail-start-translation)
 (aspk/advice-add 'quail-start-translation 'after 'aspk/app-wubi-input-english-wapper)
-(aspk/advice-add 'quail-update-translation 'after 'aspk/app-wubi-display-selectlist)
-(aspk/advice-add 'quail-input-method 'after 'aspk/app-wubi-hide-selectlist)
+
 
 (defun aspk/app-wubi-display-selectlist (&rest args)
   (let ((candidates (aspk/tooltip-get aspk/app-wubi-selectlist 'candidates)))
