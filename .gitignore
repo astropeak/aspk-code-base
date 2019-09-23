@@ -6,3 +6,5 @@
 #*
 *.exe
 /python/aspk/user_settings.py
+.DS_Store
+*.pickle
