@@ -151,11 +151,15 @@
     (aspk/app-wubi-input-english)
     (setq return-val "")))
 
+;; The keys defines in this function rely's on the return value  (DEMO VERSION!) of aspk/keybind--convert-key. C-m is enter, backspace and delete are all symbols.
+;; now we can use z to enter en mode, Enter to exit, and backspace or delete to delete a char backward.
 (defun aspk/app-wubi-input-english ()
   (aspk/keybind-temporary-keymap-highest-priority
-   (append '((return (quail-abort-translation) 1)
+   (append '((C-m (quail-abort-translation) 1)
              ;; (append '((return (backward-delete-char-untabify 1) 1)
-             (backspace (backward-delete-char-untabify 1)))
+             (backspace (backward-delete-char-untabify 1))
+             (delete (backward-delete-char-untabify 1))
+             )
            (mapcar (lambda (x)
                      (let ((s (make-string 1 x)))
                        (list s `(insert ,s)))
@@ -163,6 +167,7 @@
                    " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"))
    "En mode"))
 
+;; TODO: what this is used for?
 (aspk/advice-add 'quail-input-string-to-events 'around
                  (lambda (fn of str &rest args)
                    (if (string-equal str "z")

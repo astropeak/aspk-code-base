@@ -28,11 +28,14 @@
 ;; http://www.physics.udel.edu/~watson/scen103/ascii.html
 (defun aspk/keybind--convert-key (key)
   "key is the value returned by read-event. returned value is the internal representaion of that key, used when define keymap"
-  (if (symbolp key)
-      key
-    (if (>= key 32)
-        (make-string 1 key)
-      (intern (concat "C-" (make-string 1 (+ key 96)))))))
+    (cond
+     ((symbolp key) key)
+     ((= key 8) 'backspace)
+     ((= key 127) 'delete)
+
+     ((>= key 32) (make-string 1 key))
+     (t (intern (concat "C-" (make-string 1 (+ key 96)))))
+     ))
 ;; (equal (aspk/keybind--convert-key (read-event)) 'C-f)
 
 ;; (aspk/keybind--convert-key (read-event))
@@ -45,12 +48,13 @@
 ;;       ;; (cdr pair)
 ;;       key
 ;;     (make-string 1 key))))
-
+;; (aspk/keybind--convert-key 127)
 ;; (macroexpand '(tracem key))
 ;; (setq key "return")
 (defun aspk/keybind-temporary-keymap-highest-priority (bindings &optional msg before after)
   "Bindings: ((key action excute-count)), if excute-count ommited, just excute unlimited time. Other parameter same as the above function."
   (tracel bindings msg)
+  ;; (setq aspk-tmp bindings)
   (let* ((key (read-event))
          (key2 (aspk/keybind--convert-key key))
          (bind (assoc key2 bindings))
@@ -61,10 +65,9 @@
                                 (cons (car x) 0)) bindings)))
     (tracel key key2 bind count total-count)
     (while bind
-      (tracel total-count)
+      ;; (tracel total-count)
       (setq action (nth 1 bind))
       (setq count (or (nth 2 bind) 9999999))
-      (tracel key bind action count)
       (setq rst (eval action))
       (or (minibufferp) (not msg) (message "%s" (eval msg)))
       (setcdr (assoc key2 total-count) (1+ (cdr (assoc key2 total-count))))
@@ -75,6 +78,8 @@
         (setq key2 (aspk/keybind--convert-key key))
         (setq bind (assoc key2 bindings))
         (setq count (or (nth 2 bind) 9999999)))
+
+      (tracel key key2 bind action count)
       )
 
     (and key (setq unread-command-events (cons key unread-command-events)))
