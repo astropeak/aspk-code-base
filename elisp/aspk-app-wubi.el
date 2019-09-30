@@ -155,8 +155,11 @@
 ;; now we can use z to enter en mode, Enter to exit, and backspace or delete to delete a char backward.
 (defun aspk/app-wubi-input-english ()
   (aspk/keybind-temporary-keymap-highest-priority
-   (append '((C-m (quail-abort-translation) 1)
-             ;; (append '((return (backward-delete-char-untabify 1) 1)
+   (append '(
+             ;;  on mac enter key is C-m, on windows it is return
+             (C-m (quail-abort-translation) 1)
+             (return (quail-abort-translation) 1)
+
              (backspace (backward-delete-char-untabify 1))
              (delete (backward-delete-char-untabify 1))
              )
