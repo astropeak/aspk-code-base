@@ -1,0 +1,3 @@
+* link
+  参见 journal.org中的这个条目:
+  TODO 基于kaldi做一个能够实际可用的东西, 如类似语音输入法                   :kaldi:
