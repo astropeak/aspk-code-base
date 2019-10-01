@@ -39,14 +39,17 @@ tmpdir=./tmp
 ID=wav_ID
 echo "$ID $sound_file" > $tmpdir/wav.scp
 echo "$ID global" > $tmpdir/utt2spk
+echo "global $ID" > $tmpdir/spk2utt
+
 
 
 # 1: from sound to feature
 # 1.1 create mffc, stored in fests.scp
 compute-mfcc-feats  --use-energy=false --sample-frequency=8000 --verbose=2 scp:$tmpdir/wav.scp ark,scp:$tmpdir/feats.ark,$tmpdir/feats.scp
+compute-cmvn-stats --spk2utt=ark:$tmpdir/spk2utt scp:$tmpdir/feats.scp ark,scp:$tmpdir/cmvn.ark,$tmpdir/cmvn.scp
 
 # 1.2 process mffc, apply cmnv, add deltas
-feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$tmpdir/utt2spk scp:$modeldir/cmvn.scp scp:$tmpdir/feats.scp ark:- | add-deltas $delta_opts ark:- ark:- |"
+feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$tmpdir/utt2spk scp:$tmpdir/cmvn.scp scp:$tmpdir/feats.scp ark:- | add-deltas $delta_opts ark:- ark:- |"
 # feats="ark,s,cs:add-deltas $delta_opts scp:$tmpdir/feats.scp ark:- |"
 # if remove --utt2spk, there is error like.
 # WARNING (apply-cmvn[5.4.218~2-e6fe]:main():apply-cmvn.cc:112) No normalization statistics available for key 1_1_1_1_1_1_1_1, producing no output for this utterance
