@@ -12,9 +12,9 @@ feats=xxx
 outfile=$2
 
 # TODO: replace xxx
-max_active=5000
-beam=16
-lattice_beam=10
+max_active=50000
+beam=32
+lattice_beam=20
 acwt=0.1
 graphdir=xxx
 decode_extra_opts=
@@ -46,6 +46,7 @@ compute-mfcc-feats  --use-energy=false --sample-frequency=8000 --verbose=2 scp:$
 
 # 1.2 process mffc, apply cmnv, add deltas
 feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$tmpdir/utt2spk scp:$sdata/cmvn.scp scp:$tmpdir/feats.scp ark:- | add-deltas $delta_opts ark:- ark:- |"
+# feats="ark,s,cs:add-deltas $delta_opts scp:$tmpdir/feats.scp ark:- |"
 # if remove --utt2spk, there is error like.
 # WARNING (apply-cmvn[5.4.218~2-e6fe]:main():apply-cmvn.cc:112) No normalization statistics available for key 1_1_1_1_1_1_1_1, producing no output for this utterance
 # LOG (apply-cmvn[5.4.218~2-e6fe]:main():apply-cmvn.cc:162) Applied cepstral mean normalization to 0 utterances, errors on 29
@@ -56,6 +57,6 @@ feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$tmpdir/utt2spk scp:$sdata/c
 
 # 2: from feature to lattice
 gmm-latgen-faster --max-active=$max_active --beam=$beam --lattice-beam=$lattice_beam \
-                  --acoustic-scale=$acwt --allow-partial=true --word-symbol-table=$graphdir/words.txt $decode_extra_opts \
+                  --acoustic-scale=$acwt --allow-partial=false --word-symbol-table=$graphdir/words.txt $decode_extra_opts \
                   $model $graphdir/HCLG.fst "$feats" "ark:|gzip -c > $outfile" || exit 1;
 
