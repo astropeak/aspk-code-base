@@ -149,6 +149,9 @@
     ;; (backward-delete-char-untabify 1)
     (message "En mode")
     (aspk/app-wubi-input-english)
+    ;; doesn't work
+    ;; (let ((quail-guidance-str "En Mode"))
+    ;;   (quail-show-guidance))
     (setq return-val "")))
 
 ;; The keys defines in this function rely's on the return value  (DEMO VERSION!) of aspk/keybind--convert-key. C-m is enter, backspace and delete are all symbols.
@@ -165,7 +168,8 @@
              )
            (mapcar (lambda (x)
                      (let ((s (make-string 1 x)))
-                       (list s `(insert ,s)))
+                       (list s `(progn (insert ,s) ""))
+                       )
                      )
                    " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"))
    "En mode"))
