@@ -19,7 +19,7 @@ wip=$4
 
 latfile="ark:gunzip -c $latfile|"
 hyp_filtering_cmd=cat
-int2sym_cmd=/Users/astropeak/github/kaldi/egs/wsj/s5/utils/int2sym.pl
+int2sym_cmd=~/github/kaldi/egs/wsj/s5/utils/int2sym.pl
 
 
 lattice-scale --inv-acoustic-scale=$lmwt "$latfile" ark:- | \
