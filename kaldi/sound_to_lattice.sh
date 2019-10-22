@@ -76,7 +76,7 @@ gmm-latgen-faster --max-active=$max_active --beam=$beam --lattice-beam=$lattice_
 
 if ! $do_fmllr ; then
     echo "Not do fmllr"
-    exit 1
+    exit 0
 fi
 
 

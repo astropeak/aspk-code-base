@@ -5,10 +5,10 @@
 source ~/github/kaldi/setenv.sh
 
 # where the model is in
-modeldir=./yesnos5/exp/mono0a
+modeldir=$KALDI_ROOT/egs/yesno/s5/exp/mono0a
 
 # where the decoding HCLG graph is in
-graphdir=./yesnos5/exp/mono0a/graph_tgpr
+graphdir=$KALDI_ROOT/egs/yesno/s5/exp/mono0a/graph_tgpr
 
 # parameters
 # below values are form lattice_to_transcription

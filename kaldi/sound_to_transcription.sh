@@ -18,5 +18,7 @@ source datapack.sh
 
 latfile=$tmpdir/lat.gz
 
-./sound_to_lattice.sh $1 $latfile 2>$tmpdir/log.log
+echo "run sound_to_lattice.sh "
+./sound_to_lattice.sh $1 $latfile 2>$tmpdir/log.log  ||  exit 1;
+echo "run lattice_to_transcription.sh"
 ./lattice_to_transcription.sh $latfile 2>>$tmpdir/log.log
