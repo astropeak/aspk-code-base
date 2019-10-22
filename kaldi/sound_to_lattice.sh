@@ -13,6 +13,7 @@ if [ "$#" -ne 2 ]; then
 fi
 
 do_fmllr=false
+# do_fmllr=true
 
 source ~/github/kaldi/setenv.sh
 
@@ -100,6 +101,7 @@ fmllr_update_type=full
 silphonelist=`cat model/silence.csl` || exit 1;
 
 
+# here outfile is the lattice file
 gunzip -c $outfile | \
     lattice-to-post --acoustic-scale=$acwt ark:- ark:- | \
     weight-silence-post $silence_weight $silphonelist $alignment_model ark:- ark:- | \
@@ -132,6 +134,17 @@ lattice-determinize-pruned$thread_string --acoustic-scale=$acwt --beam=4.0 \
                        ark:$dir/trans.JOB  || exit 1;
 
 
+
+
+
+
+post="ark:ali-to-post \"ark:gzip -d -c $tmpdir/ali.gz|\" ark:-|"
+
+gmm-est-fmllr --fmllr-update-type=$fmllr_update_type \
+              --spk2utt=ark:$tmpdir/spk2utt \
+              --fmllr-min-count=1 \
+              $adapt_model "$feats" \
+              "$post" ark:$tmpdir/trans.JOB
 
 feats="$sifeats transform-feats --utt2spk=ark:$tmpdir/utt2spk ark:$dir/trans.JOB ark:- ark:- |"
 
