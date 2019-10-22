@@ -25,11 +25,6 @@ source datapack.sh
 sound_file=$1
 outfile=$2
 
-# below values could also be moved to datapack file
-max_active=50000
-beam=32
-lattice_beam=20
-acwt=0.1
 decode_extra_opts=
 
 
@@ -74,7 +69,7 @@ feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$tmpdir/utt2spk scp:$tmpdir/
 
 # 2: from feature to lattice
 gmm-latgen-faster --max-active=$max_active --beam=$beam --lattice-beam=$lattice_beam \
-                  --acoustic-scale=$acwt --allow-partial=false --word-symbol-table=$graphdir/words.txt $decode_extra_opts \
+                  --acoustic-scale=$acoustic_weight --allow-partial=false --word-symbol-table=$graphdir/words.txt $decode_extra_opts \
                   $model $graphdir/HCLG.fst "$feats" "ark:|gzip -c > $outfile" || exit 1;
 
 
@@ -103,7 +98,7 @@ silphonelist=`cat $graphdir/phones/silence.csl` || exit 1;
 
 # here outfile is the lattice file
 gunzip -c $outfile | \
-    lattice-to-post --acoustic-scale=$acwt ark:- ark:- | \
+    lattice-to-post --acoustic-scale=$acoustic_weight ark:- ark:- | \
     weight-silence-post $silence_weight $silphonelist $alignment_model ark:- ark:- | \
     gmm-post-to-gpost $alignment_model "$sifeats" ark:- ark:- | \
     gmm-est-fmllr-gpost --fmllr-update-type=$fmllr_update_type \
@@ -114,16 +109,16 @@ gunzip -c $outfile | \
 
 pass1feats="$sifeats transform-feats --utt2spk=ark:$tmpdir/utt2spk ark:$dir/pre_trans.JOB ark:- ark:- |"
 gmm-latgen-faster --max-active=$max_active --beam=$beam --lattice-beam=$lattice_beam \
-                  --acoustic-scale=$acwt --determinize-lattice=false \
+                  --acoustic-scale=$acoustic_weight --determinize-lattice=false \
                   --allow-partial=false --word-symbol-table=$graphdir/words.txt $decode_extra_opts \
                   $model $graphdir/HCLG.fst "$feats" "ark:|gzip -c > $outfile" || exit 1;
 
 
 thread_string=
 
-lattice-determinize-pruned$thread_string --acoustic-scale=$acwt --beam=4.0 \
+lattice-determinize-pruned$thread_string --acoustic-scale=$acoustic_weight --beam=4.0 \
                                          "ark:gunzip -c $outfile|" ark:- | \
-    lattice-to-post --acoustic-scale=$acwt ark:- ark:- | \
+    lattice-to-post --acoustic-scale=$acoustic_weight ark:- ark:- | \
     weight-silence-post $silence_weight $silphonelist $adapt_model ark:- ark:- | \
     gmm-est-fmllr --fmllr-update-type=$fmllr_update_type \
                   --spk2utt=ark:$tmpdir/spk2utt \
@@ -149,5 +144,5 @@ gmm-est-fmllr --fmllr-update-type=$fmllr_update_type \
 feats="$sifeats transform-feats --utt2spk=ark:$tmpdir/utt2spk ark:$dir/trans.JOB ark:- ark:- |"
 
 gmm-rescore-lattice $final_model "ark:gunzip -c $outfile|" "$feats" ark:- | \
-    lattice-determinize-pruned$thread_string --acoustic-scale=$acwt --beam=$lattice_beam ark:- \
+    lattice-determinize-pruned$thread_string --acoustic-scale=$acoustic_weight --beam=$lattice_beam ark:- \
                                              "ark:|gzip -c > $outfile"|| exit 1;

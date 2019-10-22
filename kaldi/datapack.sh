@@ -11,5 +11,13 @@ modeldir=./yesnos5/exp/mono0a
 graphdir=./yesnos5/exp/mono0a/graph_tgpr
 
 # parameters
+# below values are form lattice_to_transcription
 language_model_weight=12
 word_insertion_penalty=0.0
+
+
+# below values are from sound_to_lattice
+max_active=50000
+beam=32
+lattice_beam=20
+acoustic_weight=0.1
