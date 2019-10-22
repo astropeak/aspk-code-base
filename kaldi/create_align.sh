@@ -13,17 +13,11 @@ fi
 source datapack.sh
 
 
-# lang=~/github/kaldi/egs/yesno/s5/data/lang_test_tg
-# this is the model dir
-# dir=~/github/kaldi/egs/yesno/s5/exp/mono0a
-
 datadir=$1
-# tmpdir=./tmp
 outdir=$2
 
 
-# 1. create feature
-# 1: from sound to feature
+# 1. create feature, from sound to feature
 # 1.1 create mffc, stored in fests.scp
 compute-mfcc-feats  --use-energy=false --sample-frequency=8000 --verbose=2 scp:$datadir/wav.scp ark,scp:$outdir/feats.ark,$outdir/feats.scp
 compute-cmvn-stats --spk2utt=ark:$datadir/spk2utt scp:$outdir/feats.scp ark,scp:$outdir/cmvn.ark,$outdir/cmvn.scp
