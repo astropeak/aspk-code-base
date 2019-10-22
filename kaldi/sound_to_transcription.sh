@@ -14,8 +14,9 @@ if [ ! -d $tmpdir ]; then
     mkdir $tmpdir
 fi
 
-modeldir=./model
-graphdir=$modeldir
+source datapack.sh
+
 latfile=$tmpdir/lat.gz
+
 ./sound_to_lattice.sh $1 $latfile 2>$tmpdir/log.log
-./lattice_to_transcription.sh $latfile $graphdir/words.txt 12 0.0 2>>$tmpdir/log.log
+./lattice_to_transcription.sh $latfile 2>>$tmpdir/log.log

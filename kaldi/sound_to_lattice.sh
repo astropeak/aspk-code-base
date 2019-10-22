@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +x
+
 # This scripts calsulate lattice given a wav sound file.
 # eg: ./sound_to_lattice.sh aaa 2.lat.gz
 # the first parameter is a sound file, which is ignored for now. The second parameter is the output lattice file.
@@ -15,32 +17,29 @@ fi
 do_fmllr=false
 # do_fmllr=true
 
-source ~/github/kaldi/setenv.sh
 
+
+# datapack
+source datapack.sh
 
 sound_file=$1
-feats=xxx
-
 outfile=$2
 
-# TODO: replace xxx
+# below values could also be moved to datapack file
 max_active=50000
 beam=32
 lattice_beam=20
 acwt=0.1
-graphdir=xxx
 decode_extra_opts=
-model=xxx
+
 
 # for yesno eg
-modeldir=./model
-graphdir=$modeldir
 model=$modeldir/final.mdl
 # sdata=/Users/astropeak/github/kaldi/egs/yesno/s5/data/test_yesno
 # directory
 sdata=data
 
-cmvn_opts=
+cmvn_opts=`cat $modeldir/cmvn_opts` || exit 1;
 delta_opts=
 
 tmpdir=./tmp
@@ -62,6 +61,7 @@ compute-cmvn-stats --spk2utt=ark:$tmpdir/spk2utt scp:$tmpdir/feats.scp ark,scp:$
 
 # 1.2 process mffc, apply cmnv, add deltas
 feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$tmpdir/utt2spk scp:$tmpdir/cmvn.scp scp:$tmpdir/feats.scp ark:- | add-deltas $delta_opts ark:- ark:- |"
+
 # feats="ark,s,cs:add-deltas $delta_opts scp:$tmpdir/feats.scp ark:- |"
 # if remove --utt2spk, there is error like.
 # WARNING (apply-cmvn[5.4.218~2-e6fe]:main():apply-cmvn.cc:112) No normalization statistics available for key 1_1_1_1_1_1_1_1, producing no output for this utterance
@@ -98,7 +98,7 @@ final_model=model/final.mdl
 alignment_model=$final_model
 adapt_model=$final_model
 fmllr_update_type=full
-silphonelist=`cat model/silence.csl` || exit 1;
+silphonelist=`cat $graphdir/phones/silence.csl` || exit 1;
 
 
 # here outfile is the lattice file
