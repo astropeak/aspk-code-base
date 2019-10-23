@@ -66,6 +66,8 @@ feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$tmpdir/utt2spk scp:$tmpdir/
 # so in decoer, we sould always map a utt to the global speker.
 # feats="ark,s,cs:apply-cmvn $cmvn_opts scp:$sdata/cmvn.scp scp:$tmpdir/feats.scp ark:- | add-deltas $delta_opts ark:- ark:- |"
 
+# 1.3 do fmllr transformation
+# feats="$feats transform-feats --utt2spk=ark:data/fmllr/utt2spk ark:./t3/trans.ark ark:- ark:- |"
 
 # 2: from feature to lattice
 gmm-latgen-faster --max-active=$max_active --beam=$beam --lattice-beam=$lattice_beam \
