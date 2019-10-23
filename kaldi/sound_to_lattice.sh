@@ -7,14 +7,14 @@ set +x
 # the first parameter is a sound file, which is ignored for now. The second parameter is the output lattice file.
 # to enable fmllr, set the do_fmllr to true
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <sound_file> <lattice-file>"
+if [ "$#" -lt 2 ]; then
+    echo "Usage: $0 <sound_file> <lattice-file> [feature-transform-file]"
     echo "  eg. $0 ./data/00001111.wav tmp/lat.gz"
     echo "Note: to enable fmllr, set the do_fmllr to true"
     exit 1
 fi
 
-do_fmllr=false
+# do_fmllr=false
 # do_fmllr=true
 
 
@@ -24,6 +24,7 @@ source datapack.sh
 
 sound_file=$1
 outfile=$2
+feat_transform_file=$3
 
 decode_extra_opts=
 
@@ -67,7 +68,16 @@ feats="ark,s,cs:apply-cmvn $cmvn_opts --utt2spk=ark:$tmpdir/utt2spk scp:$tmpdir/
 # feats="ark,s,cs:apply-cmvn $cmvn_opts scp:$sdata/cmvn.scp scp:$tmpdir/feats.scp ark:- | add-deltas $delta_opts ark:- ark:- |"
 
 # 1.3 do fmllr transformation
-# feats="$feats transform-feats --utt2spk=ark:data/fmllr/utt2spk ark:./t3/trans.ark ark:- ark:- |"
+# NOTICE: here the $tmpdir/utt2spk should map any utt to speaker 'global', because this is expected by the ./t4/trans.ark, which is the fmllr transformation
+
+if [ -f "$feat_transform_file" ]; then
+    echo "Do feature transformation. transform_file: $feat_transform_file"
+    feats="$feats transform-feats --utt2spk=ark:$tmpdir/utt2spk ark:$feat_transform_file ark:- ark:- |"
+else
+    echo "No transform file given"
+fi
+
+
 
 # 2: from feature to lattice
 gmm-latgen-faster --max-active=$max_active --beam=$beam --lattice-beam=$lattice_beam \
@@ -81,6 +91,10 @@ if ! $do_fmllr ; then
     exit 0
 fi
 
+
+exit 0
+
+# below code are not usually.
 
 # 3. do fmllr
 # the fmllr dir
