@@ -171,7 +171,7 @@
                        (list s `(progn (insert ,s) ""))
                        )
                      )
-                   " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;':\",./<>?"))
+                   " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[\\{}|;':\",./<>?"))
    "En mode"))
 
 ;; TODO: what this is used for?
